@@ -8,13 +8,19 @@
 #include "../interfaces/iship-manager.h"
 #include "../models/map-update-data.h"
 
-class ShipManager: public IShipManager {
+class ShipManager : public IShipManager
+{
 
 public:
     ShipManager();
 
-    ShootResponse receiveShot(Cell cell) override;
-    void initializeShips(Ship t_carrier, Ship t_battleship, Ship t_cruiser, Ship t_submarine, Ship t_destroyer) override;
+    ShootResponse receiveShot(const Cell &t_cell) override;
+    void initializeShips(
+        const Ship &t_carrier,
+        const Ship &t_battleship,
+        const Ship &t_cruiser,
+        const Ship &t_submarine,
+        const Ship &t_destroyer) override;
     void subscribe(IObserver<MapUpdateData> *observer) override;
     void unsubscribe(IObserver<MapUpdateData> *observer) override;
 
@@ -24,11 +30,11 @@ private:
     Ship m_cruiser;
     Ship m_submarine;
     Ship m_destroyer;
-    std::vector<IObserver<MapUpdateData>*> observers = {};
+    std::vector<IObserver<MapUpdateData> *> m_observers = {};
 
-    bool isGameOver();
-    ShootResponse getSuccessfulShotResponse(Ship ship);
-    void notifyMapUpdate(const MapUpdateData& data);
+    bool isGameOver() const;
+    ShootResponse getSuccessfulShotResponse(const Ship &ship) const;
+    void notifyMapUpdate(const MapUpdateData &data) const;
 };
 
 #endif

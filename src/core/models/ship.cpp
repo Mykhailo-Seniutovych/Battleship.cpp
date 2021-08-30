@@ -27,7 +27,7 @@ bool Ship::tryReceiveShot(Cell cell) {
     return newShotReceived;
 }
 
-ShipCoordinates Ship::getCoordinates() {
+ShipCoordinates Ship::getCoordinates() const {
     std::unordered_set<uint8_t> cellsCoordinates = {};
     cellsCoordinates.insert(m_intactCellsCoordinates.begin(), m_intactCellsCoordinates.end());
     cellsCoordinates.insert(m_damagedCellsCoordinates.begin(), m_damagedCellsCoordinates.end());
@@ -45,6 +45,6 @@ bool Ship::tryMoveIntactCellToDamaged(uint8_t t_cellCoordinate) {
     return wasCellRemoved;
 }
 
-bool Ship::isShipSunk() {
+bool Ship::isShipSunk() const {
     return m_intactCellsCoordinates.size() == 0;
 }

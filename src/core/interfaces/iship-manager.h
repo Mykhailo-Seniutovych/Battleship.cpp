@@ -7,9 +7,13 @@
 
 class IShipManager: IObservable<MapUpdateData> {
 public:
-    virtual ShootResponse receiveShot(Cell cell) = 0;
+    virtual ShootResponse receiveShot(const Cell &t_cell) = 0;
     virtual void initializeShips(
-        Ship t_carrier, Ship t_battleship, Ship t_cruiser, Ship t_submarine, Ship t_destroyer) = 0;
+        const Ship &t_carrier, 
+        const Ship &t_battleship, 
+        const Ship &t_cruiser, 
+        const Ship &t_submarine, 
+        const Ship &t_destroyer) = 0;
     virtual void subscribe(IObserver<MapUpdateData> *observer) override = 0;
     virtual void unsubscribe(IObserver<MapUpdateData> *observer) override = 0;
 };

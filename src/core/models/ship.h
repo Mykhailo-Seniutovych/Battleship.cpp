@@ -13,8 +13,8 @@ public:
     Ship(Position t_position, uint8_t t_axisCoordinate, std::unordered_set<uint8_t> t_cellsCoordinates);
 
     bool tryReceiveShot(Cell cell);
-    bool isShipSunk();
-    ShipCoordinates getCoordinates();
+    bool isShipSunk() const;
+    ShipCoordinates getCoordinates() const;
 
 private:
     Position m_position;

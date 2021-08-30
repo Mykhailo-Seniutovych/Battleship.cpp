@@ -11,7 +11,7 @@
 #include "../core/interfaces/iobserver.h"
 
 class TestObserver : public IObserver<MapUpdateData> {
-    void update(MapUpdateData data) override {
+    void update(const MapUpdateData &data) override {
         std::string text;
         
         switch (data.cellState)

@@ -1,5 +1,5 @@
-#ifndef BATTLESHIP_CORE_MODELS_SHIP_H 
-#define BATTLESHIP_CORE_MODELS_SHIP_H 
+#ifndef BATTLESHIP_CORE_MODELS_SHIP_H
+#define BATTLESHIP_CORE_MODELS_SHIP_H
 
 #include <bits/stdc++.h>
 #include "position.h"
@@ -10,9 +10,9 @@ class Ship
 {
 public:
     Ship();
-    Ship(Position t_position, uint8_t t_axisCoordinate, std::unordered_set<uint8_t> t_cellsCoordinates);
+    Ship(const Position &t_position, uint8_t t_axisCoordinate, const std::unordered_set<uint8_t> &t_cellsCoordinates);
 
-    bool tryReceiveShot(Cell cell);
+    bool tryReceiveShot(const Cell &cell);
     bool isShipSunk() const;
     ShipCoordinates getCoordinates() const;
 

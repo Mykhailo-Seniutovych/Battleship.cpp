@@ -1,33 +1,25 @@
 #include "ship-manager.h"
 
-#include "../interfaces/iobserver.h"
-
-ShipManager::ShipManager() {}
-
-void ShipManager::initializeShips(
-    const Ship &t_carrier,
-    const Ship &t_battleship,
-    const Ship &t_cruiser,
-    const Ship &t_submarine,
-    const Ship &t_destroyer)
+void ShipManager::initializeShips(const Ships &ships)
 {
-    // TODO: Validate length is correct
-    m_carrier = t_carrier;
-    m_battleship = t_battleship;
-    m_cruiser = t_cruiser;
-    m_submarine = t_submarine;
-    m_destroyer = t_destroyer;
+    m_carrier = ships.carrier;
+    m_battleship = ships.battleship;
+    m_cruiser = ships.cruiser;
+    m_submarine = ships.submarine;
+    m_destroyer = ships.destroyer;
+
+    notifyShipsInitialized(ships);
 }
 
-void ShipManager::subscribe(IObserver<MapUpdateData> *observer)
+void ShipManager::subscribe(std::shared_ptr<IMapStateObserver> t_observer)
 {
-    m_observers.push_back(observer);
+    m_observers.push_back(t_observer);
 }
 
-void ShipManager::unsubscribe(IObserver<MapUpdateData> *observer)
+void ShipManager::unsubscribe(std::shared_ptr<IMapStateObserver> t_observer)
 {
     m_observers.erase(
-        std::remove(m_observers.begin(), m_observers.end(), observer),
+        std::remove(m_observers.begin(), m_observers.end(), t_observer),
         m_observers.end());
 }
 
@@ -77,11 +69,19 @@ ShootResponse ShipManager::getSuccessfulShotResponse(const Ship &ship) const
     return response;
 }
 
+void ShipManager::notifyShipsInitialized(const Ships &ships) const
+{
+    for (auto observer : m_observers)
+    {
+        observer->notifyShipsInitialized(ships);
+    }
+}
+
 void ShipManager::notifyMapUpdate(const MapUpdateData &data) const
 {
     for (auto observer : m_observers)
     {
-        observer->update(data);
+        observer->notifyMapUpdated(data);
     }
 }
 

@@ -1,9 +1,10 @@
-#ifndef BATTLESHIP_CORE_MODELS_POINT_H
-#define BATTLESHIP_CORE_MODELS_POINT_H
+#ifndef BATTLESHIP_CORE_MODELS_CELL_H
+#define BATTLESHIP_CORE_MODELS_CELL_H
 
 #include <stdint.h>
 
-struct Cell {
+struct Cell
+{
     uint8_t horCoord;
     uint8_t verCoord;
 

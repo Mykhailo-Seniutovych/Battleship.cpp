@@ -276,5 +276,6 @@ int main() {
 
     uint8_t val = 8;
     std::cout << unsigned(val);
+    std::cout << "Hello sir" << std::endl;
     return 0;
 }

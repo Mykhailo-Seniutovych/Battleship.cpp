@@ -1,2 +1,3 @@
-# Compile Core into static lib
-g++ -c src/core/**/*.cpp && mv *.o bin && ar crf bin/core.a bin/*.o && rm bin/*.o
+# Build the project with CMake, run these commands from the root directory
+- cmake -S . -B build
+- cmake --build build

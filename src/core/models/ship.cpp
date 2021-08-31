@@ -2,7 +2,7 @@
 #include "position.h"
 #include "cell.h"
 
-Ship::Ship(){};
+Ship::Ship() = default;
 
 Ship::Ship(
     const Position &t_position, uint8_t t_axisCoordinate,const std::unordered_set<uint8_t> &t_cellsCoordinates)
@@ -13,11 +13,11 @@ Ship::Ship(
 bool Ship::tryReceiveShot(const Cell &cell)
 {
     bool newShotReceived = false;
-    if (m_position == Horizontal && m_axisCoordinate == cell.horCoord)
+    if (m_position == Position::Horizontal && m_axisCoordinate == cell.horCoord)
     {
         newShotReceived = tryMoveIntactCellToDamaged(cell.verCoord);
     }
-    else if (m_position == Vertical && m_axisCoordinate == cell.verCoord)
+    else if (m_position == Position::Vertical && m_axisCoordinate == cell.verCoord)
     {
         newShotReceived = tryMoveIntactCellToDamaged(cell.horCoord);
     }
@@ -48,5 +48,5 @@ bool Ship::tryMoveIntactCellToDamaged(uint8_t t_cellCoordinate)
 
 bool Ship::isShipSunk() const
 {
-    return m_intactCellsCoordinates.size() == 0;
+    return m_intactCellsCoordinates.empty();
 }

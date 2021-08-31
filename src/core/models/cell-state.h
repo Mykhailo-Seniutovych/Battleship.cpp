@@ -1,7 +1,7 @@
 #ifndef BATTLESHIP_CORE_MODELS_CELLSTATE_H
 #define BATTLESHIP_CORE_MODELS_CELLSTATE_H
 
-enum CellState
+enum class CellState
 {
     Miss,
     ShipDamaged,

@@ -1,7 +1,8 @@
 #include <iostream>
-using namespace std;
-
 #include "battle-communication.h"
+#include <string>
+
+using namespace std;
 
 static int shotCounter = 0; // delete after real implementation is done
 
@@ -12,7 +13,7 @@ Cell BattleCommunication::getNextShotTarget() const
     string newTarget;
     getline(cin, newTarget);
 
-    auto row = static_cast<uint8_t>(stoi(newTarget.substr(0, newTarget.find(" ")))) - 1;
+    auto row = static_cast<uint8_t>(stoi(newTarget.substr(0, newTarget.find(" "))) - 1);
     auto col = static_cast<uint8_t>(stoi(newTarget.substr(newTarget.find(" ") + 1)) - 1);
 
     return Cell(row, col);

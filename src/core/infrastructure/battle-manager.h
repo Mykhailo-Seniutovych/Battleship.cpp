@@ -17,7 +17,7 @@ public:
         std::shared_ptr<IInitialShipArrangement> t_initialShipArrangement,
         std::shared_ptr<IShipManager> t_shipManager,
         std::shared_ptr<IBattleComunication> t_battleCommunication);
-    void playBattle();
+    void playBattle() const;
 
 private:
     std::shared_ptr<IInitialShipArrangement> m_initialShipArrangement;

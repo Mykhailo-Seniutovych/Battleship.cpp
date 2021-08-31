@@ -1,8 +1,6 @@
 #include "ship-coordinates.h"
 
-ShipCoordinates::ShipCoordinates()
-{
-}
+ShipCoordinates::ShipCoordinates() = default;
 
 ShipCoordinates::ShipCoordinates(
     const Position &t_position,

@@ -4,7 +4,7 @@
 #include "../models/shoot-response.h"
 using namespace std;
 
-void BattleManager::playBattle()
+void BattleManager::playBattle() const
 {
     auto shipsOnMap = m_initialShipArrangement.get()->getInitialShipArrangement();
     m_shipManager.get()->initializeShips(shipsOnMap);

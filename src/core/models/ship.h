@@ -1,7 +1,7 @@
 #ifndef BATTLESHIP_CORE_MODELS_SHIP_H
 #define BATTLESHIP_CORE_MODELS_SHIP_H
 
-#include <bits/stdc++.h>
+#include <unordered_set>
 #include "position.h"
 #include "cell.h"
 #include "ship-coordinates.h"

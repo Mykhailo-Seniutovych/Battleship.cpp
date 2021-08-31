@@ -1,4 +1,4 @@
-#ifndef BATTLESHIP_SRC_CONSOLE_UI_UI_MAPS_H
+﻿#ifndef BATTLESHIP_SRC_CONSOLE_UI_UI_MAPS_H
 #define BATTLESHIP_SRC_CONSOLE_UI_UI_MAPS_H
 
 #include <string>
@@ -30,13 +30,23 @@ public:
 
 private:
     static const uint8_t MAP_SIZE = 10;
-
+    
+    // UNICODE characters are not supported on Windows Console, that why we have to use ASCHII for Windows
+#ifdef _WIN32
+    const std::string INVISIBLE_CELL = "- ";
+    const std::string MISSED_SHOT_CELL = "* ";
+    const std::string MY_SHIP_CELL = "||";
+    const std::string SHIP_DAMAGED = "X ";
+    const std::string SHIP_SUNK_CELL = "X*";
+    const std::string MAPS_SEPARATOR = "  |  ";
+#else 
     const std::string INVISIBLE_CELL = "- ";
     const std::string MISSED_SHOT_CELL = "* ";
     const std::string MY_SHIP_CELL = "\U0001F229";
     const std::string SHIP_DAMAGED = "X ";
     const std::string SHIP_SUNK_CELL = "\U0001F147 ";
-    const std::string MAPS_SEPARATOR = "  |  ";
+#endif
+
 
     MapCellState m_myMap[MAP_SIZE][MAP_SIZE];
     MapCellState m_enemyMap[MAP_SIZE][MAP_SIZE];

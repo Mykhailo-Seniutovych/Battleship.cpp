@@ -31,7 +31,7 @@ public:
 private:
     static const uint8_t MAP_SIZE = 10;
     
-    // UNICODE characters are not supported on Windows Console, that why we have to use ASCHII for Windows
+    // UNICODE characters are not supported on Windows Console, that's why we have to use ASCHII for Windows
 #ifdef _WIN32
     const std::string INVISIBLE_CELL = "- ";
     const std::string MISSED_SHOT_CELL = "* ";

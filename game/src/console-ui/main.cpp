@@ -1,4 +1,5 @@
 #include <memory>
+#include <iostream>
 using namespace std;
 
 #include "../core/infrastructure/ship-manager.h"
@@ -13,7 +14,8 @@ int main()
     auto shipManager = make_shared<ShipManager>();
     auto shipArrangement = make_shared<ConsoleInitialShipArrangement>();
     auto battleComunication = make_shared<BattleCommunication>();
-    auto battleManager = BattleManager(shipArrangement, shipManager, battleComunication);
+
+    auto battleManager = BattleManager(make_unique<ConsoleInitialShipArrangement>(), shipManager, battleComunication);
 
     auto consoleMaps = make_shared<Maps>();
     auto observer = make_shared<ConsoleMapStateObserver>(consoleMaps);

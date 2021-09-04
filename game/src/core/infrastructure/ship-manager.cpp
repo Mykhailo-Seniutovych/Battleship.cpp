@@ -1,4 +1,5 @@
 #include "ship-manager.h"
+#include <algorithm>
 
 void ShipManager::initializeShips(const Ships &ships)
 {

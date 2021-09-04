@@ -19,11 +19,11 @@ void BattleManager::playBattle() const
 }
 
 BattleManager::BattleManager(
-    shared_ptr<IInitialShipArrangement> t_initialShipArrangement,
+    unique_ptr<IInitialShipArrangement> t_initialShipArrangement,
     shared_ptr<IShipManager> t_shipManager,
     std::shared_ptr<IBattleComunication> t_battleCommunication)
 
-    : m_initialShipArrangement(t_initialShipArrangement),
+    : m_initialShipArrangement(std::move(t_initialShipArrangement)),
       m_shipManager(t_shipManager),
       m_battleCommunication(t_battleCommunication)
 {

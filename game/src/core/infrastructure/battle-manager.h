@@ -14,13 +14,13 @@ class BattleManager
 {
 public:
     BattleManager(
-        std::shared_ptr<IInitialShipArrangement> t_initialShipArrangement,
+        std::unique_ptr<IInitialShipArrangement> t_initialShipArrangement,
         std::shared_ptr<IShipManager> t_shipManager,
         std::shared_ptr<IBattleComunication> t_battleCommunication);
     void playBattle() const;
 
 private:
-    std::shared_ptr<IInitialShipArrangement> m_initialShipArrangement;
+    std::unique_ptr<IInitialShipArrangement> m_initialShipArrangement;
     std::shared_ptr<IShipManager> m_shipManager;
     std::shared_ptr<IBattleComunication> m_battleCommunication;
 };

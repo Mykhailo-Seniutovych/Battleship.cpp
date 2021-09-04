@@ -45,6 +45,7 @@ private:
     const std::string MY_SHIP_CELL = "\U0001F229";
     const std::string SHIP_DAMAGED = "X ";
     const std::string SHIP_SUNK_CELL = "\U0001F147 ";
+    const std::string MAPS_SEPARATOR = "  |  ";
 #endif
 
 

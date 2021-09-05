@@ -2,11 +2,11 @@
 #define BATTLESHIP_SRC_CONSOLE_UI_UI_MAPS_H
 
 #include <string>
-#include "../../core/models/ship-coordinates.h"
-#include "../../core/models/map-update-data.h"
-#include "../interfaces/imaps.h"
+#include "ship-coordinates.h"
+#include "map-update-data.h"
+#include "interfaces/imaps.h"
 
-enum MapCellState
+enum class MapCellState
 {
     Invisible,
     MyShip,

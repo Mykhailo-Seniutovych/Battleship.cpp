@@ -1,7 +1,7 @@
 #include <memory>
-
 #include "battle-manager.h"
-#include "../models/shoot-response.h"
+#include "shoot-response.h"
+
 using namespace std;
 
 void BattleManager::playBattle() const
@@ -20,11 +20,11 @@ void BattleManager::playBattle() const
 
 BattleManager::BattleManager(
     unique_ptr<IInitialShipArrangement> t_initialShipArrangement,
-    shared_ptr<IShipManager> t_shipManager,
-    std::shared_ptr<IBattleComunication> t_battleCommunication)
+    unique_ptr<IShipManager> t_shipManager,
+    std::unique_ptr<IBattleComunication> t_battleCommunication)
 
-    : m_initialShipArrangement(std::move(t_initialShipArrangement)),
-      m_shipManager(t_shipManager),
-      m_battleCommunication(t_battleCommunication)
+    : m_initialShipArrangement(move(t_initialShipArrangement)),
+      m_shipManager(move(t_shipManager)),
+      m_battleCommunication(move(t_battleCommunication))
 {
 }

@@ -17,5 +17,5 @@ void ConsoleMapStateObserver::notifyMapUpdated(const MapUpdateData &updateData) 
     m_maps.get()->printMaps();
 }
 
-ConsoleMapStateObserver::ConsoleMapStateObserver(std::shared_ptr<IMaps> t_maps)
-    : m_maps(t_maps){};
+ConsoleMapStateObserver::ConsoleMapStateObserver(std::unique_ptr<IMaps> t_maps)
+    : m_maps(std::move(t_maps)){};

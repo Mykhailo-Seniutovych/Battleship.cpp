@@ -1,8 +1,8 @@
 
 #include <iostream>
 #include "maps.h"
-#include "../../core/models/ship-coordinates.h"
-#include "../../core/models/map-update-data.h"
+#include "ship-coordinates.h"
+#include "map-update-data.h"
 
 using namespace std;
 

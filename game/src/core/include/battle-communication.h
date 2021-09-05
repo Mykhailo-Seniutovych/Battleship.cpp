@@ -1,7 +1,7 @@
-#ifndef BATTLESHIP_SRC_CORE_SERVICES_BATTLE_COMMUNICATION_H
-#define BATTLESHIP_SRC_CORE_SERVICES_BATTLE_COMMUNICATION_H
+#ifndef BATTLESHIP_SRC_CORE_INCLUDE_BATTLE_COMMUNICATION_H
+#define BATTLESHIP_SRC_CORE_INCLUDE_BATTLE_COMMUNICATION_H
 
-#include "../interfaces/ibattle-communication.h"
+#include "ibattle-communication.h"
 
 class BattleCommunication : public IBattleComunication
 {

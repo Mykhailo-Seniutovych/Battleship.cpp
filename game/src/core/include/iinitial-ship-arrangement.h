@@ -3,8 +3,8 @@
 
 #include <array>
 
-#include "../models/ships.h"
-#include "../utils/constants.h"
+#include "ships.h"
+#include "constants.h"
 
 class IInitialShipArrangement
 {

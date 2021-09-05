@@ -1,5 +1,6 @@
 #include "ship-manager.h"
 #include <algorithm>
+#include <iostream>
 
 void ShipManager::initializeShips(const Ships &ships)
 {
@@ -12,12 +13,12 @@ void ShipManager::initializeShips(const Ships &ships)
     notifyShipsInitialized(ships);
 }
 
-void ShipManager::subscribe(std::shared_ptr<IMapStateObserver> t_observer)
+void ShipManager::subscribe(std::unique_ptr<IMapStateObserver> t_observer)
 {
-    m_observers.push_back(t_observer);
+    m_observers.push_back(move(t_observer));
 }
 
-void ShipManager::unsubscribe(std::shared_ptr<IMapStateObserver> t_observer)
+void ShipManager::unsubscribe(std::unique_ptr<IMapStateObserver> t_observer)
 {
     m_observers.erase(
         std::remove(m_observers.begin(), m_observers.end(), t_observer),
@@ -72,7 +73,7 @@ ShootResponse ShipManager::getSuccessfulShotResponse(const Ship &ship) const
 
 void ShipManager::notifyShipsInitialized(const Ships &ships) const
 {
-    for (auto observer : m_observers)
+    for (auto const &observer : m_observers)
     {
         observer->notifyShipsInitialized(ships);
     }
@@ -80,7 +81,7 @@ void ShipManager::notifyShipsInitialized(const Ships &ships) const
 
 void ShipManager::notifyMapUpdate(const MapUpdateData &data) const
 {
-    for (auto observer : m_observers)
+    for (auto const &observer : m_observers)
     {
         observer->notifyMapUpdated(data);
     }

@@ -4,21 +4,22 @@ using namespace std;
 
 #include "ship-manager.h"
 #include "battle-manager.h"
-#include "battle-communication.h"
+#include "computer-battle-communication.h"
 #include "services/console-initial-ship-arrangement.h"
 #include "services/console-map-state-observer.h"
+#include "services/console-cell-reader.h"
 #include "ui/maps.h"
 
 int main()
 {
-    auto shipManager = make_unique<ShipManager>();
-    auto observer = make_unique<ConsoleMapStateObserver>(make_unique<Maps>());
-    shipManager.get()->subscribe(move(observer));
-
     auto battleManager = BattleManager(
         make_unique<ConsoleInitialShipArrangement>(),
-        move(shipManager),
-        make_unique<BattleCommunication>());
+        make_unique<ShipManager>(),
+        make_unique<ComputerBattleCommunication>(),
+        make_unique<ConsoleCellReader>());
+
+    auto observer = make_unique<ConsoleMapStateObserver>(make_unique<Maps>());
+    battleManager.subscribe(move(observer));
 
     battleManager.playBattle();
 

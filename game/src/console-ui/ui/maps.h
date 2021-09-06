@@ -5,6 +5,7 @@
 #include "ship-coordinates.h"
 #include "map-update-data.h"
 #include "interfaces/imaps.h"
+#include "constants.h"
 
 enum class MapCellState
 {
@@ -25,12 +26,13 @@ public:
         const ShipCoordinates &t_mySubmarine,
         const ShipCoordinates &t_myDestroyer) override;
 
-    void updateMyMap(const MapUpdateData &updateData) override;
+    void updateMyMap(const MapUpdateData &t_updateData) override;
+    void updateEnemyMap(const MapUpdateData &t_updateData) override;
+
+    void printMyShotCell(const Cell &t_cell) const override;
     void printMaps() const override;
 
 private:
-    static const uint8_t MAP_SIZE = 10;
-    
     // UNICODE characters are not supported on Windows Console, that's why we have to use ASCHII for Windows
 #ifdef _WIN32
     const std::string INVISIBLE_CELL = "- ";
@@ -48,14 +50,16 @@ private:
     const std::string MAPS_SEPARATOR = "  |  ";
 #endif
 
+    MapCellState m_myMap[Constants::MAP_SIZE][Constants::MAP_SIZE];
+    MapCellState m_enemyMap[Constants::MAP_SIZE][Constants::MAP_SIZE];
 
-    MapCellState m_myMap[MAP_SIZE][MAP_SIZE];
-    MapCellState m_enemyMap[MAP_SIZE][MAP_SIZE];
-
+    void updateMap(
+        MapCellState (&t_map)[Constants::MAP_SIZE][Constants::MAP_SIZE], 
+        const MapUpdateData &t_updateData);
     MapCellState convertToMapState(CellState cellState) const;
     void initShipOnMyMap(const ShipCoordinates &ship);
     void printMapsSeparator() const;
-    void printMapRow(uint8_t row, const MapCellState (&t_map)[MAP_SIZE][MAP_SIZE]) const;
+    void printMapRow(uint8_t row, const MapCellState (&t_map)[Constants::MAP_SIZE][Constants::MAP_SIZE]) const;
     void printRowNumber(uint8_t rowNum) const;
     void printCell(const MapCellState &cellState) const;
 };

@@ -9,20 +9,6 @@ void ShipManager::initializeShips(const Ships &ships)
     m_cruiser = ships.cruiser;
     m_submarine = ships.submarine;
     m_destroyer = ships.destroyer;
-
-    notifyShipsInitialized(ships);
-}
-
-void ShipManager::subscribe(std::unique_ptr<IMapStateObserver> t_observer)
-{
-    m_observers.push_back(move(t_observer));
-}
-
-void ShipManager::unsubscribe(std::unique_ptr<IMapStateObserver> t_observer)
-{
-    m_observers.erase(
-        std::remove(m_observers.begin(), m_observers.end(), t_observer),
-        m_observers.end());
 }
 
 ShootResponse ShipManager::receiveShot(const Cell &cell)
@@ -52,7 +38,6 @@ ShootResponse ShipManager::receiveShot(const Cell &cell)
 
     auto updateData =
         MapUpdateData(cell, response.cellState, response.sunkShipCoordinates);
-    notifyMapUpdate(updateData);
 
     return response;
 }
@@ -69,22 +54,6 @@ ShootResponse ShipManager::getSuccessfulShotResponse(const Ship &ship) const
         response = ShootResponse(CellState::ShipSunk, ship.getCoordinates());
     }
     return response;
-}
-
-void ShipManager::notifyShipsInitialized(const Ships &ships) const
-{
-    for (auto const &observer : m_observers)
-    {
-        observer->notifyShipsInitialized(ships);
-    }
-}
-
-void ShipManager::notifyMapUpdate(const MapUpdateData &data) const
-{
-    for (auto const &observer : m_observers)
-    {
-        observer->notifyMapUpdated(data);
-    }
 }
 
 bool ShipManager::isGameOver() const

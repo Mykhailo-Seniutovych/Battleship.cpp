@@ -3,8 +3,11 @@
 #include "maps.h"
 #include "ship-coordinates.h"
 #include "map-update-data.h"
+#include "utils/map-utils.h"
+#include "constants.h"
 
 using namespace std;
+using namespace map_utils;
 
 void Maps::initMaps(
     const ShipCoordinates &t_myCarrier,
@@ -14,9 +17,9 @@ void Maps::initMaps(
     const ShipCoordinates &t_myDestroyer)
 {
     //TODO: validation
-    for (uint8_t row = 0; row < MAP_SIZE; row++)
+    for (uint8_t row = 0; row < Constants::MAP_SIZE; row++)
     {
-        for (uint8_t col = 0; col < MAP_SIZE; col++)
+        for (uint8_t col = 0; col < Constants::MAP_SIZE; col++)
         {
             m_myMap[row][col] = MapCellState::Invisible;
             m_enemyMap[row][col] = MapCellState::Invisible;
@@ -32,36 +35,59 @@ void Maps::initMaps(
 
 void Maps::updateMyMap(const MapUpdateData &updateData)
 {
-    if (updateData.cellState == CellState::ShipSunk || updateData.cellState == CellState::GameOver)
+    updateMap(m_myMap, updateData);
+}
+
+void Maps::updateEnemyMap(const MapUpdateData &updateData)
+{
+    updateMap(m_enemyMap, updateData);
+}
+
+void Maps::updateMap(
+    MapCellState (&t_map)[Constants::MAP_SIZE][Constants::MAP_SIZE],
+    const MapUpdateData &t_updateData)
+{
+    // TODO: refactor this code
+    if (t_updateData.cellState == CellState::ShipSunk || t_updateData.cellState == CellState::GameOver)
     {
-        if (updateData.sunkShipCoordinates.position == Position::Horizontal)
+        if (t_updateData.sunkShipCoordinates.position == Position::Horizontal)
         {
-            auto row = updateData.sunkShipCoordinates.axisCoordinate;
-            for (auto col : updateData.sunkShipCoordinates.cellsCoordinates)
+            auto row = t_updateData.sunkShipCoordinates.axisCoordinate;
+            for (auto col : t_updateData.sunkShipCoordinates.cellsCoordinates)
             {
-                m_myMap[row][col] = MapCellState::SunkShip;
+                t_map[row][col] = MapCellState::SunkShip;
             }
         }
         else
         {
-            auto col = updateData.sunkShipCoordinates.axisCoordinate;
-            for (auto row : updateData.sunkShipCoordinates.cellsCoordinates)
+            auto col = t_updateData.sunkShipCoordinates.axisCoordinate;
+            for (auto row : t_updateData.sunkShipCoordinates.cellsCoordinates)
             {
-                m_myMap[row][col] = MapCellState::SunkShip;
+                t_map[row][col] = MapCellState::SunkShip;
             }
         }
     }
     else
     {
-        auto row = updateData.cell.horCoord;
-        auto col = updateData.cell.verCoord;
-        m_myMap[row][col] = convertToMapState(updateData.cellState);
+        auto row = t_updateData.cell.horCoord;
+        auto col = t_updateData.cell.verCoord;
+        t_map[row][col] = convertToMapState(t_updateData.cellState);
     }
+}
+
+void Maps::printMyShotCell(const Cell &t_cell) const
+{
+    cout << "Enemy shot at ("
+         << convertRowNumberToRowLetter(unsigned(t_cell.horCoord) + 1)
+         << " "
+         << unsigned(t_cell.verCoord) + 1
+         << ")"
+         << endl;
 }
 
 void Maps::printMaps() const
 {
-    for (uint8_t row = 0; row <= MAP_SIZE; row++)
+    for (uint8_t row = 0; row <= Constants::MAP_SIZE; row++)
     {
         printMapRow(row, m_myMap);
         printMapsSeparator();
@@ -120,9 +146,9 @@ void Maps::printMapsSeparator() const
     cout << MAPS_SEPARATOR;
 }
 
-void Maps::printMapRow(uint8_t row, const MapCellState (&t_map)[MAP_SIZE][MAP_SIZE]) const
+void Maps::printMapRow(uint8_t row, const MapCellState (&t_map)[Constants::MAP_SIZE][Constants::MAP_SIZE]) const
 {
-    for (uint8_t col = 0; col <= MAP_SIZE; col++)
+    for (uint8_t col = 0; col <= Constants::MAP_SIZE; col++)
     {
         if (row == 0 && col == 0)
         {
@@ -151,41 +177,8 @@ void Maps::printMapRow(uint8_t row, const MapCellState (&t_map)[MAP_SIZE][MAP_SI
 
 void Maps::printRowNumber(uint8_t rowNum) const
 {
-    switch (rowNum)
-    {
-    case 1:
-        cout << "A ";
-        break;
-    case 2:
-        cout << "B ";
-        break;
-    case 3:
-        cout << "C ";
-        break;
-    case 4:
-        cout << "D ";
-        break;
-    case 5:
-        cout << "E ";
-        break;
-    case 6:
-        cout << "F ";
-        break;
-    case 7:
-        cout << "G ";
-        break;
-    case 8:
-        cout << "H ";
-        break;
-    case 9:
-        cout << "I ";
-        break;
-    case 10:
-        cout << "J ";
-        break;
-    default:
-        break;
-    }
+    char rowLetter = convertRowNumberToRowLetter(rowNum);
+    cout << rowLetter << " ";
 }
 
 void Maps::printCell(const MapCellState &cellState) const

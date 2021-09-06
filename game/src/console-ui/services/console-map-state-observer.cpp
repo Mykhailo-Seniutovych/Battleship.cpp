@@ -11,9 +11,16 @@ void ConsoleMapStateObserver::notifyShipsInitialized(const Ships &ships) const
     m_maps.get()->printMaps();
 }
 
-void ConsoleMapStateObserver::notifyMapUpdated(const MapUpdateData &updateData) const
+void ConsoleMapStateObserver::notifyMyMapUpdated(const MapUpdateData &updateData) const
 {
+    m_maps.get()->printMyShotCell(updateData.cell);
     m_maps.get()->updateMyMap(updateData);
+    m_maps.get()->printMaps();
+}
+
+void ConsoleMapStateObserver::notifyEnemyMapUpdated(const MapUpdateData &updateData) const
+{
+    m_maps.get()->updateEnemyMap(updateData);
     m_maps.get()->printMaps();
 }
 

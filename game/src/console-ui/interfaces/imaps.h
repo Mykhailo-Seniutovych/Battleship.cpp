@@ -10,7 +10,11 @@ public:
         const ShipCoordinates &t_myCruiser,
         const ShipCoordinates &t_mySubmarine,
         const ShipCoordinates &t_myDestroyer) = 0;
-    virtual void updateMyMap(const MapUpdateData &updateData) = 0;
+
+    virtual void updateMyMap(const MapUpdateData &t_updateData) = 0;
+    virtual void updateEnemyMap(const MapUpdateData &t_updateData) = 0;
+
+    virtual void printMyShotCell(const Cell &t_cell) const = 0;
     virtual void printMaps() const = 0;
 };
 

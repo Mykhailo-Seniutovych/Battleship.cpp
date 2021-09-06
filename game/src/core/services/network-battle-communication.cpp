@@ -1,12 +1,12 @@
 #include <iostream>
-#include "battle-communication.h"
+#include "network-battle-communication.h"
 #include <string>
 
 using namespace std;
 
 static int shotCounter = 0; // delete after real implementation is done
 
-Cell BattleCommunication::getNextShotTarget() const
+Cell NetworkBattleCommunication::getNextShotTarget() const
 {
     // TODO: replace with TCP implementation
     cout << "Enter coordinates to receive next shot (e.g. \"1 10\")" << endl;
@@ -19,7 +19,14 @@ Cell BattleCommunication::getNextShotTarget() const
     return Cell(row, col);
 }
 
-void BattleCommunication::sendShotTo(const Cell &cell)
+void NetworkBattleCommunication::notifyShotResponse(ShootResponse shootResponse)
+{
+     // TODO: implement
+};
+
+ShootResponse NetworkBattleCommunication::sendShotTo(const Cell &cell)
 {
     // TODO: implement
+
+    return ShootResponse(CellState::Miss);
 }

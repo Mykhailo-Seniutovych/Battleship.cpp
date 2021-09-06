@@ -11,7 +11,8 @@ class ConsoleMapStateObserver : public IMapStateObserver
 public:
     ConsoleMapStateObserver(std::unique_ptr<IMaps> t_maps);
     void notifyShipsInitialized(const Ships &t_ships) const override;
-    void notifyMapUpdated(const MapUpdateData &t_updateData) const override;
+    void notifyMyMapUpdated(const MapUpdateData &t_updateData) const override;
+    void notifyEnemyMapUpdated(const MapUpdateData &t_updateData) const override;
 
 private:
     std::unique_ptr<IMaps> m_maps;

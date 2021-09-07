@@ -22,8 +22,8 @@ ComputerBattleCommunication::ComputerBattleCommunication()
 void ComputerBattleCommunication::initShips()
 {
     // TODO: Replace with randomly created ships
-    m_carrier = Ship(Position::Horizontal, 1, {1, 2, 3, 4, 5, 6});
-    m_battleship = Ship(Position::Vertical, 7, {1, 2, 3, 5});
+    m_carrier = Ship(Position::Horizontal, 1, {1, 2, 3, 4, 5});
+    m_battleship = Ship(Position::Vertical, 7, {1, 2, 3, 4});
     m_cruiser = Ship(Position::Horizontal, 8, {3, 4, 5});
     m_submarine = Ship(Position::Vertical, 9, {7, 8, 9});
     m_destroyer = Ship(Position::Vertical, 2, {4, 5});

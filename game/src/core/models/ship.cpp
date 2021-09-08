@@ -12,17 +12,17 @@ Ship::Ship(
 
 bool Ship::tryReceiveShot(const Cell &cell)
 {
-    bool newShotReceived = false;
+    bool shotReceived = false;
     if (m_position == Position::Horizontal && m_axisCoordinate == cell.horCoord)
     {
-        newShotReceived = tryMoveIntactCellToDamaged(cell.verCoord);
+        shotReceived = tryMoveToDamagedCells(cell.verCoord);
     }
     else if (m_position == Position::Vertical && m_axisCoordinate == cell.verCoord)
     {
-        newShotReceived = tryMoveIntactCellToDamaged(cell.horCoord);
+        shotReceived = tryMoveToDamagedCells(cell.horCoord);
     }
 
-    return newShotReceived;
+    return shotReceived;
 }
 
 ShipCoordinates Ship::getCoordinates() const
@@ -35,8 +35,13 @@ ShipCoordinates Ship::getCoordinates() const
     return result;
 }
 
-bool Ship::tryMoveIntactCellToDamaged(uint8_t t_cellCoordinate)
+bool Ship::tryMoveToDamagedCells(uint8_t t_cellCoordinate)
 {
+    if(m_damagedCellsCoordinates.count(t_cellCoordinate))
+    {
+        return true;
+    }
+
     auto cellsErasedCount = m_intactCellsCoordinates.erase(t_cellCoordinate);
     auto wasCellRemoved = cellsErasedCount != 0;
     if (cellsErasedCount != 0)

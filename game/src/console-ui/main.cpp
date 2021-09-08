@@ -15,7 +15,7 @@ int main()
     auto battleManager = BattleManager(
         make_unique<ConsoleInitialShipArrangement>(),
         make_unique<ShipManager>(),
-        make_unique<ComputerBattleCommunication>(),
+        make_unique<ComputerBattleCommunication>(make_unique<ShipManager>()),
         make_unique<ConsoleCellReader>());
 
     auto observer = make_unique<ConsoleMapStateObserver>(make_unique<Maps>());

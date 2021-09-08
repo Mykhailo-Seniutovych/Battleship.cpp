@@ -22,7 +22,7 @@ private:
     std::unordered_set<uint8_t> m_damagedCellsCoordinates = {};
     std::unordered_set<uint8_t> m_intactCellsCoordinates = {};
 
-    bool tryMoveIntactCellToDamaged(uint8_t t_cellCoordinate);
+    bool tryMoveToDamagedCells(uint8_t t_cellCoordinate);
 };
 
 #endif

@@ -19,7 +19,7 @@ Cell NetworkBattleCommunication::getNextShotTarget() const
     return Cell(row, col);
 }
 
-void NetworkBattleCommunication::notifyShotResponse(ShootResponse shootResponse)
+void NetworkBattleCommunication::notifyShotResponse(const ShootResponse &shootResponse)
 {
      // TODO: implement
 };

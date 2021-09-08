@@ -3,32 +3,28 @@
 
 #include <unordered_set>
 #include <vector>
+#include <memory>;
 #include "ibattle-communication.h"
 #include "ship.h"
 #include "shoot-response.h"
+#include "iship-manager.h"
 
 class ComputerBattleCommunication : public IBattleComunication
 {
 public:
-    ComputerBattleCommunication();
+    ComputerBattleCommunication(std::unique_ptr<IShipManager> t_computerShipManager);
     
     Cell getNextShotTarget() const override;
     ShootResponse sendShotTo(const Cell &cell) override;
-    void notifyShotResponse(ShootResponse shootResponse) override;
+    void notifyShotResponse(const ShootResponse& shootResponse) override;
 
 private:
-    Ship m_carrier;
-    Ship m_battleship;
-    Ship m_cruiser;
-    Ship m_submarine;
-    Ship m_destroyer;
+    std::unique_ptr<IShipManager> m_computerShipManager;
     mutable std::unordered_set<Cell, Cell::HashFunction> m_shotCells = {};
     mutable std::vector<Cell> m_cellsToShoot;
 
     void initShips();
     void initShootTargets();
-    ShootResponse getSuccessfulShotResponse(const Ship &ship) const;
-    bool isGameOver() const;
 };
 
 #endif

@@ -5,6 +5,19 @@
 
 using namespace std;
 
+BattleManager::BattleManager(
+    unique_ptr<IInitialShipArrangement> t_initialShipArrangement,
+    unique_ptr<IShipManager> t_shipManager,
+    unique_ptr<IBattleComunication> t_battleCommunication,
+    unique_ptr<ICellReader> t_cellReader)
+
+    : m_initialShipArrangement(move(t_initialShipArrangement)),
+      m_shipManager(move(t_shipManager)),
+      m_battleCommunication(move(t_battleCommunication)),
+      m_cellReader(move(t_cellReader))
+{
+}
+
 void BattleManager::playBattle() const
 {
     auto shipsOnMap = m_initialShipArrangement.get()->getInitialShipArrangement();
@@ -26,19 +39,6 @@ void BattleManager::playBattle() const
         isGameOver = currentPlayerResponse.cellState == CellState::GameOver ||
                      enemyResponse.cellState == CellState::GameOver;
     } while (!isGameOver);
-}
-
-BattleManager::BattleManager(
-    unique_ptr<IInitialShipArrangement> t_initialShipArrangement,
-    unique_ptr<IShipManager> t_shipManager,
-    unique_ptr<IBattleComunication> t_battleCommunication,
-    unique_ptr<ICellReader> t_cellReader)
-
-    : m_initialShipArrangement(move(t_initialShipArrangement)),
-      m_shipManager(move(t_shipManager)),
-      m_battleCommunication(move(t_battleCommunication)),
-      m_cellReader(move(t_cellReader))
-{
 }
 
 void BattleManager::subscribe(unique_ptr<IMapStateObserver> t_observer)

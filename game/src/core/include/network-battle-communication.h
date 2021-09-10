@@ -8,7 +8,7 @@ class NetworkBattleCommunication : public IBattleComunication
 public:
     Cell getNextShotTarget() const override;
     ShootResponse sendShotTo(const Cell &cell) override;
-    void notifyShotResponse(ShootResponse shootResponse) override;
+    void notifyShotResponse(const ShootResponse &shootResponse) override;
 };
 
 #endif

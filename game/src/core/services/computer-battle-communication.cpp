@@ -5,15 +5,19 @@
 #include <thread>
 #include <algorithm>
 #include <random>
+#include <memory>
 #include "computer-battle-communication.h"
 #include "constants.h"
+#include "ships.h"
 
 using namespace std;
 using namespace std::this_thread;
 using namespace std::chrono_literals;
 using std::chrono::system_clock;
 
-ComputerBattleCommunication::ComputerBattleCommunication()
+ComputerBattleCommunication::ComputerBattleCommunication(
+    unique_ptr<IShipManager> t_computerShipManager)
+    : m_computerShipManager(move(t_computerShipManager))
 {
     initShips();
     initShootTargets();
@@ -22,11 +26,14 @@ ComputerBattleCommunication::ComputerBattleCommunication()
 void ComputerBattleCommunication::initShips()
 {
     // TODO: Replace with randomly created ships
-    m_carrier = Ship(Position::Horizontal, 1, {1, 2, 3, 4, 5});
-    m_battleship = Ship(Position::Vertical, 7, {1, 2, 3, 4});
-    m_cruiser = Ship(Position::Horizontal, 8, {3, 4, 5});
-    m_submarine = Ship(Position::Vertical, 9, {7, 8, 9});
-    m_destroyer = Ship(Position::Vertical, 2, {4, 5});
+    auto ships = Ships {
+        .carrier = Ship(Position::Horizontal, 1, { 1, 2, 3, 4, 5 }),
+        .battleship = Ship(Position::Vertical, 7, { 1, 2, 3, 4 }),
+        .cruiser = Ship(Position::Horizontal, 8, { 3, 4, 5 }),
+        .submarine = Ship(Position::Vertical, 9, { 7, 8, 9 }),
+        .destroyer = Ship(Position::Vertical, 2, { 4, 5 }),
+    };
+    m_computerShipManager.get()->initializeShips(ships);
 }
 
 void ComputerBattleCommunication::initShootTargets()
@@ -55,58 +62,12 @@ Cell ComputerBattleCommunication::getNextShotTarget() const
     return cell;
 }
 
-void ComputerBattleCommunication::notifyShotResponse(ShootResponse shootResponse)
+void ComputerBattleCommunication::notifyShotResponse(const ShootResponse& shootResponse)
 {
 }
 
-// TODO: Similar methods exist in BattleManager, need to provide common implementation 
 ShootResponse ComputerBattleCommunication::sendShotTo(const Cell &cell)
 {
-    ShootResponse response(CellState::Miss);
-
-    if (m_carrier.tryReceiveShot(cell))
-    {
-        response = getSuccessfulShotResponse(m_carrier);
-    }
-    else if (m_battleship.tryReceiveShot(cell))
-    {
-        response = getSuccessfulShotResponse(m_battleship);
-    }
-    else if (m_cruiser.tryReceiveShot(cell))
-    {
-        response = getSuccessfulShotResponse(m_cruiser);
-    }
-    else if (m_submarine.tryReceiveShot(cell))
-    {
-        response = getSuccessfulShotResponse(m_submarine);
-    }
-    else if (m_destroyer.tryReceiveShot(cell))
-    {
-        response = getSuccessfulShotResponse(m_destroyer);
-    }
-
+    auto response = m_computerShipManager.get()->receiveShot(cell);
     return response;
-}
-
-ShootResponse ComputerBattleCommunication::getSuccessfulShotResponse(const Ship &ship) const
-{
-    ShootResponse response(CellState::ShipDamaged);
-    if (isGameOver())
-    {
-        response = ShootResponse(CellState::GameOver, ship.getCoordinates());
-    }
-    else if (ship.isShipSunk())
-    {
-        response = ShootResponse(CellState::ShipSunk, ship.getCoordinates());
-    }
-    return response;
-}
-
-bool ComputerBattleCommunication::isGameOver() const
-{
-    return m_carrier.isShipSunk() &&
-           m_battleship.isShipSunk() &&
-           m_cruiser.isShipSunk() &&
-           m_submarine.isShipSunk() &&
-           m_destroyer.isShipSunk();
 }

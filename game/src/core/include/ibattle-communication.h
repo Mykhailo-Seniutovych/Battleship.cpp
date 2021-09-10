@@ -8,7 +8,7 @@ class IBattleComunication
 {
 public:
     virtual Cell getNextShotTarget() const = 0;
-    virtual void notifyShotResponse(ShootResponse shootResponse) = 0;
+    virtual void notifyShotResponse(const ShootResponse& shootResponse) = 0;
     virtual ShootResponse sendShotTo(const Cell &cell) = 0;
 };
 

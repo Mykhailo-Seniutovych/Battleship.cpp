@@ -1,9 +1,5 @@
 #include <memory>
-#include <iostream>
-#include <iomanip>
-#include <ios>
-#include <functional>
-#include "sqlite3.h"
+#include <cstdint>
 #include <string>
 
 #include "ship-manager.h"
@@ -16,8 +12,7 @@
 #include "services/console-cell-reader.h"
 #include "ui/maps.h"
 #include "database-service.h"
-#include "exception"
-#include "sql-exception.h"
+#include "ui/statistics-ui.h"
 
 using namespace std;
 
@@ -35,43 +30,46 @@ void playGame()
     battleManager.playBattle();
 }
 
-void showStatistics()
+void showStatistics(bool showBest)
 {
-    try
+    auto databaseService = make_unique<DatabaseService<Player>>();
+    databaseService.get()->ensureDbCreated();
+    auto statisticsUi = StatisticsUi(
+        make_unique<StatisticsService>(move(databaseService)));
+    if (showBest)
     {
-        const uint32_t count = 10;
-
-        auto databaseService = make_unique<DatabaseService<Player>>();
-        databaseService.get()->ensureDbCreated();
-        auto statisticsService = StatisticsService(move(databaseService));
-        auto players = statisticsService.getTopBestPlayers(count);
-
-        cout << left
-             << setw(20) << "Nickname"
-             << setw(11) << "Games Won"
-             << setw(12) << "Games Lost"
-             << setw(6) << "Score"
-             << endl;
-        for (auto player : players)
-        {
-            cout << left
-                 << setw(20) << player.nickname
-                 << setw(11) << player.gamesWon
-                 << setw(12) << player.gamesLost
-                 << setw(6) << player.getScore()
-                 << endl;
-        };
-        cout << endl;
+        statisticsUi.showBestPlayers();
     }
-    catch (const exception &ex)
+    else
     {
-        cout << "Unexpected error happened: " << ex.what() << endl;
+        statisticsUi.showWorstPlayers();
     }
 }
 
-int main()
+int main(int argc, char *argv[])
 {
-    showStatistics();
-    //playGame();
+    auto startGame = true;
+    for (uint8_t index = 1; index < argc; index++)
+    {
+        if (string(argv[index]) == "--stats-best")
+        {
+            startGame = false;
+            showStatistics(true);
+            break;
+        }
+
+        if (string(argv[index]) == "--stats-worst")
+        {
+            startGame = false;
+            showStatistics(false);
+            break;
+        };
+    }
+
+    if (startGame)
+    {
+        playGame();
+    }
+
     return 0;
 }

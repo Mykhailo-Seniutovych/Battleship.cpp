@@ -1,6 +1,8 @@
 #ifndef BATTLESHIP_SRC_CONSOLE_UI_INTERFACES_IMAPS_H
 #define BATTLESHIP_SRC_CONSOLE_UI_INTERFACES_IMAPS_H
 
+#include "ship-coordinates.h"
+
 class IMaps
 {
 public:

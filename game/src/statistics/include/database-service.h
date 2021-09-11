@@ -6,7 +6,6 @@
 #include "db-record.h"
 #include "sql-exception.h"
 
-//TODO: fix rlative path
 #include "queries.h"
 
 template <class T>
@@ -18,7 +17,7 @@ class DatabaseService : public IDatabaseService<T>
 public:
     void ensureDbCreated() const
     {
-        const std::filesystem::path dbPath = m_dbName;
+        const std::filesystem::path dbPath = DB_NAME;
         auto isDbCreated = std::filesystem::exists(dbPath);
         if (!isDbCreated)
         {
@@ -32,7 +31,7 @@ public:
         sqlite3 *db = nullptr;
         sqlite3_stmt *statement;
 
-        auto openResult = sqlite3_open(m_dbName, &db);
+        auto openResult = sqlite3_open(DB_NAME, &db);
         if (openResult != SQLITE_OK)
         {
             sqlite3_close(db);
@@ -70,7 +69,7 @@ public:
     {
         sqlite3 *db = nullptr;
         sqlite3_stmt *statement;
-        auto openResult = sqlite3_open(m_dbName, &db);
+        auto openResult = sqlite3_open(DB_NAME, &db);
         if (openResult != SQLITE_OK)
         {
             sqlite3_close(db);
@@ -120,7 +119,7 @@ public:
     void executeCommand(const char *t_query, paramsBinderFunc paramsBinder) const override
     {
         sqlite3 *db = nullptr;
-        auto openResult = sqlite3_open(m_dbName, &db);
+        auto openResult = sqlite3_open(DB_NAME, &db);
         if (openResult != SQLITE_OK)
         {
             sqlite3_close(db);
@@ -151,7 +150,7 @@ public:
     }
 
 private:
-    const char *m_dbName = "statistics.db";
+    const char *DB_NAME = "statistics.db";
 };
 
 #endif

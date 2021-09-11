@@ -21,8 +21,8 @@ public:
         std::unique_ptr<ICellReader> t_cellReader);
     void playBattle() const;
 
-    void subscribe(std::unique_ptr<IMapStateObserver> t_observer);
-    void unsubscribe(std::unique_ptr<IMapStateObserver> t_observer);
+    void subscribe(std::unique_ptr<IBattleObserver> t_observer);
+    void unsubscribe(std::unique_ptr<IBattleObserver> t_observer);
 
 private:
     std::unique_ptr<IInitialShipArrangement> m_initialShipArrangement;
@@ -30,11 +30,12 @@ private:
     std::unique_ptr<IBattleComunication> m_battleCommunication;
     std::unique_ptr<ICellReader> m_cellReader;
 
-    std::vector<std::unique_ptr<IMapStateObserver>> m_observers = {};
+    std::vector<std::unique_ptr<IBattleObserver>> m_observers = {};
 
-    void notifyShipsInitialized(const Ships &ships) const;
-    void notifyMyMapUpdated(const Cell &cell, const ShootResponse &shootResponse) const;
-    void notifyEnemyMapUpdated(const Cell &cell, const ShootResponse &shootResponse) const;
+    void notifyShipsInitialized(const Ships &t_ships) const;
+    void notifyMyMapUpdated(const Cell &t_cell, const ShootResponse &t_shootResponse) const;
+    void notifyEnemyMapUpdated(const Cell &t_cell, const ShootResponse &t_shootResponse) const;
+    void notifyGameOver(bool t_currenPlayerWon) const;
 };
 
 #endif

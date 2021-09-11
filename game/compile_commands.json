@@ -86,8 +86,8 @@
 },
 {
   "directory": "/home/michael/programming/personal/battleship++/game/src/console-ui",
-  "command": "/usr/bin/c++  -I/home/michael/programming/personal/battleship++/game/src/console-ui -I/home/michael/programming/personal/battleship++/game/src/core/include -I/home/michael/programming/personal/battleship++/game/src/statistics/include -I/home/michael/programming/personal/battleship++/game/libs/sqlite/include -std=c++2a -o CMakeFiles/battleship++.dir/services/console-map-state-observer.cpp.o -c /home/michael/programming/personal/battleship++/game/src/console-ui/services/console-map-state-observer.cpp",
-  "file": "/home/michael/programming/personal/battleship++/game/src/console-ui/services/console-map-state-observer.cpp"
+  "command": "/usr/bin/c++  -I/home/michael/programming/personal/battleship++/game/src/console-ui -I/home/michael/programming/personal/battleship++/game/src/core/include -I/home/michael/programming/personal/battleship++/game/src/statistics/include -I/home/michael/programming/personal/battleship++/game/libs/sqlite/include -std=c++2a -o CMakeFiles/battleship++.dir/services/console-map-observer.cpp.o -c /home/michael/programming/personal/battleship++/game/src/console-ui/services/console-map-observer.cpp",
+  "file": "/home/michael/programming/personal/battleship++/game/src/console-ui/services/console-map-observer.cpp"
 },
 {
   "directory": "/home/michael/programming/personal/battleship++/game/src/console-ui",

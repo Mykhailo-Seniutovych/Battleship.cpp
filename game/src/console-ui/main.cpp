@@ -8,7 +8,8 @@
 #include "database-service.h"
 #include "computer-battle-communication.h"
 #include "services/console-initial-ship-arrangement.h"
-#include "services/console-map-state-observer.h"
+#include "services/console-map-observer.h"
+#include "services/statistics-observer.h"
 #include "services/console-cell-reader.h"
 #include "ui/maps.h"
 #include "database-service.h"
@@ -24,8 +25,15 @@ void playGame()
         make_unique<ComputerBattleCommunication>(make_unique<ShipManager>()),
         make_unique<ConsoleCellReader>());
 
-    auto observer = make_unique<ConsoleMapStateObserver>(make_unique<Maps>());
-    battleManager.subscribe(move(observer));
+    auto mapObserver = make_unique<ConsoleMapObserver>(make_unique<Maps>());
+    battleManager.subscribe(move(mapObserver));
+
+    auto databaseService = make_unique<DatabaseService<Player>>();
+    databaseService.get()->ensureDbCreated();
+    
+    auto statisticsObserver = make_unique<StatisticsObserver>(
+        make_unique<StatisticsService>(move(databaseService)), "Super Bro"); // TODO: read nickname from file
+    battleManager.subscribe(move(statisticsObserver));
 
     battleManager.playBattle();
 }

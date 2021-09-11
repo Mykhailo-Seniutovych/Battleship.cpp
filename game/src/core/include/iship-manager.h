@@ -3,7 +3,7 @@
 
 #include "map-update-data.h"
 #include "shoot-response.h"
-#include "imap-state-observer.h"
+#include "ibattle-observer.h"
 
 class IShipManager
 {

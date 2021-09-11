@@ -16,6 +16,8 @@
 #include "services/console-cell-reader.h"
 #include "ui/maps.h"
 #include "database-service.h"
+#include "exception"
+#include "sql-exception.h"
 
 using namespace std;
 
@@ -35,34 +37,41 @@ void playGame()
 
 void showStatistics()
 {
-    const uint32_t count = 10;
-
-    auto statisticsService = StatisticsService(make_unique<DatabaseService<Player>>());
-    auto players = statisticsService.getTopBestPlayers(count);
-
-    cout << left
-         << setw(20) << "Nickname"
-         << setw(11) << "Games Won"
-         << setw(12) << "Games Lost"
-         << setw(6) << "Score"
-         << endl;
-    for (auto player : players)
+    try
     {
-        cout << left
-             << setw(20) << player.nickname
-             << setw(11) << player.gamesWon
-             << setw(12) << player.gamesLost
-             << setw(6) << player.getScore()
-             << endl;
-    };
-    cout << endl;
+        const uint32_t count = 10;
 
-    //statisticsService.updatePlayerStats("Dawg", false);
+        auto databaseService = make_unique<DatabaseService<Player>>();
+        databaseService.get()->ensureDbCreated();
+        auto statisticsService = StatisticsService(move(databaseService));
+        auto players = statisticsService.getTopBestPlayers(count);
+
+        cout << left
+             << setw(20) << "Nickname"
+             << setw(11) << "Games Won"
+             << setw(12) << "Games Lost"
+             << setw(6) << "Score"
+             << endl;
+        for (auto player : players)
+        {
+            cout << left
+                 << setw(20) << player.nickname
+                 << setw(11) << player.gamesWon
+                 << setw(12) << player.gamesLost
+                 << setw(6) << player.getScore()
+                 << endl;
+        };
+        cout << endl;
+    }
+    catch (const exception &ex)
+    {
+        cout << "Unexpected error happened: " << ex.what() << endl;
+    }
 }
 
 int main()
 {
-    //showStatistics();
-    playGame();
+    showStatistics();
+    //playGame();
     return 0;
 }

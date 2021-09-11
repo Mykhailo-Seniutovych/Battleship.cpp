@@ -1,10 +1,10 @@
 #include "queries.h"
 
 const char *Queries::CREATE_PLAYER_TABLE =
-    "create table if not exists Player (Nickname text primary key, GamesWon int, GamesLost int)";
-const char *Queries::SELECT_PLAYERS = "select nickname, GamesWon, GamesLost from Player";
+    "create table if not exists Player (Nickname text primary key unique, GamesWon int, GamesLost int)";
+const char *Queries::SELECT_PLAYERS = "select Nickname, GamesWon, GamesLost from Player";
 
-const char *Queries::SELECT_PLAYER = "select nickname, GamesWon, GamesLost from Player where Nickname = ?";
+const char *Queries::SELECT_PLAYER = "select Nickname, GamesWon, GamesLost from Player where Nickname = ?";
 Queries::paramsBinderFunc Queries::selectPlayerBinder(const char *nickname)
 {
     return [nickname](sqlite3_stmt *t_statement)

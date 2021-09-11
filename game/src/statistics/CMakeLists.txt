@@ -9,4 +9,9 @@ target_include_directories(statistics
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 )
 
+target_include_directories(statistics 
+    PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}
+)
+
 set_property(TARGET statistics PROPERTY CXX_STANDARD 20)

@@ -3,7 +3,7 @@
 
 #include <unordered_set>
 #include <vector>
-#include <memory>;
+#include <memory>
 #include "ibattle-communication.h"
 #include "ship.h"
 #include "shoot-response.h"

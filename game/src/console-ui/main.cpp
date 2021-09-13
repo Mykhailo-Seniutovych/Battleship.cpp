@@ -1,6 +1,8 @@
 #include <memory>
 #include <cstdint>
 #include <string>
+#include <exception>
+#include <iostream>
 
 #include "ship-manager.h"
 #include "battle-manager.h"
@@ -30,7 +32,7 @@ void playGame()
 
     auto databaseService = make_unique<DatabaseService<Player>>();
     databaseService.get()->ensureDbCreated();
-    
+
     auto statisticsObserver = make_unique<StatisticsObserver>(
         make_unique<StatisticsService>(move(databaseService)), "Super Bro"); // TODO: read nickname from file
     battleManager.subscribe(move(statisticsObserver));
@@ -56,27 +58,34 @@ void showStatistics(bool showBest)
 
 int main(int argc, char *argv[])
 {
-    auto startGame = true;
-    for (uint8_t index = 1; index < argc; index++)
+    try
     {
-        if (string(argv[index]) == "--stats-best")
+        auto startGame = true;
+        for (uint8_t index = 1; index < argc; index++)
         {
-            startGame = false;
-            showStatistics(true);
-            break;
+            if (string(argv[index]) == "--stats-best")
+            {
+                startGame = false;
+                showStatistics(true);
+                break;
+            }
+
+            if (string(argv[index]) == "--stats-worst")
+            {
+                startGame = false;
+                showStatistics(false);
+                break;
+            };
         }
 
-        if (string(argv[index]) == "--stats-worst")
+        if (startGame)
         {
-            startGame = false;
-            showStatistics(false);
-            break;
-        };
+            playGame();
+        }
     }
-
-    if (startGame)
+    catch (const exception &ex)
     {
-        playGame();
+        cout << "Unexpected error happened: " << ex.what() << endl;
     }
 
     return 0;

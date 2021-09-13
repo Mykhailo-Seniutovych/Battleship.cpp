@@ -13,30 +13,15 @@ StatisticsUi::StatisticsUi(unique_ptr<IStatisticsService> t_statisticsService)
 
 void StatisticsUi::showBestPlayers() const
 {
-    try
-    {
-        auto players = m_statisticsService.get()->getTopBestPlayers(PLAYERS_COUNT);
-        displayPlayers(players);
-    }
-    catch (const exception &ex)
-    {
-        cout << "Unexpected error happened when showing statistics: " << ex.what() << endl;
-    }
+    auto players = m_statisticsService.get()->getTopBestPlayers(PLAYERS_COUNT);
+    displayPlayers(players);
 }
 
 void StatisticsUi::showWorstPlayers() const
 {
-    try
-    {
-        auto players = m_statisticsService.get()->getTopWorstPlayers(PLAYERS_COUNT);
-        displayPlayers(players);
-    }
-    catch (const exception &ex)
-    {
-        cout << "Unexpected error happened when showing statistics: " << ex.what() << endl;
-    }
+    auto players = m_statisticsService.get()->getTopWorstPlayers(PLAYERS_COUNT);
+    displayPlayers(players);
 }
-
 
 void StatisticsUi::displayPlayers(const std::vector<Player> &players) const
 {

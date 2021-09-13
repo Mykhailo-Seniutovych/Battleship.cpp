@@ -1,9 +1,10 @@
 #include "ship-manager.h"
-#include <algorithm>
 #include <iostream>
+#include <algorithm>
 
 void ShipManager::initializeShips(const Ships &ships)
 {
+
     m_carrier = ships.carrier;
     m_battleship = ships.battleship;
     m_cruiser = ships.cruiser;

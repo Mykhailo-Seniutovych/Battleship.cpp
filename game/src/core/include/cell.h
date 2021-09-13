@@ -2,6 +2,7 @@
 #define BATTLESHIP_CORE_MODELS_CELL_H
 
 #include <stdint.h>
+#include <cstddef>
 
 struct Cell
 {

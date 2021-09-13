@@ -3,8 +3,10 @@
 #include <vector>
 #include <cstdint>
 #include <unordered_set>
+#include <string>
 #include "console-initial-ship-arrangement.h"
 #include "constants.h"
+#include "validation-exception.h"
 
 using namespace std;
 
@@ -34,15 +36,15 @@ Ships ConsoleInitialShipArrangement::getInitialShipArrangement() const
     return ships;
 };
 
-void ConsoleInitialShipArrangement::skipCommentSection(ifstream &inputFileStream) const
+void ConsoleInitialShipArrangement::skipCommentSection(ifstream &t_inputFileStream) const
 {
-    while (!inputFileStream.eof())
+    while (!t_inputFileStream.eof())
     {
         char currentChar;
-        inputFileStream >> currentChar;
+        t_inputFileStream >> currentChar;
         if (currentChar == '*')
         {
-            inputFileStream >> currentChar;
+            t_inputFileStream >> currentChar;
             if (currentChar == '/')
             {
                 break;
@@ -51,12 +53,12 @@ void ConsoleInitialShipArrangement::skipCommentSection(ifstream &inputFileStream
     }
 }
 
-void ConsoleInitialShipArrangement::skipUntilSecondMapRow(ifstream &inputFileStream) const
+void ConsoleInitialShipArrangement::skipUntilSecondMapRow(ifstream &t_inputFileStream) const
 {
-    while (!inputFileStream.eof())
+    while (!t_inputFileStream.eof())
     {
         string line;
-        getline(inputFileStream, line);
+        getline(t_inputFileStream, line);
         auto isWhitespace = line.find_first_not_of(' ') == line.npos;
         auto isEmpty = line == "";
         if (!isEmpty && !isWhitespace)
@@ -67,60 +69,68 @@ void ConsoleInitialShipArrangement::skipUntilSecondMapRow(ifstream &inputFileStr
 }
 
 void ConsoleInitialShipArrangement::parseLine(
-    ShipCells &shipCells, const std::string &line, uint8_t rowIndex) const
+    ShipCells &t_shipCells, const std::string &t_line, uint8_t t_rowIndex) const
 {
     auto charCountInOneMapRow = Constants::MAP_SIZE * 2 + 2;
     for (uint8_t verIndex = 2; verIndex < charCountInOneMapRow; verIndex += 2)
     {
-        auto symbol = line.substr(verIndex, 2);
+        auto symbol = t_line.substr(verIndex, 2);
         uint8_t colIndex = (verIndex - 2) / 2;
         if (symbol == CARRIER_SYMBOL)
         {
-            shipCells.carrierCells.push_back(Cell(rowIndex, colIndex));
+            t_shipCells.carrierCells.push_back(Cell(t_rowIndex, colIndex));
         }
         if (symbol == BATTLESHIP_SYMBOL)
         {
-            shipCells.battleshipCells.push_back(Cell(rowIndex, colIndex));
+            t_shipCells.battleshipCells.push_back(Cell(t_rowIndex, colIndex));
         }
         if (symbol == CRUISER_SYMBOL)
         {
-            shipCells.cruiserCells.push_back(Cell(rowIndex, colIndex));
+            t_shipCells.cruiserCells.push_back(Cell(t_rowIndex, colIndex));
         }
         if (symbol == SUBMARINE_SYMBOL)
         {
-            shipCells.submarineCells.push_back(Cell(rowIndex, colIndex));
+            t_shipCells.submarineCells.push_back(Cell(t_rowIndex, colIndex));
         }
         if (symbol == DESTROYER_SYMBOL)
         {
-            shipCells.destroyerCells.push_back(Cell(rowIndex, colIndex));
+            t_shipCells.destroyerCells.push_back(Cell(t_rowIndex, colIndex));
         }
     }
 }
 
-Ships ConsoleInitialShipArrangement::createShipsFromCells(const ShipCells &shipCells) const
+Ships ConsoleInitialShipArrangement::createShipsFromCells(const ShipCells &t_shipCells) const
 {
     auto ships = Ships{
-        .carrier = createShipFromCells(shipCells.carrierCells),
-        .battleship = createShipFromCells(shipCells.battleshipCells),
-        .cruiser = createShipFromCells(shipCells.cruiserCells),
-        .submarine = createShipFromCells(shipCells.submarineCells),
-        .destroyer = createShipFromCells(shipCells.destroyerCells)};
+        .carrier = createShipFromCells(t_shipCells.carrierCells),
+        .battleship = createShipFromCells(t_shipCells.battleshipCells),
+        .cruiser = createShipFromCells(t_shipCells.cruiserCells),
+        .submarine = createShipFromCells(t_shipCells.submarineCells),
+        .destroyer = createShipFromCells(t_shipCells.destroyerCells)};
     return ships;
 }
 
-Ship ConsoleInitialShipArrangement::createShipFromCells(const std::vector<Cell> &cells) const
+Ship ConsoleInitialShipArrangement::createShipFromCells(const std::vector<Cell> &t_cells) const
 {
     auto position =
-        cells[0].horCoord == cells[1].horCoord
+        t_cells[0].horCoord == t_cells[1].horCoord
             ? Position::Horizontal
             : Position::Vertical;
 
     auto axisCoord = position == Position::Horizontal
-                         ? cells[0].horCoord
-                         : cells[0].verCoord;
+                         ? t_cells[0].horCoord
+                         : t_cells[0].verCoord;
+
     unordered_set<uint8_t> coordinates = {};
-    for (const auto &cell : cells)
+    for (const auto &cell : t_cells)
     {
+        auto cellAxisCoord = position == Position::Horizontal ? cell.horCoord : cell.verCoord;
+        if (cellAxisCoord != axisCoord)
+        {
+            throw ValidationException(
+                "Ship cells must be in sequential order, "
+                "and ship must be either in horizontal or vertical position, not both.");
+        }
         coordinates.insert(position == Position::Horizontal ? cell.verCoord : cell.horCoord);
     }
     return Ship(position, axisCoord, coordinates);

@@ -31,11 +31,11 @@ private:
     const std::string SUBMARINE_SYMBOL = "3`";
     const std::string DESTROYER_SYMBOL = "2 ";
 
-    void skipCommentSection(std::ifstream &inputFileStream) const;
-    void skipUntilSecondMapRow(std::ifstream &inputFileStream) const;
-    void parseLine(ShipCells &shipCells, const std::string &line, uint8_t rowIndex) const;
-    Ships createShipsFromCells(const ShipCells &shipCells) const;
-    Ship createShipFromCells(const std::vector<Cell> &cells) const;
+    void skipCommentSection(std::ifstream &t_inputFileStream) const;
+    void skipUntilSecondMapRow(std::ifstream &t_inputFileStream) const;
+    void parseLine(ShipCells &t_shipCells, const std::string &t_line, uint8_t t_rowIndex) const;
+    Ships createShipsFromCells(const ShipCells &t_shipCells) const;
+    Ship createShipFromCells(const std::vector<Cell> &t_cells) const;
 };
 
 #endif

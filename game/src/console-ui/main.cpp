@@ -85,6 +85,7 @@ int main(int argc, char *argv[])
     }
     catch (const exception &ex)
     {
+        auto msg = ex.what();
         cout << "Unexpected error happened: " << ex.what() << endl;
     }
 

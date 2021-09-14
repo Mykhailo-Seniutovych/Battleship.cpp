@@ -1,5 +1,5 @@
-#ifndef BATTLESHIP_SRC_CONSOLE_UI_UI_CONSOLE_INITIAL_SHIP_ARRANGEMENT_H
-#define BATTLESHIP_SRC_CONSOLE_UI_UI_CONSOLE_INITIAL_SHIP_ARRANGEMENT_H
+#ifndef BATTLESHIP_SRC_CONSOLE_UI_SERVICES_CONSOLE_SHIP_ARRANGEMENT_H
+#define BATTLESHIP_SRC_CONSOLE_UI_SERVICES_CONSOLE_SHIP_ARRANGEMENT_H
 
 #include <fstream>
 #include <string>
@@ -7,12 +7,12 @@
 #include <vector>
 #include <cstdint>
 #include "cell.h"
-#include "iinitial-ship-arrangement.h"
+#include "iship-arrangement.h"
 
-class ConsoleInitialShipArrangement : public IInitialShipArrangement
+class ConsoleShipArrangement : public IShipArrangement
 {
 public:
-    Ships getInitialShipArrangement() const override;
+    Ships getShipArrangement() const override;
 
 private:
     struct ShipCells

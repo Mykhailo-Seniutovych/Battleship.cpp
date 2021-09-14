@@ -9,7 +9,7 @@
 #include "statistics-service.h"
 #include "database-service.h"
 #include "computer-battle-communication.h"
-#include "services/console-initial-ship-arrangement.h"
+#include "services/console-ship-arrangement.h"
 #include "services/console-map-observer.h"
 #include "services/statistics-observer.h"
 #include "services/console-cell-reader.h"
@@ -22,7 +22,7 @@ using namespace std;
 void playGame()
 {
     auto battleManager = BattleManager(
-        make_unique<ConsoleInitialShipArrangement>(),
+        make_unique<ConsoleShipArrangement>(),
         make_unique<ShipManager>(),
         make_unique<ComputerBattleCommunication>(make_unique<ShipManager>()),
         make_unique<ConsoleCellReader>());

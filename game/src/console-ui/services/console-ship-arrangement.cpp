@@ -4,13 +4,13 @@
 #include <cstdint>
 #include <unordered_set>
 #include <string>
-#include "console-initial-ship-arrangement.h"
+#include "console-ship-arrangement.h"
 #include "constants.h"
 #include "validation-exception.h"
 
 using namespace std;
 
-Ships ConsoleInitialShipArrangement::getInitialShipArrangement() const
+Ships ConsoleShipArrangement::getShipArrangement() const
 {
     ifstream inputFileStream;
     inputFileStream.open(MAP_FILE_NAME);
@@ -36,7 +36,7 @@ Ships ConsoleInitialShipArrangement::getInitialShipArrangement() const
     return ships;
 };
 
-void ConsoleInitialShipArrangement::skipCommentSection(ifstream &t_inputFileStream) const
+void ConsoleShipArrangement::skipCommentSection(ifstream &t_inputFileStream) const
 {
     while (!t_inputFileStream.eof())
     {
@@ -53,7 +53,7 @@ void ConsoleInitialShipArrangement::skipCommentSection(ifstream &t_inputFileStre
     }
 }
 
-void ConsoleInitialShipArrangement::skipUntilSecondMapRow(ifstream &t_inputFileStream) const
+void ConsoleShipArrangement::skipUntilSecondMapRow(ifstream &t_inputFileStream) const
 {
     while (!t_inputFileStream.eof())
     {
@@ -68,7 +68,7 @@ void ConsoleInitialShipArrangement::skipUntilSecondMapRow(ifstream &t_inputFileS
     }
 }
 
-void ConsoleInitialShipArrangement::parseLine(
+void ConsoleShipArrangement::parseLine(
     ShipCells &t_shipCells, const std::string &t_line, uint8_t t_rowIndex) const
 {
     auto charCountInOneMapRow = Constants::MAP_SIZE * 2 + 2;
@@ -99,7 +99,7 @@ void ConsoleInitialShipArrangement::parseLine(
     }
 }
 
-Ships ConsoleInitialShipArrangement::createShipsFromCells(const ShipCells &t_shipCells) const
+Ships ConsoleShipArrangement::createShipsFromCells(const ShipCells &t_shipCells) const
 {
     auto ships = Ships{
         .carrier = createShipFromCells(t_shipCells.carrierCells),
@@ -110,7 +110,7 @@ Ships ConsoleInitialShipArrangement::createShipsFromCells(const ShipCells &t_shi
     return ships;
 }
 
-Ship ConsoleInitialShipArrangement::createShipFromCells(const std::vector<Cell> &t_cells) const
+Ship ConsoleShipArrangement::createShipFromCells(const std::vector<Cell> &t_cells) const
 {
     auto position =
         t_cells[0].horCoord == t_cells[1].horCoord

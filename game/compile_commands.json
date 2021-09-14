@@ -81,8 +81,8 @@
 },
 {
   "directory": "/home/michael/programming/personal/battleship++/game/src/console-ui",
-  "command": "/usr/bin/c++  -I/home/michael/programming/personal/battleship++/game/src/console-ui -I/home/michael/programming/personal/battleship++/game/src/core/include -I/home/michael/programming/personal/battleship++/game/src/statistics/include -I/home/michael/programming/personal/battleship++/game/libs/sqlite/include -std=c++2a -o CMakeFiles/battleship++.dir/services/console-initial-ship-arrangement.cpp.o -c /home/michael/programming/personal/battleship++/game/src/console-ui/services/console-initial-ship-arrangement.cpp",
-  "file": "/home/michael/programming/personal/battleship++/game/src/console-ui/services/console-initial-ship-arrangement.cpp"
+  "command": "/usr/bin/c++  -I/home/michael/programming/personal/battleship++/game/src/console-ui -I/home/michael/programming/personal/battleship++/game/src/core/include -I/home/michael/programming/personal/battleship++/game/src/statistics/include -I/home/michael/programming/personal/battleship++/game/libs/sqlite/include -std=c++2a -o CMakeFiles/battleship++.dir/services/console-ship-arrangement.h.cpp.o -c /home/michael/programming/personal/battleship++/game/src/console-ui/services/console-ship-arrangement.h.cpp",
+  "file": "/home/michael/programming/personal/battleship++/game/src/console-ui/services/console-ship-arrangement.h.cpp"
 },
 {
   "directory": "/home/michael/programming/personal/battleship++/game/src/console-ui",

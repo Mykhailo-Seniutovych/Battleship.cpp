@@ -6,12 +6,12 @@
 using namespace std;
 
 BattleManager::BattleManager(
-    unique_ptr<IInitialShipArrangement> t_initialShipArrangement,
+    unique_ptr<IShipArrangement> t_shipArrangement,
     unique_ptr<IShipManager> t_shipManager,
     unique_ptr<IBattleComunication> t_battleCommunication,
     unique_ptr<ICellReader> t_cellReader)
 
-    : m_initialShipArrangement(move(t_initialShipArrangement)),
+    : m_shipArrangement(move(t_shipArrangement)),
       m_shipManager(move(t_shipManager)),
       m_battleCommunication(move(t_battleCommunication)),
       m_cellReader(move(t_cellReader))
@@ -20,7 +20,7 @@ BattleManager::BattleManager(
 
 void BattleManager::playBattle() const
 {
-    auto shipsOnMap = m_initialShipArrangement.get()->getInitialShipArrangement();
+    auto shipsOnMap = m_shipArrangement.get()->getShipArrangement();
     m_shipManager.get()->initializeShips(shipsOnMap);
     notifyShipsInitialized(shipsOnMap);
 

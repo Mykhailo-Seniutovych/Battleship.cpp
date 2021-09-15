@@ -3,6 +3,7 @@
 #include <string>
 #include "validation-exception.h"
 #include "ship-manager.h"
+#include "constants.h"
 
 using namespace std;
 
@@ -10,11 +11,11 @@ void ShipManager::initializeShips(const Ships &t_ships)
 {
     unordered_set<Cell, Cell::HashFunction> takenCells = {};
 
-    validateShip(t_ships.carrier, takenCells, CARRIER_LENGTH);
-    validateShip(t_ships.battleship, takenCells, BATTLESHIP_LENGTH);
-    validateShip(t_ships.cruiser, takenCells, CRUISER_LENGTH);
-    validateShip(t_ships.submarine, takenCells, SUBMARINE_LENGTH);
-    validateShip(t_ships.destroyer, takenCells, DESTROYER_LENGTH);
+    validateShip(t_ships.carrier, takenCells, Constants::CARRIER_LENGTH);
+    validateShip(t_ships.battleship, takenCells, Constants::BATTLESHIP_LENGTH);
+    validateShip(t_ships.cruiser, takenCells, Constants::CRUISER_LENGTH);
+    validateShip(t_ships.submarine, takenCells, Constants::SUBMARINE_LENGTH);
+    validateShip(t_ships.destroyer, takenCells, Constants::DESTROYER_LENGTH);
 
     m_carrier = t_ships.carrier;
     m_battleship = t_ships.battleship;
@@ -42,7 +43,7 @@ void ShipManager::validateShip(
     auto isPreviousCoordSet = false;
     for (auto coord : coordinates.cellsCoordinates)
     {
-        if (coord > 9)
+        if (coord > Constants::MAP_SIZE - 1)
         {
             throw ValidationException("Ship cell is outside of map boundaries.");
         }
@@ -91,9 +92,6 @@ ShootResponse ShipManager::receiveShot(const Cell &t_cell)
     {
         response = getSuccessfulShotResponse(m_destroyer);
     }
-
-    auto updateData =
-        MapUpdateData(t_cell, response.cellState, response.sunkShipCoordinates);
 
     return response;
 }

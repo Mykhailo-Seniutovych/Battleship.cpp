@@ -8,11 +8,14 @@
 #include "ship.h"
 #include "shoot-response.h"
 #include "iship-manager.h"
+#include "iship-arrangement.h"
 
 class ComputerBattleCommunication : public IBattleComunication
 {
 public:
-    ComputerBattleCommunication(std::unique_ptr<IShipManager> t_computerShipManager);
+    ComputerBattleCommunication(
+        std::unique_ptr<IShipManager> t_computerShipManager,
+        std::unique_ptr<IShipArrangement> t_computerShipArrangement);
     
     Cell getNextShotTarget() const override;
     ShootResponse sendShotTo(const Cell &cell) override;
@@ -20,6 +23,8 @@ public:
 
 private:
     std::unique_ptr<IShipManager> m_computerShipManager;
+    std::unique_ptr<IShipArrangement> m_computerShipArrangement;
+
     mutable std::unordered_set<Cell, Cell::HashFunction> m_shotCells = {};
     mutable std::vector<Cell> m_cellsToShoot;
 

@@ -1,5 +1,5 @@
-#ifndef BATTLESHIP_CORE_MODELS_SHIP_H
-#define BATTLESHIP_CORE_MODELS_SHIP_H
+#ifndef BATTLESHIP_SRC_CORE_INCLUDE_SHIP_H
+#define BATTLESHIP_SRC_CORE_INCLUDE_SHIP_H
 
 #include <unordered_set>
 #include "position.h"
@@ -15,6 +15,7 @@ public:
     bool tryReceiveShot(const Cell &cell);
     bool isShipSunk() const;
     ShipCoordinates getCoordinates() const;
+    std::unordered_set<Cell, Cell::HashFunction> getShipCells() const;
 
 private:
     Position m_position;

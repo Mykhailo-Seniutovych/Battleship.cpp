@@ -1,11 +1,13 @@
+#include <vector>
 #include "ship.h"
 #include "position.h"
 #include "cell.h"
+using namespace std;
 
 Ship::Ship() = default;
 
 Ship::Ship(
-    const Position &t_position, uint8_t t_axisCoordinate,const std::unordered_set<uint8_t> &t_cellsCoordinates)
+    const Position &t_position, uint8_t t_axisCoordinate, const unordered_set<uint8_t> &t_cellsCoordinates)
     : m_position(t_position),
       m_axisCoordinate(t_axisCoordinate),
       m_intactCellsCoordinates(t_cellsCoordinates) {}
@@ -27,7 +29,7 @@ bool Ship::tryReceiveShot(const Cell &cell)
 
 ShipCoordinates Ship::getCoordinates() const
 {
-    std::unordered_set<uint8_t> cellsCoordinates = {};
+    unordered_set<uint8_t> cellsCoordinates = {};
     cellsCoordinates.insert(m_intactCellsCoordinates.begin(), m_intactCellsCoordinates.end());
     cellsCoordinates.insert(m_damagedCellsCoordinates.begin(), m_damagedCellsCoordinates.end());
 
@@ -35,9 +37,37 @@ ShipCoordinates Ship::getCoordinates() const
     return result;
 }
 
+unordered_set<Cell, Cell::HashFunction> Ship::getShipCells() const
+{
+    auto cells = unordered_set<Cell, Cell::HashFunction>();
+    if (m_position == Position::Horizontal)
+    {
+        for (auto coord : m_intactCellsCoordinates)
+        {
+            cells.insert(Cell(m_axisCoordinate, coord));
+        }
+        for (auto coord : m_damagedCellsCoordinates)
+        {
+            cells.insert(Cell(m_axisCoordinate, coord));
+        }
+    }
+    else
+    {
+        for (auto coord : m_intactCellsCoordinates)
+        {
+            cells.insert(Cell(coord, m_axisCoordinate));
+        }
+        for (auto coord : m_damagedCellsCoordinates)
+        {
+            cells.insert(Cell(coord, m_axisCoordinate));
+        }
+    }
+    return cells;
+}
+
 bool Ship::tryMoveToDamagedCells(uint8_t t_cellCoordinate)
 {
-    if(m_damagedCellsCoordinates.count(t_cellCoordinate))
+    if (m_damagedCellsCoordinates.count(t_cellCoordinate))
     {
         return true;
     }

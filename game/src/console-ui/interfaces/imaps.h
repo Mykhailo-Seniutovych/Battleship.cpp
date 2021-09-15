@@ -2,6 +2,7 @@
 #define BATTLESHIP_SRC_CONSOLE_UI_INTERFACES_IMAPS_H
 
 #include "ship-coordinates.h"
+#include "map-update-data.h"
 
 class IMaps
 {

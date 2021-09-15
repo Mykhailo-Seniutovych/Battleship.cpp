@@ -10,7 +10,7 @@
 
 using namespace std;
 
-Ships ConsoleShipArrangement::getShipArrangement() const
+Ships ConsoleShipArrangement::getShipsArrangement() const
 {
     ifstream inputFileStream;
     inputFileStream.open(MAP_FILE_NAME);

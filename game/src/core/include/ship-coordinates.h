@@ -2,6 +2,7 @@
 #define BATTLESHIP_SRC_CORE_INCLUDE_SHIP_COORDINATES_H
 
 #include <unordered_set>
+#include <vector>
 #include "position.h"
 #include "cell.h"
 

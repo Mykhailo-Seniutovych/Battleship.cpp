@@ -5,8 +5,8 @@
 
 namespace map_utils
 {
-    char convertRowNumberToRowLetter(uint8_t rowNum);
-    uint8_t convertRowLetterToRowNumber(char rowLetter);
+    char convertRowNumberToRowLetter(uint8_t t_rowNum);
+    uint8_t convertRowLetterToRowNumber(char t_rowLetter);
 }
 
 #endif

@@ -10,6 +10,7 @@
 #include "database-service.h"
 #include "computer-battle-communication.h"
 #include "services/console-ship-arrangement.h"
+#include "computer-ship-arrangement.h"
 #include "services/console-map-observer.h"
 #include "services/statistics-observer.h"
 #include "services/console-cell-reader.h"
@@ -24,7 +25,9 @@ void playGame()
     auto battleManager = BattleManager(
         make_unique<ConsoleShipArrangement>(),
         make_unique<ShipManager>(),
-        make_unique<ComputerBattleCommunication>(make_unique<ShipManager>()),
+        make_unique<ComputerBattleCommunication>(
+            make_unique<ShipManager>(), 
+            make_unique<ComputerShipArrangement>()),
         make_unique<ConsoleCellReader>());
 
     auto mapObserver = make_unique<ConsoleMapObserver>(make_unique<Maps>());

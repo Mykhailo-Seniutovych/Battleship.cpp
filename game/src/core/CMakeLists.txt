@@ -8,4 +8,10 @@ target_include_directories(core
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 )
 
+target_include_directories(core
+    PRIVATE 
+    $<INSTALL_INTERFACE:include>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+)
+
 set_property(TARGET core PROPERTY CXX_STANDARD 20)

@@ -19,12 +19,6 @@ public:
     void initializeShips(const Ships &t_ships) override;
 
 private:
-    const uint8_t CARRIER_LENGTH = 5;
-    const uint8_t BATTLESHIP_LENGTH = 4;
-    const uint8_t CRUISER_LENGTH = 3;
-    const uint8_t SUBMARINE_LENGTH = 3;
-    const uint8_t DESTROYER_LENGTH = 2;
-
     Ship m_carrier;
     Ship m_battleship;
     Ship m_cruiser;

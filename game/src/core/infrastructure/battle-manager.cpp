@@ -20,7 +20,7 @@ BattleManager::BattleManager(
 
 void BattleManager::playBattle() const
 {
-    auto shipsOnMap = m_shipArrangement.get()->getShipArrangement();
+    auto shipsOnMap = m_shipArrangement.get()->getShipsArrangement();
     m_shipManager.get()->initializeShips(shipsOnMap);
     notifyShipsInitialized(shipsOnMap);
 

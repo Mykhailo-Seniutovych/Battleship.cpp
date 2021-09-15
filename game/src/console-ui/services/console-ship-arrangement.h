@@ -12,7 +12,7 @@
 class ConsoleShipArrangement : public IShipArrangement
 {
 public:
-    Ships getShipArrangement() const override;
+    Ships getShipsArrangement() const override;
 
 private:
     struct ShipCells

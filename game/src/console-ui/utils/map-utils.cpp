@@ -1,10 +1,11 @@
 #include "map-utils.h"
 #include "cstdint"
+#include "exceptions/invalid-input-exception.h"
 
-char map_utils::convertRowNumberToRowLetter(uint8_t rowNum)
+char map_utils::convertRowNumberToRowLetter(uint8_t t_rowNum)
 {
     char rowLetter;
-    switch (rowNum)
+    switch (t_rowNum)
     {
     case 1:
         rowLetter = 'A';
@@ -37,50 +38,59 @@ char map_utils::convertRowNumberToRowLetter(uint8_t rowNum)
         rowLetter = 'J';
         break;
     default:
-        break;
+        throw new InvalidInputException("row number is invalid");
     };
 
     return rowLetter;
 };
 
-uint8_t map_utils::convertRowLetterToRowNumber(char rowLetter)
+uint8_t map_utils::convertRowLetterToRowNumber(char t_rowLetter)
 {
     char rowNum;
-    switch (rowLetter)
+    if (t_rowLetter == 'A' || t_rowLetter == 'a')
     {
-    case 'A':
         rowNum = 1;
-        break;
-    case 'B':
+    }
+    else if (t_rowLetter == 'B' || t_rowLetter == 'b')
+    {
         rowNum = 2;
-        break;
-    case 'C':
+    }
+    else if (t_rowLetter == 'C' || t_rowLetter == 'c')
+    {
         rowNum = 3;
-        break;
-    case 'D':
+    }
+    else if (t_rowLetter == 'D' || t_rowLetter == 'd')
+    {
         rowNum = 4;
-        break;
-    case 'E':
+    }
+    else if (t_rowLetter == 'E' || t_rowLetter == 'e')
+    {
         rowNum = 5;
-        break;
-    case 'F':
+    }
+    else if (t_rowLetter == 'F' || t_rowLetter == 'f')
+    {
         rowNum = 6;
-        break;
-    case 'G':
+    }
+    else if (t_rowLetter == 'G' || t_rowLetter == 'G')
+    {
         rowNum = 7;
-        break;
-    case 'H':
+    }
+    else if (t_rowLetter == 'H' || t_rowLetter == 'h')
+    {
         rowNum = 8;
-        break;
-    case 'I':
+    }
+    else if (t_rowLetter == 'I' || t_rowLetter == 'i')
+    {
         rowNum = 9;
-        break;
-    case 'J':
+    }
+    else if (t_rowLetter == 'J' || t_rowLetter == 'j')
+    {
         rowNum = 10;
-        break;
-    default:
-        break;
-    };
+    }
+    else
+    {
+        throw InvalidInputException("row letter is invalid");
+    }
 
     return rowNum;
 };

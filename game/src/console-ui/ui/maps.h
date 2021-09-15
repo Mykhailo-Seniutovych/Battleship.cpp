@@ -41,7 +41,7 @@ private:
     const std::string SHIP_DAMAGED = "X ";
     const std::string SHIP_SUNK_CELL = "X*";
     const std::string MAPS_SEPARATOR = "  |  ";
-#else 
+#else
     const std::string INVISIBLE_CELL = "- ";
     const std::string MISSED_SHOT_CELL = "* ";
     const std::string MY_SHIP_CELL = "\U0001F229";
@@ -54,8 +54,11 @@ private:
     MapCellState m_enemyMap[Constants::MAP_SIZE][Constants::MAP_SIZE];
 
     void updateMap(
-        MapCellState (&t_map)[Constants::MAP_SIZE][Constants::MAP_SIZE], 
+        MapCellState (&t_map)[Constants::MAP_SIZE][Constants::MAP_SIZE],
         const MapUpdateData &t_updateData);
+    void addSunkShip(
+        MapCellState (&t_map)[Constants::MAP_SIZE][Constants::MAP_SIZE],
+        const ShipCoordinates &t_sunkShipCoord);
     MapCellState convertToMapState(CellState cellState) const;
     void initShipOnMyMap(const ShipCoordinates &ship);
     void printMapsSeparator() const;
@@ -63,6 +66,5 @@ private:
     void printRowNumber(uint8_t rowNum) const;
     void printCell(const MapCellState &cellState) const;
 };
-
 
 #endif

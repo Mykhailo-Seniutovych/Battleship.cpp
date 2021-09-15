@@ -1,111 +1,131 @@
 [
 {
-  "directory": "/home/michael/programming/personal/battleship++/game/src/core",
-  "command": "/usr/bin/c++  -I/home/michael/programming/personal/battleship++/game/src/core/include -std=c++2a -o CMakeFiles/core.dir/infrastructure/battle-manager.cpp.o -c /home/michael/programming/personal/battleship++/game/src/core/infrastructure/battle-manager.cpp",
+  "directory": "/home/michael/programming/personal/battleship++/game/build/src/core",
+  "command": "/usr/bin/c++  -I/home/michael/programming/personal/battleship++/game/src/core/include -I/home/michael/programming/personal/battleship++/game/src/core -std=c++2a -o CMakeFiles/core.dir/exceptions/validation-exception.cpp.o -c /home/michael/programming/personal/battleship++/game/src/core/exceptions/validation-exception.cpp",
+  "file": "/home/michael/programming/personal/battleship++/game/src/core/exceptions/validation-exception.cpp"
+},
+{
+  "directory": "/home/michael/programming/personal/battleship++/game/build/src/core",
+  "command": "/usr/bin/c++  -I/home/michael/programming/personal/battleship++/game/src/core/include -I/home/michael/programming/personal/battleship++/game/src/core -std=c++2a -o CMakeFiles/core.dir/infrastructure/battle-manager.cpp.o -c /home/michael/programming/personal/battleship++/game/src/core/infrastructure/battle-manager.cpp",
   "file": "/home/michael/programming/personal/battleship++/game/src/core/infrastructure/battle-manager.cpp"
 },
 {
-  "directory": "/home/michael/programming/personal/battleship++/game/src/core",
-  "command": "/usr/bin/c++  -I/home/michael/programming/personal/battleship++/game/src/core/include -std=c++2a -o CMakeFiles/core.dir/infrastructure/ship-manager.cpp.o -c /home/michael/programming/personal/battleship++/game/src/core/infrastructure/ship-manager.cpp",
+  "directory": "/home/michael/programming/personal/battleship++/game/build/src/core",
+  "command": "/usr/bin/c++  -I/home/michael/programming/personal/battleship++/game/src/core/include -I/home/michael/programming/personal/battleship++/game/src/core -std=c++2a -o CMakeFiles/core.dir/infrastructure/ship-manager.cpp.o -c /home/michael/programming/personal/battleship++/game/src/core/infrastructure/ship-manager.cpp",
   "file": "/home/michael/programming/personal/battleship++/game/src/core/infrastructure/ship-manager.cpp"
 },
 {
-  "directory": "/home/michael/programming/personal/battleship++/game/src/core",
-  "command": "/usr/bin/c++  -I/home/michael/programming/personal/battleship++/game/src/core/include -std=c++2a -o CMakeFiles/core.dir/models/cell.cpp.o -c /home/michael/programming/personal/battleship++/game/src/core/models/cell.cpp",
+  "directory": "/home/michael/programming/personal/battleship++/game/build/src/core",
+  "command": "/usr/bin/c++  -I/home/michael/programming/personal/battleship++/game/src/core/include -I/home/michael/programming/personal/battleship++/game/src/core -std=c++2a -o CMakeFiles/core.dir/models/cell.cpp.o -c /home/michael/programming/personal/battleship++/game/src/core/models/cell.cpp",
   "file": "/home/michael/programming/personal/battleship++/game/src/core/models/cell.cpp"
 },
 {
-  "directory": "/home/michael/programming/personal/battleship++/game/src/core",
-  "command": "/usr/bin/c++  -I/home/michael/programming/personal/battleship++/game/src/core/include -std=c++2a -o CMakeFiles/core.dir/models/map-update-data.cpp.o -c /home/michael/programming/personal/battleship++/game/src/core/models/map-update-data.cpp",
+  "directory": "/home/michael/programming/personal/battleship++/game/build/src/core",
+  "command": "/usr/bin/c++  -I/home/michael/programming/personal/battleship++/game/src/core/include -I/home/michael/programming/personal/battleship++/game/src/core -std=c++2a -o CMakeFiles/core.dir/models/map-update-data.cpp.o -c /home/michael/programming/personal/battleship++/game/src/core/models/map-update-data.cpp",
   "file": "/home/michael/programming/personal/battleship++/game/src/core/models/map-update-data.cpp"
 },
 {
-  "directory": "/home/michael/programming/personal/battleship++/game/src/core",
-  "command": "/usr/bin/c++  -I/home/michael/programming/personal/battleship++/game/src/core/include -std=c++2a -o CMakeFiles/core.dir/models/ship-coordinates.cpp.o -c /home/michael/programming/personal/battleship++/game/src/core/models/ship-coordinates.cpp",
+  "directory": "/home/michael/programming/personal/battleship++/game/build/src/core",
+  "command": "/usr/bin/c++  -I/home/michael/programming/personal/battleship++/game/src/core/include -I/home/michael/programming/personal/battleship++/game/src/core -std=c++2a -o CMakeFiles/core.dir/models/ship-coordinates.cpp.o -c /home/michael/programming/personal/battleship++/game/src/core/models/ship-coordinates.cpp",
   "file": "/home/michael/programming/personal/battleship++/game/src/core/models/ship-coordinates.cpp"
 },
 {
-  "directory": "/home/michael/programming/personal/battleship++/game/src/core",
-  "command": "/usr/bin/c++  -I/home/michael/programming/personal/battleship++/game/src/core/include -std=c++2a -o CMakeFiles/core.dir/models/ship.cpp.o -c /home/michael/programming/personal/battleship++/game/src/core/models/ship.cpp",
+  "directory": "/home/michael/programming/personal/battleship++/game/build/src/core",
+  "command": "/usr/bin/c++  -I/home/michael/programming/personal/battleship++/game/src/core/include -I/home/michael/programming/personal/battleship++/game/src/core -std=c++2a -o CMakeFiles/core.dir/models/ship.cpp.o -c /home/michael/programming/personal/battleship++/game/src/core/models/ship.cpp",
   "file": "/home/michael/programming/personal/battleship++/game/src/core/models/ship.cpp"
 },
 {
-  "directory": "/home/michael/programming/personal/battleship++/game/src/core",
-  "command": "/usr/bin/c++  -I/home/michael/programming/personal/battleship++/game/src/core/include -std=c++2a -o CMakeFiles/core.dir/models/shoot-response.cpp.o -c /home/michael/programming/personal/battleship++/game/src/core/models/shoot-response.cpp",
+  "directory": "/home/michael/programming/personal/battleship++/game/build/src/core",
+  "command": "/usr/bin/c++  -I/home/michael/programming/personal/battleship++/game/src/core/include -I/home/michael/programming/personal/battleship++/game/src/core -std=c++2a -o CMakeFiles/core.dir/models/shoot-response.cpp.o -c /home/michael/programming/personal/battleship++/game/src/core/models/shoot-response.cpp",
   "file": "/home/michael/programming/personal/battleship++/game/src/core/models/shoot-response.cpp"
 },
 {
-  "directory": "/home/michael/programming/personal/battleship++/game/src/core",
-  "command": "/usr/bin/c++  -I/home/michael/programming/personal/battleship++/game/src/core/include -std=c++2a -o CMakeFiles/core.dir/services/computer-battle-communication.cpp.o -c /home/michael/programming/personal/battleship++/game/src/core/services/computer-battle-communication.cpp",
+  "directory": "/home/michael/programming/personal/battleship++/game/build/src/core",
+  "command": "/usr/bin/c++  -I/home/michael/programming/personal/battleship++/game/src/core/include -I/home/michael/programming/personal/battleship++/game/src/core -std=c++2a -o CMakeFiles/core.dir/services/computer-battle-communication.cpp.o -c /home/michael/programming/personal/battleship++/game/src/core/services/computer-battle-communication.cpp",
   "file": "/home/michael/programming/personal/battleship++/game/src/core/services/computer-battle-communication.cpp"
 },
 {
-  "directory": "/home/michael/programming/personal/battleship++/game/src/core",
-  "command": "/usr/bin/c++  -I/home/michael/programming/personal/battleship++/game/src/core/include -std=c++2a -o CMakeFiles/core.dir/services/network-battle-communication.cpp.o -c /home/michael/programming/personal/battleship++/game/src/core/services/network-battle-communication.cpp",
+  "directory": "/home/michael/programming/personal/battleship++/game/build/src/core",
+  "command": "/usr/bin/c++  -I/home/michael/programming/personal/battleship++/game/src/core/include -I/home/michael/programming/personal/battleship++/game/src/core -std=c++2a -o CMakeFiles/core.dir/services/computer-ship-arrangement.cpp.o -c /home/michael/programming/personal/battleship++/game/src/core/services/computer-ship-arrangement.cpp",
+  "file": "/home/michael/programming/personal/battleship++/game/src/core/services/computer-ship-arrangement.cpp"
+},
+{
+  "directory": "/home/michael/programming/personal/battleship++/game/build/src/core",
+  "command": "/usr/bin/c++  -I/home/michael/programming/personal/battleship++/game/src/core/include -I/home/michael/programming/personal/battleship++/game/src/core -std=c++2a -o CMakeFiles/core.dir/services/network-battle-communication.cpp.o -c /home/michael/programming/personal/battleship++/game/src/core/services/network-battle-communication.cpp",
   "file": "/home/michael/programming/personal/battleship++/game/src/core/services/network-battle-communication.cpp"
 },
 {
-  "directory": "/home/michael/programming/personal/battleship++/game/src/statistics",
+  "directory": "/home/michael/programming/personal/battleship++/game/build/src/core",
+  "command": "/usr/bin/c++  -I/home/michael/programming/personal/battleship++/game/src/core/include -I/home/michael/programming/personal/battleship++/game/src/core -std=c++2a -o CMakeFiles/core.dir/utils/bool-random-generator.cpp.o -c /home/michael/programming/personal/battleship++/game/src/core/utils/bool-random-generator.cpp",
+  "file": "/home/michael/programming/personal/battleship++/game/src/core/utils/bool-random-generator.cpp"
+},
+{
+  "directory": "/home/michael/programming/personal/battleship++/game/build/src/statistics",
   "command": "/usr/bin/c++  -I/home/michael/programming/personal/battleship++/game/src/statistics/include -I/home/michael/programming/personal/battleship++/game/src/statistics -I/home/michael/programming/personal/battleship++/game/libs/sqlite/include -std=c++2a -o CMakeFiles/statistics.dir/exceptions/sql-exception.cpp.o -c /home/michael/programming/personal/battleship++/game/src/statistics/exceptions/sql-exception.cpp",
   "file": "/home/michael/programming/personal/battleship++/game/src/statistics/exceptions/sql-exception.cpp"
 },
 {
-  "directory": "/home/michael/programming/personal/battleship++/game/src/statistics",
+  "directory": "/home/michael/programming/personal/battleship++/game/build/src/statistics",
   "command": "/usr/bin/c++  -I/home/michael/programming/personal/battleship++/game/src/statistics/include -I/home/michael/programming/personal/battleship++/game/src/statistics -I/home/michael/programming/personal/battleship++/game/libs/sqlite/include -std=c++2a -o CMakeFiles/statistics.dir/models/player.cpp.o -c /home/michael/programming/personal/battleship++/game/src/statistics/models/player.cpp",
   "file": "/home/michael/programming/personal/battleship++/game/src/statistics/models/player.cpp"
 },
 {
-  "directory": "/home/michael/programming/personal/battleship++/game/src/statistics",
+  "directory": "/home/michael/programming/personal/battleship++/game/build/src/statistics",
   "command": "/usr/bin/c++  -I/home/michael/programming/personal/battleship++/game/src/statistics/include -I/home/michael/programming/personal/battleship++/game/src/statistics -I/home/michael/programming/personal/battleship++/game/libs/sqlite/include -std=c++2a -o CMakeFiles/statistics.dir/services/statistics-service.cpp.o -c /home/michael/programming/personal/battleship++/game/src/statistics/services/statistics-service.cpp",
   "file": "/home/michael/programming/personal/battleship++/game/src/statistics/services/statistics-service.cpp"
 },
 {
-  "directory": "/home/michael/programming/personal/battleship++/game/src/statistics",
+  "directory": "/home/michael/programming/personal/battleship++/game/build/src/statistics",
   "command": "/usr/bin/c++  -I/home/michael/programming/personal/battleship++/game/src/statistics/include -I/home/michael/programming/personal/battleship++/game/src/statistics -I/home/michael/programming/personal/battleship++/game/libs/sqlite/include -std=c++2a -o CMakeFiles/statistics.dir/utils/queries.cpp.o -c /home/michael/programming/personal/battleship++/game/src/statistics/utils/queries.cpp",
   "file": "/home/michael/programming/personal/battleship++/game/src/statistics/utils/queries.cpp"
 },
 {
-  "directory": "/home/michael/programming/personal/battleship++/game/src/statistics",
+  "directory": "/home/michael/programming/personal/battleship++/game/build/src/statistics",
   "command": "/usr/bin/c++  -I/home/michael/programming/personal/battleship++/game/src/statistics/include -I/home/michael/programming/personal/battleship++/game/src/statistics -I/home/michael/programming/personal/battleship++/game/libs/sqlite/include -std=c++2a -o CMakeFiles/statistics.dir/utils/record-readers.cpp.o -c /home/michael/programming/personal/battleship++/game/src/statistics/utils/record-readers.cpp",
   "file": "/home/michael/programming/personal/battleship++/game/src/statistics/utils/record-readers.cpp"
 },
 {
-  "directory": "/home/michael/programming/personal/battleship++/game/src/console-ui",
+  "directory": "/home/michael/programming/personal/battleship++/game/build/src/console-ui",
   "command": "/usr/bin/c++  -I/home/michael/programming/personal/battleship++/game/src/console-ui -I/home/michael/programming/personal/battleship++/game/src/core/include -I/home/michael/programming/personal/battleship++/game/src/statistics/include -I/home/michael/programming/personal/battleship++/game/libs/sqlite/include -std=c++2a -o CMakeFiles/battleship++.dir/main.cpp.o -c /home/michael/programming/personal/battleship++/game/src/console-ui/main.cpp",
   "file": "/home/michael/programming/personal/battleship++/game/src/console-ui/main.cpp"
 },
 {
-  "directory": "/home/michael/programming/personal/battleship++/game/src/console-ui",
+  "directory": "/home/michael/programming/personal/battleship++/game/build/src/console-ui",
   "command": "/usr/bin/c++  -I/home/michael/programming/personal/battleship++/game/src/console-ui -I/home/michael/programming/personal/battleship++/game/src/core/include -I/home/michael/programming/personal/battleship++/game/src/statistics/include -I/home/michael/programming/personal/battleship++/game/libs/sqlite/include -std=c++2a -o CMakeFiles/battleship++.dir/services/console-cell-reader.cpp.o -c /home/michael/programming/personal/battleship++/game/src/console-ui/services/console-cell-reader.cpp",
   "file": "/home/michael/programming/personal/battleship++/game/src/console-ui/services/console-cell-reader.cpp"
 },
 {
-  "directory": "/home/michael/programming/personal/battleship++/game/src/console-ui",
-  "command": "/usr/bin/c++  -I/home/michael/programming/personal/battleship++/game/src/console-ui -I/home/michael/programming/personal/battleship++/game/src/core/include -I/home/michael/programming/personal/battleship++/game/src/statistics/include -I/home/michael/programming/personal/battleship++/game/libs/sqlite/include -std=c++2a -o CMakeFiles/battleship++.dir/services/console-ship-arrangement.h.cpp.o -c /home/michael/programming/personal/battleship++/game/src/console-ui/services/console-ship-arrangement.h.cpp",
-  "file": "/home/michael/programming/personal/battleship++/game/src/console-ui/services/console-ship-arrangement.h.cpp"
-},
-{
-  "directory": "/home/michael/programming/personal/battleship++/game/src/console-ui",
+  "directory": "/home/michael/programming/personal/battleship++/game/build/src/console-ui",
   "command": "/usr/bin/c++  -I/home/michael/programming/personal/battleship++/game/src/console-ui -I/home/michael/programming/personal/battleship++/game/src/core/include -I/home/michael/programming/personal/battleship++/game/src/statistics/include -I/home/michael/programming/personal/battleship++/game/libs/sqlite/include -std=c++2a -o CMakeFiles/battleship++.dir/services/console-map-observer.cpp.o -c /home/michael/programming/personal/battleship++/game/src/console-ui/services/console-map-observer.cpp",
   "file": "/home/michael/programming/personal/battleship++/game/src/console-ui/services/console-map-observer.cpp"
 },
 {
-  "directory": "/home/michael/programming/personal/battleship++/game/src/console-ui",
+  "directory": "/home/michael/programming/personal/battleship++/game/build/src/console-ui",
+  "command": "/usr/bin/c++  -I/home/michael/programming/personal/battleship++/game/src/console-ui -I/home/michael/programming/personal/battleship++/game/src/core/include -I/home/michael/programming/personal/battleship++/game/src/statistics/include -I/home/michael/programming/personal/battleship++/game/libs/sqlite/include -std=c++2a -o CMakeFiles/battleship++.dir/services/console-ship-arrangement.cpp.o -c /home/michael/programming/personal/battleship++/game/src/console-ui/services/console-ship-arrangement.cpp",
+  "file": "/home/michael/programming/personal/battleship++/game/src/console-ui/services/console-ship-arrangement.cpp"
+},
+{
+  "directory": "/home/michael/programming/personal/battleship++/game/build/src/console-ui",
+  "command": "/usr/bin/c++  -I/home/michael/programming/personal/battleship++/game/src/console-ui -I/home/michael/programming/personal/battleship++/game/src/core/include -I/home/michael/programming/personal/battleship++/game/src/statistics/include -I/home/michael/programming/personal/battleship++/game/libs/sqlite/include -std=c++2a -o CMakeFiles/battleship++.dir/services/statistics-observer.cpp.o -c /home/michael/programming/personal/battleship++/game/src/console-ui/services/statistics-observer.cpp",
+  "file": "/home/michael/programming/personal/battleship++/game/src/console-ui/services/statistics-observer.cpp"
+},
+{
+  "directory": "/home/michael/programming/personal/battleship++/game/build/src/console-ui",
   "command": "/usr/bin/c++  -I/home/michael/programming/personal/battleship++/game/src/console-ui -I/home/michael/programming/personal/battleship++/game/src/core/include -I/home/michael/programming/personal/battleship++/game/src/statistics/include -I/home/michael/programming/personal/battleship++/game/libs/sqlite/include -std=c++2a -o CMakeFiles/battleship++.dir/ui/maps.cpp.o -c /home/michael/programming/personal/battleship++/game/src/console-ui/ui/maps.cpp",
   "file": "/home/michael/programming/personal/battleship++/game/src/console-ui/ui/maps.cpp"
 },
 {
-  "directory": "/home/michael/programming/personal/battleship++/game/src/console-ui",
+  "directory": "/home/michael/programming/personal/battleship++/game/build/src/console-ui",
   "command": "/usr/bin/c++  -I/home/michael/programming/personal/battleship++/game/src/console-ui -I/home/michael/programming/personal/battleship++/game/src/core/include -I/home/michael/programming/personal/battleship++/game/src/statistics/include -I/home/michael/programming/personal/battleship++/game/libs/sqlite/include -std=c++2a -o CMakeFiles/battleship++.dir/ui/statistics-ui.cpp.o -c /home/michael/programming/personal/battleship++/game/src/console-ui/ui/statistics-ui.cpp",
   "file": "/home/michael/programming/personal/battleship++/game/src/console-ui/ui/statistics-ui.cpp"
 },
 {
-  "directory": "/home/michael/programming/personal/battleship++/game/src/console-ui",
+  "directory": "/home/michael/programming/personal/battleship++/game/build/src/console-ui",
   "command": "/usr/bin/c++  -I/home/michael/programming/personal/battleship++/game/src/console-ui -I/home/michael/programming/personal/battleship++/game/src/core/include -I/home/michael/programming/personal/battleship++/game/src/statistics/include -I/home/michael/programming/personal/battleship++/game/libs/sqlite/include -std=c++2a -o CMakeFiles/battleship++.dir/utils/map-utils.cpp.o -c /home/michael/programming/personal/battleship++/game/src/console-ui/utils/map-utils.cpp",
   "file": "/home/michael/programming/personal/battleship++/game/src/console-ui/utils/map-utils.cpp"
 },
 {
-  "directory": "/home/michael/programming/personal/battleship++/game/libs/sqlite",
+  "directory": "/home/michael/programming/personal/battleship++/game/build/libs/sqlite",
   "command": "/usr/bin/cc -DSQLITE_ENABLE_FTS4 -DSQLITE_ENABLE_FTS5 -DSQLITE_ENABLE_JSON1 -DSQLITE_ENABLE_RBU -DSQLITE_ENABLE_RTREE -DSQLITE_ENABLE_STAT4 -DSQLITE_THREADSAFE=0 -I/home/michael/programming/personal/battleship++/game/src -I/home/michael/programming/personal/battleship++/game/libs/sqlite/include  -o CMakeFiles/sqlite3.dir/src/sqlite3.c.o -c /home/michael/programming/personal/battleship++/game/libs/sqlite/src/sqlite3.c",
   "file": "/home/michael/programming/personal/battleship++/game/libs/sqlite/src/sqlite3.c"
 }

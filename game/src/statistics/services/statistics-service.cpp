@@ -2,7 +2,6 @@
 #include <algorithm>
 #include <filesystem>
 
-// TODO: fix relative paths
 #include "queries.h"
 #include "utils/record-readers.h"
 

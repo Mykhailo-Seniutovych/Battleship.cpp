@@ -16,8 +16,10 @@ using namespace std::chrono_literals;
 using std::chrono::system_clock;
 
 ComputerBattleCommunication::ComputerBattleCommunication(
-    unique_ptr<IShipManager> t_computerShipManager)
-    : m_computerShipManager(move(t_computerShipManager))
+    unique_ptr<IShipManager> t_computerShipManager,
+    unique_ptr<IShipArrangement> t_computerShipArrangement)
+    : m_computerShipManager(move(t_computerShipManager)),
+      m_computerShipArrangement(move(t_computerShipArrangement))
 {
     initShips();
     initShootTargets();
@@ -25,14 +27,7 @@ ComputerBattleCommunication::ComputerBattleCommunication(
 
 void ComputerBattleCommunication::initShips()
 {
-    // TODO: Replace with randomly created ships
-    auto ships = Ships {
-        .carrier = Ship(Position::Horizontal, 1, { 1, 2, 3, 4, 5 }),
-        .battleship = Ship(Position::Vertical, 7, { 1, 2, 3, 4 }),
-        .cruiser = Ship(Position::Horizontal, 8, { 3, 4, 5 }),
-        .submarine = Ship(Position::Vertical, 9, { 7, 8, 9 }),
-        .destroyer = Ship(Position::Vertical, 2, { 4, 5 }),
-    };
+    auto ships = m_computerShipArrangement.get()->getShipsArrangement();
     m_computerShipManager.get()->initializeShips(ships);
 }
 
@@ -62,7 +57,7 @@ Cell ComputerBattleCommunication::getNextShotTarget() const
     return cell;
 }
 
-void ComputerBattleCommunication::notifyShotResponse(const ShootResponse& shootResponse)
+void ComputerBattleCommunication::notifyShotResponse(const ShootResponse &shootResponse)
 {
 }
 

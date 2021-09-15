@@ -9,7 +9,7 @@
 class IShipArrangement
 {
 public:
-    virtual Ships getShipArrangement() const = 0;
+    virtual Ships getShipsArrangement() const = 0;
 };
 
 #endif

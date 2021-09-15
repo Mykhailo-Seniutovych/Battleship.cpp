@@ -1,6 +1,7 @@
 #include <unordered_set>
 #include <cstdint>
 #include "cell.h"
+
 using namespace std;
 
 Cell::Cell(uint8_t t_hor_coord, uint8_t t_ver_coord)

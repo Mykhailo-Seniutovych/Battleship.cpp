@@ -16,7 +16,6 @@ void Maps::initMaps(
     const ShipCoordinates &t_mySubmarine,
     const ShipCoordinates &t_myDestroyer)
 {
-    //TODO: validation
     for (uint8_t row = 0; row < Constants::MAP_SIZE; row++)
     {
         for (uint8_t col = 0; col < Constants::MAP_SIZE; col++)
@@ -47,31 +46,37 @@ void Maps::updateMap(
     MapCellState (&t_map)[Constants::MAP_SIZE][Constants::MAP_SIZE],
     const MapUpdateData &t_updateData)
 {
-    // TODO: refactor this code
     if (t_updateData.cellState == CellState::ShipSunk || t_updateData.cellState == CellState::GameOver)
     {
-        if (t_updateData.sunkShipCoordinates.position == Position::Horizontal)
-        {
-            auto row = t_updateData.sunkShipCoordinates.axisCoordinate;
-            for (auto col : t_updateData.sunkShipCoordinates.cellsCoordinates)
-            {
-                t_map[row][col] = MapCellState::SunkShip;
-            }
-        }
-        else
-        {
-            auto col = t_updateData.sunkShipCoordinates.axisCoordinate;
-            for (auto row : t_updateData.sunkShipCoordinates.cellsCoordinates)
-            {
-                t_map[row][col] = MapCellState::SunkShip;
-            }
-        }
+        addSunkShip(t_map, t_updateData.sunkShipCoordinates);
     }
     else
     {
         auto row = t_updateData.cell.horCoord;
         auto col = t_updateData.cell.verCoord;
         t_map[row][col] = convertToMapState(t_updateData.cellState);
+    }
+}
+
+void Maps::addSunkShip(
+    MapCellState (&t_map)[Constants::MAP_SIZE][Constants::MAP_SIZE],
+    const ShipCoordinates &t_sunkShipCoord)
+{
+    if (t_sunkShipCoord.position == Position::Horizontal)
+    {
+        auto row = t_sunkShipCoord.axisCoordinate;
+        for (auto col : t_sunkShipCoord.cellsCoordinates)
+        {
+            t_map[row][col] = MapCellState::SunkShip;
+        }
+    }
+    else
+    {
+        auto col = t_sunkShipCoord.axisCoordinate;
+        for (auto row : t_sunkShipCoord.cellsCoordinates)
+        {
+            t_map[row][col] = MapCellState::SunkShip;
+        }
     }
 }
 
@@ -94,6 +99,7 @@ void Maps::printMaps() const
         printMapRow(row, m_enemyMap);
         cout << endl;
     }
+    cout << endl;
 }
 
 MapCellState Maps::convertToMapState(CellState cellState) const

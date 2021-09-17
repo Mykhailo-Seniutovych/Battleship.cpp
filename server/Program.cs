@@ -1,7 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace battleship.server
+namespace Battleship.Server
 {
     public class Program
     {
@@ -14,7 +14,7 @@ namespace battleship.server
             Host.CreateDefaultBuilder(args)
                 .ConfigureServices((hostContext, services) =>
                 {
-                    services.AddHostedService<Worker>();
+                    services.AddHostedService<TcpServer>();
                 });
     }
 }

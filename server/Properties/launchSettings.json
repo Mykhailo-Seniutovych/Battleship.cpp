@@ -1,6 +1,6 @@
 ﻿{
   "profiles": {
-    "battleship.server": {
+    "Battleship.Server": {
       "commandName": "Project",
       "dotnetRunMessages": "true",
       "environmentVariables": {

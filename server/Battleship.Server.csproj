@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
-    <UserSecretsId>dotnet-battleship.server-C07E66EC-2C25-4A15-8707-3C8A7F500C77</UserSecretsId>
+    <UserSecretsId>dotnet-Battleship.Server-C07E66EC-2C25-4A15-8707-3C8A7F500C77</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>

@@ -4,6 +4,6 @@ namespace Battleship.Server.Models
     {
         public string PlayerNickname { get; set; }
         public string OpponentNickname { get; set; }
-        public string AuthCode { get; set; }
+        public string PassCode { get; set; }
     }
 }

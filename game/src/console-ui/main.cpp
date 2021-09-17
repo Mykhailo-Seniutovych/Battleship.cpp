@@ -9,6 +9,8 @@
 #include "statistics-service.h"
 #include "database-service.h"
 #include "computer-battle-communication.h"
+#include "network-battle-communication.h"
+#include "tcp-client.h"
 #include "services/console-ship-arrangement.h"
 #include "computer-ship-arrangement.h"
 #include "services/console-map-observer.h"
@@ -23,11 +25,13 @@ using namespace std;
 void playGame()
 {
     auto battleManager = BattleManager(
-        make_unique<ConsoleShipArrangement>(),
+        //make_unique<ConsoleShipArrangement>(),
+        make_unique<ComputerShipArrangement>(),
         make_unique<ShipManager>(),
-        make_unique<ComputerBattleCommunication>(
-            make_unique<ShipManager>(), 
-            make_unique<ComputerShipArrangement>()),
+        // make_unique<ComputerBattleCommunication>(
+        //     make_unique<ShipManager>(),
+        //     make_unique<ComputerShipArrangement>()),
+        make_unique<NetworkBattleCommunication>(make_unique<TcpClient>()),
         make_unique<ConsoleCellReader>());
 
     auto mapObserver = make_unique<ConsoleMapObserver>(make_unique<Maps>());
@@ -89,7 +93,7 @@ int main(int argc, char *argv[])
     catch (const exception &ex)
     {
         auto msg = ex.what();
-        cout << "Unexpected error happened: " << ex.what() << endl;
+        cerr << "Unexpected error happened: " << ex.what() << endl;
     }
 
     return 0;

@@ -6,27 +6,31 @@ using namespace std;
 
 static int shotCounter = 0; // delete after real implementation is done
 
+NetworkBattleCommunication::NetworkBattleCommunication(
+    unique_ptr<ITcpClient> t_tcpClient) : m_tcpClient(move(t_tcpClient))
+{
+}
+
 Cell NetworkBattleCommunication::getNextShotTarget() const
 {
-    // TODO: replace with TCP implementation
-    cout << "Enter coordinates to receive next shot (e.g. \"1 10\")" << endl;
-    string newTarget;
-    getline(cin, newTarget);
+    // TODO: Add real implementation
+    m_tcpClient.get()->establishConnection(
+        "{ \"PlayerNickname\": \"ZalBoy\", \"OpponentNickname\": \"Dawg\", \"PassCode\": \"123\"}\0");
+    auto message = m_tcpClient.get()->readNextMessage();
 
-    auto row = static_cast<uint8_t>(stoi(newTarget.substr(0, newTarget.find(" "))) - 1);
-    auto col = static_cast<uint8_t>(stoi(newTarget.substr(newTarget.find(" ") + 1)) - 1);
-
-    return Cell(row, col);
+    cout << "received: " << message << endl;
+    return Cell(1, 2);
 }
 
 void NetworkBattleCommunication::notifyShotResponse(const ShootResponse &shootResponse)
 {
-     // TODO: implement
+    auto message = m_tcpClient.get()->readNextMessage();
 };
 
 ShootResponse NetworkBattleCommunication::sendShotTo(const Cell &cell)
 {
-    // TODO: implement
-
+    auto message = "Dawg, I am shooting at " + to_string(cell.horCoord) + " " + to_string(cell.verCoord);
+    m_tcpClient.get()->sendMessage(message);
+    
     return ShootResponse(CellState::Miss);
 }

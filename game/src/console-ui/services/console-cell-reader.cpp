@@ -22,7 +22,7 @@ Cell ConsoleCellReader::readCell() const
         auto colNumberFromUserInput = stoi(newTarget.substr(newTarget.find(" ") + 1));
         if (colNumberFromUserInput < 1 || colNumberFromUserInput > Constants::MAP_SIZE)
         {
-            cout << INVALID_INPUT_ERROR_MSG << endl;
+            cerr << INVALID_INPUT_ERROR_MSG << endl;
             return readCell();
         }
         auto colNum = colNumberFromUserInput - 1;

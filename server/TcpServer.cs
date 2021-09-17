@@ -16,10 +16,12 @@ namespace Battleship.Server
     public class TcpServer : IHostedService
     {
         private const int PortNumber = 5000;
+
+        private readonly TimeSpan IncomingConnectionTimeout = TimeSpan.FromSeconds(5);
         private readonly int PlayerResponseTimeout = TimeSpan.FromMinutes(10).Milliseconds;
 
         private TcpListener _tcpListener;
-        private Dictionary<string, PlayerConnection> _waitingConnections  = new Dictionary<string, PlayerConnection>();
+        private Dictionary<string, PlayerConnection> _waitingConnections = new Dictionary<string, PlayerConnection>();
         private readonly ILogger<TcpServer> _logger;
 
         public TcpServer(ILogger<TcpServer> logger)
@@ -41,7 +43,7 @@ namespace Battleship.Server
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
-            Task.Run(async () =>
+            Task.Run(() =>
             {
                 _tcpListener.Start();
                 _logger.LogInformation("TCP Server started, listening on port {0}", PortNumber);
@@ -52,11 +54,10 @@ namespace Battleship.Server
                     {
                         var client = _tcpListener.AcceptTcpClient();
                         var incomingStream = client.GetStream();
-                        var connection = await GetIncomingConnection(incomingStream);
+                        var connection = GetIncomingConnection(incomingStream);
                         AuthorizeConnection(connection);
 
-                        _waitingConnections.Add(
-                            connection.PlayerNickname, new PlayerConnection(connection, incomingStream));
+                        StartGameOrAddToWaiting(connection, incomingStream);
                     }
                     catch (Exception ex)
                     {
@@ -68,19 +69,27 @@ namespace Battleship.Server
             return Task.CompletedTask;
         }
 
-        private async Task<IncomingConnection> GetIncomingConnection(NetworkStream incomingStream)
+        private IncomingConnection GetIncomingConnection(NetworkStream incomingStream)
         {
             var cancellationTokenSource = new CancellationTokenSource();
-            cancellationTokenSource.CancelAfter(TimeSpan.FromSeconds(5));
-            var connection = await JsonSerializer.DeserializeAsync<IncomingConnection>(incomingStream);
+            cancellationTokenSource.CancelAfter(IncomingConnectionTimeout);
+
+            var buffer = new byte[1024];
+            var countOfBytesRead = incomingStream.Read(buffer, 0, buffer.Length);
+            if (countOfBytesRead == 0)
+            {
+                throw new AuthenticationException("Client didn't provide connection information.");
+            }
+            var incomingMsg = System.Text.Encoding.ASCII.GetString(buffer, 0, countOfBytesRead);
+            var connection = JsonSerializer.Deserialize<IncomingConnection>(incomingMsg);
             return connection;
         }
 
         private void AuthorizeConnection(IncomingConnection connection)
         {
-            if (connection.AuthCode == AuthConstants.PassCode)
+            if (connection.PassCode != AuthConstants.PassCode)
             {
-                throw new AuthenticationException("Unknow client connected");
+                throw new AuthenticationException("Unknow client connected.");
             }
         }
 
@@ -88,13 +97,13 @@ namespace Battleship.Server
         {
             if (_waitingConnections.ContainsKey(connection.OpponentNickname))
             {
-                var opponentConnectiron = _waitingConnections[connection.OpponentNickname];
-                StartGame(new PlayerConnection(connection, incomingStream), opponentConnectiron);
+                var opponentConnection = _waitingConnections[connection.OpponentNickname];
+                StartGame(new PlayerConnection(connection, incomingStream), opponentConnection);
             }
             else
             {
                 _logger.LogInformation(
-                    "New player '{0}' connected, and is waiting for another player '{1}'",
+                    "New player '{0}' connected, and is waiting for another player '{1}'.",
                     connection.PlayerNickname,
                     connection.OpponentNickname);
                 _waitingConnections.Add(connection.PlayerNickname, new PlayerConnection(connection, incomingStream));
@@ -142,7 +151,7 @@ namespace Battleship.Server
                 {
                     _logger.LogError(
                         ex,
-                        "Unexpected error happened during the game between '{0}' and '{1}'",
+                        "Unexpected error happened during the game between '{0}' and '{1}'.",
                         player1Connection.PlayerNickname,
                         player2Connection.PlayerNickname);
                 }

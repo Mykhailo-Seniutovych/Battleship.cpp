@@ -17,6 +17,7 @@ public:
         std::unique_ptr<IShipManager> t_computerShipManager,
         std::unique_ptr<IShipArrangement> t_computerShipArrangement);
     
+    GameStartParams receiveGameStartParams() const override;
     Cell getNextShotTarget() const override;
     ShootResponse sendShotTo(const Cell &cell) override;
     void notifyShotResponse(const ShootResponse& shootResponse) override;

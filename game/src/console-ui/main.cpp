@@ -8,7 +8,8 @@
 #include "battle-manager.h"
 #include "statistics-service.h"
 #include "database-service.h"
-#include "computer-battle-communication.h"
+#include "computer-battle-communication-factory.h"
+#include "network-battle-communication-factory.h"
 #include "network-battle-communication.h"
 #include "tcp-client.h"
 #include "services/console-ship-arrangement.h"
@@ -24,14 +25,16 @@ using namespace std;
 
 void playGame()
 {
+    cout << "Establishing connection with another player..." << endl;
+
     auto battleManager = BattleManager(
         //make_unique<ConsoleShipArrangement>(),
         make_unique<ComputerShipArrangement>(),
         make_unique<ShipManager>(),
-        // make_unique<ComputerBattleCommunication>(
-        //     make_unique<ShipManager>(),
-        //     make_unique<ComputerShipArrangement>()),
-        make_unique<NetworkBattleCommunication>(make_unique<TcpClient>()),
+        // make_unique<ComputerBattleCommunicationFactory>(
+        //    make_unique<ShipManager>(),
+        //    make_unique<ComputerShipArrangement>()),
+        make_unique<NetworkBattleCommunicationFactory>(make_unique<TcpClient>()),
         make_unique<ConsoleCellReader>());
 
     auto mapObserver = make_unique<ConsoleMapObserver>(make_unique<Maps>());

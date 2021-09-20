@@ -1,3 +1,6 @@
+using Battleship.Server.Interfaces;
+using Battleship.Server.Models;
+using Battleship.Server.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
@@ -14,6 +17,8 @@ namespace Battleship.Server
             Host.CreateDefaultBuilder(args)
                 .ConfigureServices((hostContext, services) =>
                 {
+                    services.AddSingleton<IGameService, GameService>();
+                    services.AddSingleton<IMessageService, MessageService>();
                     services.AddHostedService<TcpServer>();
                 });
     }

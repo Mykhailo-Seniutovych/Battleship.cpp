@@ -38,7 +38,7 @@ char map_utils::convertRowNumberToRowLetter(uint8_t t_rowNum)
         rowLetter = 'J';
         break;
     default:
-        throw new InvalidInputException("row number is invalid");
+        throw new InvalidInputException("Row number is invalid.");
     };
 
     return rowLetter;
@@ -89,7 +89,7 @@ uint8_t map_utils::convertRowLetterToRowNumber(char t_rowLetter)
     }
     else
     {
-        throw InvalidInputException("row letter is invalid");
+        throw InvalidInputException("Row letter is invalid.");
     }
 
     return rowNum;

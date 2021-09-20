@@ -6,12 +6,14 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 #include <string.h>
+#include <algorithm>
 #include "tcp-client.h"
 #include "tcp-exception.h"
+#include "utils/endian-checker.h"
 
 using namespace std;
 
-void TcpClient::establishConnection(const std::string &connectionInfo)
+void TcpClient::establishConnection(const std::string &t_connectionInfo)
 {
     if (!m_isSocketEstablished)
     {
@@ -22,7 +24,7 @@ void TcpClient::establishConnection(const std::string &connectionInfo)
         auto socketDescriptor = socket(AF_INET, SOCK_STREAM, 0);
         if (socketDescriptor < 0)
         {
-            throw TcpException(string(strerror(errno)));
+            throwError();
         }
 
         sockaddr_in servAddr;
@@ -31,8 +33,7 @@ void TcpClient::establishConnection(const std::string &connectionInfo)
 
         if (inet_pton(AF_INET, address.c_str(), &servAddr.sin_addr) <= 0)
         {
-            close(socketDescriptor);
-            throw TcpException(string(strerror(errno)));
+            throwError();
         }
 
         auto connectResult = connect(
@@ -42,40 +43,99 @@ void TcpClient::establishConnection(const std::string &connectionInfo)
 
         if (connectResult < 0)
         {
-            close(socketDescriptor);
-            throw TcpException(string(strerror(errno)));
+            throwError();
         }
 
         m_socketDescriptor = socketDescriptor;
 
-        sendMessage(connectionInfo);
+        sendMessage(t_connectionInfo);
         m_isSocketEstablished = true;
     }
 }
 
 string TcpClient::readNextMessage()
 {
-    char buffer[1024];
-    auto bytesReadCount = read(m_socketDescriptor, buffer, sizeof(buffer));
-    if (bytesReadCount < 0)
-    {
-        m_isSocketEstablished = false;
-        close(m_socketDescriptor);
-        throw TcpException(string(strerror(errno)));
-    }
-    auto message = string(buffer).substr(0, bytesReadCount);
+    auto messageLength = readMessageLength();
+    auto message = readMessageContent(messageLength);
     return message;
 }
 
 void TcpClient::sendMessage(const string &message)
 {
-    char buffer[1024];
+    sendMessageLength(message.length());
+    sendMessageContent(message);
+}
+
+int32_t TcpClient::readMessageLength()
+{
+    char messageLengthBytes[sizeof(int32_t)];
+    auto bytesReadCount = read(m_socketDescriptor, messageLengthBytes, sizeof(messageLengthBytes));
+    if (bytesReadCount < 0)
+    {
+        throwError();
+    }
+
+    if (!EndianChecker::isCurrentSystemBigEndian())
+    {
+        reverse(messageLengthBytes, messageLengthBytes + sizeof(messageLengthBytes));
+    }
+    int32_t messageLength;
+    memcpy(&messageLength, messageLengthBytes, sizeof(int32_t));
+    return messageLength;
+}
+
+string TcpClient::readMessageContent(int32_t t_messageLength)
+{
+    char buffer[t_messageLength];
+    auto bytesReadCount = read(m_socketDescriptor, buffer, t_messageLength);
+    if (bytesReadCount < 0)
+    {
+        throwError();
+    }
+
+    return string(buffer).substr(0, t_messageLength);
+}
+
+void TcpClient::sendMessageLength(int32_t t_length)
+{
+    char lengthBuffer[sizeof(int32_t)];
+    memcpy(lengthBuffer, &t_length, sizeof(int32_t));
+
+    if (!EndianChecker::isCurrentSystemBigEndian())
+    {
+        reverse(lengthBuffer, lengthBuffer + sizeof(lengthBuffer));
+    }
+    char messageLengthBytes[sizeof(int32_t)];
+    auto bytesWrittenCount = send(m_socketDescriptor, lengthBuffer, sizeof(int32_t), 0);
+    if (bytesWrittenCount < 0)
+    {
+        throwError();
+    }
+}
+
+void TcpClient::sendMessageContent(const string &message)
+{
+    char buffer[message.length()];
     auto bytesWrittenCount = send(m_socketDescriptor, message.c_str(), message.length(), 0);
     if (bytesWrittenCount < 0)
     {
-        m_isSocketEstablished = false;
-        close(m_socketDescriptor);
-        throw TcpException(string(strerror(errno)));
+        throwError();
     }
 }
+
+void TcpClient::throwError()
+{
+    close(m_socketDescriptor);
+    m_isSocketEstablished = false;
+    throw TcpException(string(strerror(errno)));
+}
+
+void TcpClient::closeConnection()
+{
+    if (m_isSocketEstablished)
+    {
+        close(m_socketDescriptor);
+    }
+}
+
 //#endif

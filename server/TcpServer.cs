@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
-using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Battleship.Server.Constants;
 using Battleship.Server.Exceptions;
+using Battleship.Server.Interfaces;
 using Battleship.Server.Models;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -16,20 +16,25 @@ namespace Battleship.Server
     public class TcpServer : IHostedService
     {
         private const int PortNumber = 5000;
+        private const int DefaultBufferSize = 1024;
+        private readonly TimeSpan _streamTimeout = TimeSpan.FromSeconds(1000); // TODO: use smaller interval in prod
 
-        private readonly TimeSpan IncomingConnectionTimeout = TimeSpan.FromSeconds(5);
-        private readonly int PlayerResponseTimeout = TimeSpan.FromMinutes(10).Milliseconds;
-
+        private readonly object Locker = new Object();
         private TcpListener _tcpListener;
         private Dictionary<string, PlayerConnection> _waitingConnections = new Dictionary<string, PlayerConnection>();
         private readonly ILogger<TcpServer> _logger;
+        private readonly IGameService _gameService;
+        private readonly IMessageService _messageService;
 
-        public TcpServer(ILogger<TcpServer> logger)
+        public TcpServer(ILogger<TcpServer> logger, IGameService gameService, IMessageService messageService)
         {
             _logger = logger;
+            _gameService = gameService;
+            _messageService = messageService;
 
-            var _localAddr = IPAddress.Parse("0.0.0.0");
-            _tcpListener = new TcpListener(_localAddr, PortNumber);
+            const string allInterfacesAddr = "0.0.0.0";
+            var addr = IPAddress.Parse(allInterfacesAddr);
+            _tcpListener = new TcpListener(addr, PortNumber);
         }
 
         public Task StopAsync(CancellationToken cancellationToken)
@@ -43,117 +48,124 @@ namespace Battleship.Server
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
-            Task.Run(() =>
+            Task.Run(async () =>
             {
                 _tcpListener.Start();
                 _logger.LogInformation("TCP Server started, listening on port {0}", PortNumber);
 
                 while (true)
                 {
+                    NetworkStream incomingStream = null;
                     try
                     {
                         var client = _tcpListener.AcceptTcpClient();
-                        var incomingStream = client.GetStream();
-                        var connection = GetIncomingConnection(incomingStream);
+                        incomingStream = client.GetStream();
+                        var connection = await GetIncomingConnection(incomingStream);
                         AuthorizeConnection(connection);
-
                         StartGameOrAddToWaiting(connection, incomingStream);
                     }
                     catch (Exception ex)
                     {
+                        incomingStream?.Close();
                         _logger.LogError(ex, "Unexpected error happened when processing incomming connection.");
                     }
                 }
             });
 
+            StartConnectionCleaner();
+
             return Task.CompletedTask;
         }
 
-        private IncomingConnection GetIncomingConnection(NetworkStream incomingStream)
+        private async Task<IncomingConnection> GetIncomingConnection(NetworkStream incomingStream)
         {
-            var cancellationTokenSource = new CancellationTokenSource();
-            cancellationTokenSource.CancelAfter(IncomingConnectionTimeout);
-
-            var buffer = new byte[1024];
-            var countOfBytesRead = incomingStream.Read(buffer, 0, buffer.Length);
-            if (countOfBytesRead == 0)
-            {
-                throw new AuthenticationException("Client didn't provide connection information.");
-            }
-            var incomingMsg = System.Text.Encoding.ASCII.GetString(buffer, 0, countOfBytesRead);
-            var connection = JsonSerializer.Deserialize<IncomingConnection>(incomingMsg);
-            return connection;
+            return await _messageService
+                .ReadNextMessage<IncomingConnection>(incomingStream, _streamTimeout);
         }
 
         private void AuthorizeConnection(IncomingConnection connection)
         {
             if (connection.PassCode != AuthConstants.PassCode)
             {
-                throw new AuthenticationException("Unknow client connected.");
+                throw new StreamException("Unknow client connected.");
             }
         }
 
         private void StartGameOrAddToWaiting(IncomingConnection connection, NetworkStream incomingStream)
         {
-            if (_waitingConnections.ContainsKey(connection.OpponentNickname))
+            lock (Locker)
             {
-                var opponentConnection = _waitingConnections[connection.OpponentNickname];
-                StartGame(new PlayerConnection(connection, incomingStream), opponentConnection);
-            }
-            else
-            {
+                if (_waitingConnections.ContainsKey(connection.OpponentNickname))
+                {
+                    var opponentConnection = _waitingConnections[connection.OpponentNickname];
+                    _ = _gameService.StartGame(new PlayerConnection(connection, incomingStream), opponentConnection);
+
+                    _waitingConnections.Remove(connection.OpponentNickname);
+                    return;
+                }
+
+                var playerAlreadyExists = _waitingConnections.ContainsKey(connection.PlayerNickname);
+                if (playerAlreadyExists)
+                {
+                    var errorMsg = $"Player with nickname '{connection.PlayerNickname}' is not available at the moment.";
+                    _messageService.SendMessage(incomingStream, new ErrorWrapper(errorMsg), _streamTimeout);
+                    incomingStream.Close();
+                    return;
+                }
+
+                _waitingConnections.Add(connection.PlayerNickname, new PlayerConnection(connection, incomingStream));
                 _logger.LogInformation(
                     "New player '{0}' connected, and is waiting for another player '{1}'.",
                     connection.PlayerNickname,
                     connection.OpponentNickname);
-                _waitingConnections.Add(connection.PlayerNickname, new PlayerConnection(connection, incomingStream));
             }
         }
 
-        private void StartGame(PlayerConnection player1Connection, PlayerConnection player2Connection)
+        private byte[] GetLengthPrefixedMessage(string message)
+        {
+            var messageEncoded = System.Text.Encoding.ASCII.GetBytes(message);
+            var buffer = new byte[DefaultBufferSize];
+
+            var lengthPrefix = BitConverter.GetBytes(messageEncoded.Length);
+            if (BitConverter.IsLittleEndian)
+            {
+                Array.Reverse(lengthPrefix);
+            }
+
+            var result = new byte[lengthPrefix.Length + messageEncoded.Length];
+            lengthPrefix.CopyTo(result, 0);
+            messageEncoded.CopyTo(result, 0);
+
+            return result;
+        }
+
+        private void StartConnectionCleaner()
         {
             Task.Run(async () =>
             {
-                try
+                while (true)
                 {
-                    var player1Starts = new Random().Next(2) == 1;
-                    var player2Starts = !player1Starts;
-
-                    await JsonSerializer.SerializeAsync<GameStartParams>(
-                        player1Connection.Stream, new GameStartParams(player1Starts));
-                    await JsonSerializer.SerializeAsync<GameStartParams>(
-                        player2Connection.Stream, new GameStartParams(player2Starts));
-
-
-                    player1Connection.Stream.ReadTimeout = PlayerResponseTimeout;
-                    player2Connection.Stream.ReadTimeout = PlayerResponseTimeout;
-
-                    var shootingStream = player1Starts ? player1Connection.Stream : player2Connection.Stream;
-                    var receivingStream = player1Starts ? player2Connection.Stream : player1Connection.Stream;
-
-                    int countOfBytesRead;
-                    var buffer = new byte[1024];
-                    while ((countOfBytesRead = shootingStream.Read(buffer, 0, buffer.Length)) != 0)
+                    lock (Locker)
                     {
-                        receivingStream.Write(buffer, 0, countOfBytesRead);
-
-                        var shootingStreamCopy = shootingStream;
-                        shootingStream = receivingStream;
-                        receivingStream = shootingStreamCopy;
-
-                        buffer = new byte[1024];
+                        try
+                        {
+                            foreach (var connection in _waitingConnections)
+                            {
+                                var clientIsWaitingMoreThan10Mins =
+                                    DateTime.Now - connection.Value.ConnectedTime >= TimeSpan.FromMinutes(10);
+                                if (clientIsWaitingMoreThan10Mins)
+                                {
+                                    _waitingConnections.Remove(connection.Key);
+                                }
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger.LogError(ex, "Unexpected error happened when cleaning old waiting connections.");
+                        }
                     }
 
-                    shootingStream.Dispose();
-                    receivingStream.Dispose();
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError(
-                        ex,
-                        "Unexpected error happened during the game between '{0}' and '{1}'.",
-                        player1Connection.PlayerNickname,
-                        player2Connection.PlayerNickname);
+                    await Task.Delay(TimeSpan.FromMinutes(2));
                 }
             });
         }

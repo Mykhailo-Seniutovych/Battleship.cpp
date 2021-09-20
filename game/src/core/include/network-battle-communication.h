@@ -9,6 +9,10 @@ class NetworkBattleCommunication : public IBattleComunication
 {
 public:
     NetworkBattleCommunication(std::unique_ptr<ITcpClient> t_tcpClient);
+    ~NetworkBattleCommunication();
+
+    void establishNetworkConnection() const;
+    GameStartParams receiveGameStartParams() const override;
     Cell getNextShotTarget() const override;
     ShootResponse sendShotTo(const Cell &cell) override;
     void notifyShotResponse(const ShootResponse &shootResponse) override;

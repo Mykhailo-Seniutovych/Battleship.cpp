@@ -8,12 +8,12 @@ using namespace std;
 BattleManager::BattleManager(
     unique_ptr<IShipArrangement> t_shipArrangement,
     unique_ptr<IShipManager> t_shipManager,
-    unique_ptr<IBattleComunication> t_battleCommunication,
+    unique_ptr<IBattleComunicationFactory> t_battleCommunicationFactory,
     unique_ptr<ICellReader> t_cellReader)
-
+    
     : m_shipArrangement(move(t_shipArrangement)),
       m_shipManager(move(t_shipManager)),
-      m_battleCommunication(move(t_battleCommunication)),
+      m_battleCommunicationFactory(move(t_battleCommunicationFactory)),
       m_cellReader(move(t_cellReader))
 {
 }
@@ -22,15 +22,19 @@ void BattleManager::playBattle() const
 {
     auto shipsOnMap = m_shipArrangement.get()->getShipsArrangement();
     m_shipManager.get()->initializeShips(shipsOnMap);
+
+    auto battleCommunication = m_battleCommunicationFactory.get()->createBattleCommunication();
+    auto startParams = battleCommunication.get()->receiveGameStartParams();
     notifyShipsInitialized(shipsOnMap);
 
-    do
+    if (startParams.initiateFirstShot)
     {
-        auto targetCell = m_battleCommunication.get()->getNextShotTarget();
-        auto currentPlayerResponse = m_shipManager.get()->receiveShot(targetCell);
-        notifyMyMapUpdated(targetCell, currentPlayerResponse);
-        m_battleCommunication.get()->notifyShotResponse(currentPlayerResponse);
+        sendShot(battleCommunication);
+    }
 
+    while (true)
+    {
+        auto currentPlayerResponse = receiveShot(battleCommunication);
         auto currentPlayerLost = currentPlayerResponse.cellState == CellState::GameOver;
         if (currentPlayerLost)
         {
@@ -38,18 +42,31 @@ void BattleManager::playBattle() const
             break;
         }
 
-        auto cellToShoot = m_cellReader.get()->readCell();
-        auto enemyResponse = m_battleCommunication.get()->sendShotTo(cellToShoot);
-        notifyEnemyMapUpdated(cellToShoot, enemyResponse);
-
+        auto enemyResponse = sendShot(battleCommunication);
         auto enemyLost = enemyResponse.cellState == CellState::GameOver;
         if (enemyLost)
         {
             notifyGameOver(true);
             break;
         }
+    };
+}
 
-    } while (true);
+ShootResponse BattleManager::sendShot(shared_ptr<IBattleComunication> t_battleCommunication) const
+{
+    auto cellToShoot = m_cellReader.get()->readCell();
+    auto enemyResponse = t_battleCommunication.get()->sendShotTo(cellToShoot);
+    notifyEnemyMapUpdated(cellToShoot, enemyResponse);
+    return enemyResponse;
+}
+
+ShootResponse BattleManager::receiveShot(shared_ptr<IBattleComunication> t_battleCommunication) const
+{
+    auto targetCell = t_battleCommunication.get()->getNextShotTarget();
+    auto currentPlayerResponse = m_shipManager.get()->receiveShot(targetCell);
+    notifyMyMapUpdated(targetCell, currentPlayerResponse);
+    t_battleCommunication.get()->notifyShotResponse(currentPlayerResponse);
+    return currentPlayerResponse;
 }
 
 void BattleManager::subscribe(unique_ptr<IBattleObserver> t_observer)

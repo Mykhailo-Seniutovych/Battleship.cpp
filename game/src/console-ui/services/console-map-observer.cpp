@@ -7,6 +7,8 @@ ConsoleMapObserver::ConsoleMapObserver(std::unique_ptr<IMaps> t_maps)
 
 void ConsoleMapObserver::notifyShipsInitialized(const Ships &ships) const
 {
+    cout << "Connection established successfully." << endl
+         << endl;
     m_maps.get()->initMaps(
         ships.carrier.getCoordinates(),
         ships.battleship.getCoordinates(),

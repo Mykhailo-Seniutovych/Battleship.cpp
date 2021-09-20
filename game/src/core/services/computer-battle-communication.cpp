@@ -9,7 +9,7 @@
 #include "computer-battle-communication.h"
 #include "constants.h"
 #include "ships.h"
-
+#include "utils/bool-random-generator.h"
 using namespace std;
 using namespace std::this_thread;
 using namespace std::chrono_literals;
@@ -23,6 +23,14 @@ ComputerBattleCommunication::ComputerBattleCommunication(
 {
     initShips();
     initShootTargets();
+}
+
+GameStartParams ComputerBattleCommunication::receiveGameStartParams() const
+{
+    auto boolGenerator = BoolRandomGenerator();
+    return boolGenerator.getRandomBool()
+               ? GameStartParams{.initiateFirstShot = true}
+               : GameStartParams{.initiateFirstShot = false};
 }
 
 void ComputerBattleCommunication::initShips()

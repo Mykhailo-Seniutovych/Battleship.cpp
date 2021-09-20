@@ -11,6 +11,12 @@ target_include_directories(battleship++
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
 )
 
+target_include_directories(battleship++ 
+    PRIVATE 
+    $<INSTALL_INTERFACE:include>
+    $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/libs/json/include>
+)
+
 configure_file(map.txt ${CMAKE_BINARY_DIR}/bin/map.txt COPYONLY)
 
 set_property(TARGET battleship++ PROPERTY CXX_STANDARD 20)

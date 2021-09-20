@@ -71,7 +71,7 @@ uint8_t map_utils::convertRowLetterToRowNumber(char t_rowLetter)
     {
         rowNum = 6;
     }
-    else if (t_rowLetter == 'G' || t_rowLetter == 'G')
+    else if (t_rowLetter == 'G' || t_rowLetter == 'g')
     {
         rowNum = 7;
     }

@@ -8,7 +8,8 @@ struct Cell
 {
     uint8_t horCoord;
     uint8_t verCoord;
-
+    
+    Cell() = default;
     Cell(uint8_t t_horCoord, uint8_t t_verCoord);
 
     bool operator==(const Cell &otherPoint) const;

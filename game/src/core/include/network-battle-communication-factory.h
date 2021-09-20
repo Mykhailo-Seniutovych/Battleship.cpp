@@ -4,15 +4,19 @@
 #include "ibattle-communication-factory.h"
 #include "itcp-client.h"
 #include "tcp-client.h"
+#include "imapper.h"
 
 class NetworkBattleCommunicationFactory : public IBattleComunicationFactory
 {
 public:
-    NetworkBattleCommunicationFactory(std::unique_ptr<ITcpClient> t_tcpClient);
+    NetworkBattleCommunicationFactory(
+        std::unique_ptr<ITcpClient> t_tcpClient, 
+        std::unique_ptr<IMapper> t_mapper);
     std::shared_ptr<IBattleComunication> createBattleCommunication() override;
 
 private:
     std::unique_ptr<ITcpClient> m_tcpClient;
+    std::unique_ptr<IMapper> m_mapper;
 };
 
 #endif

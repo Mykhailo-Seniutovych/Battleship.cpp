@@ -107,7 +107,7 @@ namespace Battleship.Server
                 var playerAlreadyExists = _waitingConnections.ContainsKey(connection.PlayerNickname);
                 if (playerAlreadyExists)
                 {
-                    var errorMsg = $"Player with nickname '{connection.PlayerNickname}' is not available at the moment.";
+                    var errorMsg = $"Nickname '{connection.PlayerNickname}' is not available at the moment, use another nickname.";
                     _messageService.SendMessage(incomingStream, new ErrorWrapper(errorMsg), _streamTimeout);
                     incomingStream.Close();
                     return;

@@ -8,7 +8,7 @@
 class TcpClient : public ITcpClient
 {
 public:
-    void establishConnection(const std::string &t_connectionInfo) override;
+    void establishConnection(const std::string &t_incomingConnection) override;
     std::string readNextMessage() override;
     void sendMessage(const std::string &t_message) override;
     void closeConnection() override;

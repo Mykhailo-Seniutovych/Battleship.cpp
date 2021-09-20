@@ -4,11 +4,14 @@
 #include <memory>
 #include "ibattle-communication.h"
 #include "itcp-client.h"
+#include "imapper.h"
 
 class NetworkBattleCommunication : public IBattleComunication
 {
 public:
-    NetworkBattleCommunication(std::unique_ptr<ITcpClient> t_tcpClient);
+    NetworkBattleCommunication(
+        std::unique_ptr<ITcpClient> t_tcpClient,
+        std::unique_ptr<IMapper> t_mapper);
     ~NetworkBattleCommunication();
 
     void establishNetworkConnection() const;
@@ -19,6 +22,7 @@ public:
 
 private:
     std::unique_ptr<ITcpClient> m_tcpClient;
+    std::unique_ptr<IMapper> m_mapper;
 };
 
 #endif

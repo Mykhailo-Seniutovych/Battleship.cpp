@@ -13,7 +13,7 @@
 
 using namespace std;
 
-void TcpClient::establishConnection(const std::string &t_connectionInfo)
+void TcpClient::establishConnection(const std::string &t_incomingConnection)
 {
     if (!m_isSocketEstablished)
     {
@@ -48,7 +48,7 @@ void TcpClient::establishConnection(const std::string &t_connectionInfo)
 
         m_socketDescriptor = socketDescriptor;
 
-        sendMessage(t_connectionInfo);
+        sendMessage(t_incomingConnection);
         m_isSocketEstablished = true;
     }
 }

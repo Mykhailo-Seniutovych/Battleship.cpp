@@ -1,11 +1,14 @@
 #include <iostream>
-#include "network-battle-communication.h"
 #include <string>
+#include "network-battle-communication.h"
+#include "communication-exception.h"
 
 using namespace std;
 
 NetworkBattleCommunication::NetworkBattleCommunication(
-    unique_ptr<ITcpClient> t_tcpClient) : m_tcpClient(move(t_tcpClient))
+    unique_ptr<ITcpClient> t_tcpClient,
+    unique_ptr<IMapper> t_mapper)
+    : m_tcpClient(move(t_tcpClient)), m_mapper(move(t_mapper))
 {
 }
 
@@ -16,37 +19,56 @@ NetworkBattleCommunication::~NetworkBattleCommunication()
 
 void NetworkBattleCommunication::establishNetworkConnection() const
 {
-    m_tcpClient.get()->establishConnection(
-        "{ \"PlayerNickname\": \"Dawg\", \"OpponentNickname\": \"ZalBoy\", \"PassCode\": \"123\"}\0");
+    auto incomingConnection = IncomingConnection{
+        .playerNickname = "Dawg",
+        .opponentNickname = "ZalBoy"};
+
+    auto message = m_mapper.get()->mapFromIncomingConnection(incomingConnection);
+    m_tcpClient.get()->establishConnection(message);
 }
 
 GameStartParams NetworkBattleCommunication::receiveGameStartParams() const
 {
     auto message = m_tcpClient.get()->readNextMessage();
-    cout << "established connection: " << message << endl;
+    auto msgWrapper = m_mapper.get()->mapToGameStartParams(message);
+    if (msgWrapper.isError)
+    {
+        throw CommunicationException(msgWrapper.error);
+    }
 
-    return GameStartParams{.initiateFirstShot = true};
+    return msgWrapper.message;
 }
 
 Cell NetworkBattleCommunication::getNextShotTarget() const
 {
     auto message = m_tcpClient.get()->readNextMessage();
-
-    cout << "received target: " << message << endl;
-    return Cell(1, 2);
+    auto msgWrapper = m_mapper.get()->mapToCell(message);
+    if (msgWrapper.isError)
+    {
+        throw CommunicationException(msgWrapper.error);
+    }
+    return msgWrapper.message;
 }
 
 void NetworkBattleCommunication::notifyShotResponse(const ShootResponse &shootResponse)
 {
-    m_tcpClient.get()->sendMessage("Dawg, you got me");
+    auto messageWrapper = MessageWrapper(shootResponse);
+    auto message = m_mapper.get()->mapFromShootResponse(messageWrapper);
+    m_tcpClient.get()->sendMessage(message);
 };
 
 ShootResponse NetworkBattleCommunication::sendShotTo(const Cell &cell)
 {
-    auto message = "Dawg, I am shooting at " + to_string(cell.horCoord) + " " + to_string(cell.verCoord);
+    auto messageWrapper = MessageWrapper(cell);
+    auto message = m_mapper.get()->mapFromCell(messageWrapper);
     m_tcpClient.get()->sendMessage(message);
-    auto receivedMsg = m_tcpClient.get()->readNextMessage();
-    cout << "received shoot response: " << receivedMsg << endl;
 
-    return ShootResponse(CellState::Miss);
+    auto shootResponseMessage = m_tcpClient.get()->readNextMessage();
+    auto shootResponse = m_mapper.get()->mapToShootResponse(shootResponseMessage);
+    if (shootResponse.isError)
+    {
+        throw CommunicationException(shootResponse.error);
+    }
+
+    return shootResponse.message;
 }

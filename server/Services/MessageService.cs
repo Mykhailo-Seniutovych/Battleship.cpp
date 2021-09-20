@@ -14,7 +14,8 @@ namespace Battleship.Server.Services
         private readonly JsonSerializerOptions _jsonOptions = new JsonSerializerOptions
         {
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-            PropertyNameCaseInsensitive = true
+            PropertyNameCaseInsensitive = true,
+            IgnoreNullValues = true
         };
 
         public async Task<T> ReadNextMessage<T>(Stream stream, TimeSpan timeout)

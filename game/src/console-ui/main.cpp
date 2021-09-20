@@ -20,6 +20,8 @@
 #include "ui/maps.h"
 #include "database-service.h"
 #include "ui/statistics-ui.h"
+#include "mapper.h"
+#include "message-wrapper.h"
 
 using namespace std;
 
@@ -34,7 +36,9 @@ void playGame()
         // make_unique<ComputerBattleCommunicationFactory>(
         //    make_unique<ShipManager>(),
         //    make_unique<ComputerShipArrangement>()),
-        make_unique<NetworkBattleCommunicationFactory>(make_unique<TcpClient>()),
+        make_unique<NetworkBattleCommunicationFactory>(
+            make_unique<TcpClient>(),
+            make_unique<Mapper>()),
         make_unique<ConsoleCellReader>());
 
     auto mapObserver = make_unique<ConsoleMapObserver>(make_unique<Maps>());
@@ -65,6 +69,46 @@ void showStatistics(bool showBest)
         statisticsUi.showWorstPlayers();
     }
 }
+
+// void testMapper1()
+// {
+//     auto mapper = Mapper();
+//     auto res = mapper.mapToGameStartParams(
+//         "{\"isError\": false, \"error\": \"aha no error\", \"message\": {\"initiateFirstShot\": true }}");
+
+//     auto cellWrapper = MessageWrapper<Cell>{
+//         .isError = false,
+//         .error = "ololol",
+//         .message = Cell(3, 4)};
+
+//     auto msg = mapper.mapFromCell(cellWrapper);
+//     auto entity = mapper.mapToCell(msg);
+// }
+
+// void testMapper2()
+// {
+//     auto mapper = Mapper();
+
+//     auto shootResponse = ShootResponse();
+//     shootResponse.cellState = CellState::GameOver;
+//     shootResponse.sunkShipCoordinates = ShipCoordinates();
+//     shootResponse.sunkShipCoordinates.position = Position::Vertical;
+//     shootResponse.sunkShipCoordinates.axisCoordinate = 7;
+//     shootResponse.sunkShipCoordinates.cellsCoordinates = {1, 2, 3, 4};
+
+//     auto wrapper = MessageWrapper<ShootResponse>{
+//         .isError = false,
+//         .error = "ololol",
+//         .message = shootResponse};
+
+//     auto msg = mapper.mapFromShootResponse(wrapper);
+//     auto entity = mapper.mapToShootResponse(msg);
+
+//     for (auto t : entity.message.sunkShipCoordinates.cellsCoordinates)
+//     {
+//         cout << unsigned(t) << endl;
+//     }
+// }
 
 int main(int argc, char *argv[])
 {

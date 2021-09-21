@@ -7,25 +7,27 @@
 #include <unistd.h>
 #include <string.h>
 #include <algorithm>
+#include <string>
+#include <fcntl.h>
 #include "tcp-client.h"
 #include "tcp-exception.h"
 #include "utils/endian-checker.h"
 
 using namespace std;
 
+TcpClient::TcpClient(std::shared_ptr<IAppConfig> t_appConfig) : m_appConfig(t_appConfig) {}
+
 void TcpClient::establishConnection(const std::string &t_incomingConnection)
 {
     if (!m_isSocketEstablished)
     {
-        // TODO: put these values into config
-        const int port = 5000;
-        const string address = "127.0.0.1";
-
         auto socketDescriptor = socket(AF_INET, SOCK_STREAM, 0);
         if (socketDescriptor < 0)
         {
             throwError();
         }
+        auto address = m_appConfig.get()->getServerAddres();
+        auto port = m_appConfig.get()->getServerPort();
 
         sockaddr_in servAddr;
         servAddr.sin_family = AF_INET;
@@ -70,6 +72,11 @@ int32_t TcpClient::readMessageLength()
 {
     char messageLengthBytes[sizeof(int32_t)];
     auto bytesReadCount = read(m_socketDescriptor, messageLengthBytes, sizeof(messageLengthBytes));
+    if (bytesReadCount == 0)
+    {
+        throwConnectionLostError();
+    }
+
     if (bytesReadCount < 0)
     {
         throwError();
@@ -88,6 +95,10 @@ string TcpClient::readMessageContent(int32_t t_messageLength)
 {
     char buffer[t_messageLength];
     auto bytesReadCount = read(m_socketDescriptor, buffer, t_messageLength);
+    if (bytesReadCount == 0)
+    {
+        throwConnectionLostError();
+    }
     if (bytesReadCount < 0)
     {
         throwError();
@@ -130,11 +141,18 @@ void TcpClient::throwError()
     throw TcpException(string(strerror(errno)));
 }
 
-void TcpClient::closeConnection()
+void TcpClient::throwConnectionLostError()
+{
+    close(m_socketDescriptor);
+    m_isSocketEstablished = false;
+    throw TcpException("Network connection with another player was lost.");
+}
+
+void TcpClient::shutdownConnection()
 {
     if (m_isSocketEstablished)
     {
-        close(m_socketDescriptor);
+        shutdown(m_socketDescriptor, SHUT_RDWR);
     }
 }
 

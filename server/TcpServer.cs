@@ -8,6 +8,7 @@ using Battleship.Server.Constants;
 using Battleship.Server.Exceptions;
 using Battleship.Server.Interfaces;
 using Battleship.Server.Models;
+using Battleship.Server.Utils;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
@@ -16,12 +17,14 @@ namespace Battleship.Server
     public class TcpServer : IHostedService
     {
         private const int PortNumber = 5000;
-        private const int DefaultBufferSize = 1024;
         private readonly TimeSpan _streamTimeout = TimeSpan.FromSeconds(1000); // TODO: use smaller interval in prod
 
         private readonly object Locker = new Object();
         private TcpListener _tcpListener;
-        private Dictionary<string, PlayerConnection> _waitingConnections = new Dictionary<string, PlayerConnection>();
+        private Dictionary<string, PlayerConnection> _waitingNamedConnections =
+            new Dictionary<string, PlayerConnection>();
+        private PlayerConnection _waitingRandomConnection = null;
+
         private readonly ILogger<TcpServer> _logger;
         private readonly IGameService _gameService;
         private readonly IMessageService _messageService;
@@ -72,7 +75,8 @@ namespace Battleship.Server
                 }
             });
 
-            StartConnectionCleaner();
+            StartIdleConnectionsCleaner();
+            StartUnaliveConnectionsCleaner();
 
             return Task.CompletedTask;
         }
@@ -95,25 +99,44 @@ namespace Battleship.Server
         {
             lock (Locker)
             {
-                if (_waitingConnections.ContainsKey(connection.OpponentNickname))
+                var isRandomPlayerBattle = string.IsNullOrEmpty(connection.OpponentNickname);
+                var isAnotherRandomPlayerWaiting = _waitingRandomConnection != null;
+                if (isRandomPlayerBattle && isAnotherRandomPlayerWaiting)
                 {
-                    var opponentConnection = _waitingConnections[connection.OpponentNickname];
-                    _ = _gameService.StartGame(new PlayerConnection(connection, incomingStream), opponentConnection);
-
-                    _waitingConnections.Remove(connection.OpponentNickname);
+                    _ = _gameService.StartGame(
+                        new PlayerConnection(connection, incomingStream), _waitingRandomConnection);
+                    _waitingRandomConnection = null;
                     return;
                 }
 
-                var playerAlreadyExists = _waitingConnections.ContainsKey(connection.PlayerNickname);
-                if (playerAlreadyExists)
+                if (isRandomPlayerBattle && !isAnotherRandomPlayerWaiting)
                 {
-                    var errorMsg = $"Nickname '{connection.PlayerNickname}' is not available at the moment, use another nickname.";
+                    _waitingRandomConnection = new PlayerConnection(connection, incomingStream);
+                    return;
+                }
+
+                var isAnotherWaitingForPlayer = _waitingNamedConnections.ContainsKey(connection.OpponentBattleKey);
+                if (isAnotherWaitingForPlayer)
+                {
+                    var opponentConnection = _waitingNamedConnections[connection.OpponentBattleKey];
+                    _ = _gameService.StartGame(new PlayerConnection(connection, incomingStream), opponentConnection);
+
+                    _waitingNamedConnections.Remove(connection.OpponentBattleKey);
+                    return;
+                }
+
+                var playersPairAlreadyExists = _waitingNamedConnections.ContainsKey(connection.PlayerBattleKey);
+                if (playersPairAlreadyExists)
+                {
+                    var errorMsg = $"Battle for players '{connection.PlayerNickname}' and '{connection.OpponentNickname}'"
+                        + " is not available at the moment. Please try again later or change the nickname.";
+
                     _messageService.SendMessage(incomingStream, new ErrorWrapper(errorMsg), _streamTimeout);
                     incomingStream.Close();
                     return;
                 }
 
-                _waitingConnections.Add(connection.PlayerNickname, new PlayerConnection(connection, incomingStream));
+                _waitingNamedConnections.Add(connection.PlayerBattleKey, new PlayerConnection(connection, incomingStream));
                 _logger.LogInformation(
                     "New player '{0}' connected, and is waiting for another player '{1}'.",
                     connection.PlayerNickname,
@@ -124,7 +147,6 @@ namespace Battleship.Server
         private byte[] GetLengthPrefixedMessage(string message)
         {
             var messageEncoded = System.Text.Encoding.ASCII.GetBytes(message);
-            var buffer = new byte[DefaultBufferSize];
 
             var lengthPrefix = BitConverter.GetBytes(messageEncoded.Length);
             if (BitConverter.IsLittleEndian)
@@ -139,7 +161,7 @@ namespace Battleship.Server
             return result;
         }
 
-        private void StartConnectionCleaner()
+        private void StartIdleConnectionsCleaner()
         {
             Task.Run(async () =>
             {
@@ -149,23 +171,68 @@ namespace Battleship.Server
                     {
                         try
                         {
-                            foreach (var connection in _waitingConnections)
+                            var maxConnectionTimeout = TimeSpan.FromMinutes(10);
+                            foreach (var connection in _waitingNamedConnections)
                             {
-                                var clientIsWaitingMoreThan10Mins =
-                                    DateTime.Now - connection.Value.ConnectedTime >= TimeSpan.FromMinutes(10);
-                                if (clientIsWaitingMoreThan10Mins)
+                                var clientIsWaitingTooLong =
+                                    DateTime.Now - connection.Value.ConnectedTime >= maxConnectionTimeout;
+                                if (clientIsWaitingTooLong)
                                 {
-                                    _waitingConnections.Remove(connection.Key);
+                                    _waitingNamedConnections[connection.Key].Stream.Close();
+                                    _waitingNamedConnections.Remove(connection.Key);
                                 }
+                            }
+                            var isWaitingTooLong = _waitingRandomConnection != null
+                                && DateTime.Now - _waitingRandomConnection.ConnectedTime >= maxConnectionTimeout;
+                            if (isWaitingTooLong)
+                            {
+                                _waitingRandomConnection.Stream.Close();
+                                _waitingRandomConnection = null;
                             }
                         }
                         catch (Exception ex)
                         {
-                            _logger.LogError(ex, "Unexpected error happened when cleaning old waiting connections.");
+                            _logger.LogError(ex, "Unexpected error happened when cleaning idle waiting connections.");
                         }
                     }
 
                     await Task.Delay(TimeSpan.FromMinutes(2));
+                }
+            });
+        }
+
+        private void StartUnaliveConnectionsCleaner()
+        {
+            Task.Run(async () =>
+            {
+                while (true)
+                {
+                    lock (Locker)
+                    {
+                        try
+                        {
+                            foreach (var connection in _waitingNamedConnections)
+                            {
+                                if (!connection.Value.Stream.IsAlive())
+                                {
+                                    _waitingNamedConnections[connection.Key].Stream.Close();
+                                    _waitingNamedConnections.Remove(connection.Key);
+                                }
+                            }
+
+                            if (_waitingRandomConnection != null && !_waitingRandomConnection.Stream.IsAlive())
+                            {
+                                _waitingRandomConnection.Stream.Close();
+                                _waitingRandomConnection = null;
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger.LogError(ex, "Unexpected error happened when cleaning unalive waiting connections.");
+                        }
+                    }
+
+                    await Task.Delay(TimeSpan.FromSeconds(20));
                 }
             });
         }

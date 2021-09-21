@@ -8,9 +8,7 @@ struct IncomingConnection
 {
     std::string playerNickname;
     std::string opponentNickname;
-
-    // TODO: Provide better storage of a passcode than directly in source code, that is publicly available on GitHub.
-    std::string passcode = "cG!GA{{Y2G;A'C`[,&nPoYTf6yg&FFPkj!`EqoLB0r{lvxKdOE";
+    std::string passcode;
 };
 
 #endif

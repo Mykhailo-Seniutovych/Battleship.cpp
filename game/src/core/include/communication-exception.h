@@ -14,5 +14,4 @@ private:
     std::string m_message;
 };
 
-
 #endif

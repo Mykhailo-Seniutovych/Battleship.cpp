@@ -9,7 +9,7 @@ public:
     virtual void establishConnection(const std::string &connectionInfo) = 0;
     virtual std::string readNextMessage() = 0;
     virtual void sendMessage(const std::string &t_message) = 0;
-    virtual void closeConnection() = 0;
+    virtual void shutdownConnection() = 0;
 };
 
 #endif

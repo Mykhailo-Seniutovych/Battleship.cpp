@@ -7,21 +7,27 @@ using namespace std;
 
 NetworkBattleCommunication::NetworkBattleCommunication(
     unique_ptr<ITcpClient> t_tcpClient,
-    unique_ptr<IMapper> t_mapper)
-    : m_tcpClient(move(t_tcpClient)), m_mapper(move(t_mapper))
+    unique_ptr<IMapper> t_mapper,
+    shared_ptr<IAppConfig> t_appConfig,
+    const std::string &t_opponentName)
+    : m_tcpClient(move(t_tcpClient)),
+      m_mapper(move(t_mapper)),
+      m_appConfig(t_appConfig),
+      m_opponentName(t_opponentName)
 {
 }
 
 NetworkBattleCommunication::~NetworkBattleCommunication()
 {
-    m_tcpClient.get()->closeConnection();
+    m_tcpClient.get()->shutdownConnection();
 }
 
 void NetworkBattleCommunication::establishNetworkConnection() const
 {
     auto incomingConnection = IncomingConnection{
-        .playerNickname = "Dawg",
-        .opponentNickname = "ZalBoy"};
+        .playerNickname = m_appConfig.get()->getNickname(),
+        .opponentNickname = m_opponentName,
+        .passcode = m_appConfig.get()->getAuthPasscode()};
 
     auto message = m_mapper.get()->mapFromIncomingConnection(incomingConnection);
     m_tcpClient.get()->establishConnection(message);

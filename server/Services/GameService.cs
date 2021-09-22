@@ -37,9 +37,10 @@ namespace Battleship.Server.Services
                     stream1.ReadTimeout = PlayerResponseTimeout;
                     stream2.ReadTimeout = PlayerResponseTimeout;
 
+                    var syncLock = new object();
                     await Task.WhenAll(
-                        TransferDataBetweenStreams(stream1, stream2),
-                        TransferDataBetweenStreams(stream2, stream1));
+                        TransferDataBetweenStreams(stream1, stream2, syncLock),
+                        TransferDataBetweenStreams(stream2, stream1, syncLock));
 
                     _logger.LogInformation(
                         "Game between '{0}' and '{1}' finished.",
@@ -72,7 +73,7 @@ namespace Battleship.Server.Services
                 stream2, new MessageWrapper<GameStartParams>(new GameStartParams(player2Starts)), timeout);
         }
 
-        private Task TransferDataBetweenStreams(NetworkStream sender, NetworkStream receiver)
+        private Task TransferDataBetweenStreams(NetworkStream sender, NetworkStream receiver, object syncLock)
         {
             return Task.Run(async () =>
             {
@@ -82,12 +83,36 @@ namespace Battleship.Server.Services
                 var buffer = new byte[bufferSize];
                 while ((countOfBytesRead = await sender.ReadAsync(buffer, 0, buffer.Length)) != 0)
                 {
-                    await receiver.WriteAsync(buffer, 0, countOfBytesRead);
-                    buffer = new byte[bufferSize];
+                    lock (syncLock)
+                    {
+                        if (!receiver.Socket.Connected)
+                        {
+                            break;
+                        }
+
+                        receiver.Write(buffer, 0, countOfBytesRead);
+                        buffer = new byte[bufferSize];
+                    }
                 }
 
-                sender.Close();
-                receiver.Close();
+                lock (syncLock)
+                {
+                    sender.Close();
+                    if (receiver.Socket.Connected)
+                    {
+                        try
+                        {
+                            var timeout = TimeSpan.FromMilliseconds(PlayerResponseTimeout);
+                            _messageService.SendMessage(
+                                receiver, new ErrorWrapper("Network connection with another player was lost."), timeout).Wait();
+                        }
+                        catch (Exception)
+                        {
+                            // In case when the game is over and both client connections were closed on the client side,
+                            // message will not be sent and exception will be thrown, we can ignore that case
+                        }
+                    }
+                }
             });
         }
     }

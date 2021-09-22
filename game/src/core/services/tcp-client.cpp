@@ -1,4 +1,4 @@
-//#ifdef UNIX
+#ifdef __unix
 
 #include <sys/socket.h>
 #include <errno.h>
@@ -156,4 +156,4 @@ void TcpClient::shutdownConnection()
     }
 }
 
-//#endif
+#endif

@@ -64,7 +64,7 @@ BattleManager createBattleManager(PlayMode t_playMode, shared_ptr<IAppConfig> t_
             make_unique<ShipManager>(),
             make_unique<ComputerBattleCommunicationFactory>(
                 make_unique<ShipManager>(),
-                make_unique<ComputerShipArrangement>()),
+                make_unique<ConsoleShipArrangement>()),
             make_unique<ConsoleCellReader>());
     }
     else

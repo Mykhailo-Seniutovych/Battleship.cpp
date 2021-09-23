@@ -33,20 +33,20 @@ public:
     void printMaps() const override;
 
 private:
-    // UNICODE characters are not supported on Windows Console, that's why we have to use ASCHII for Windows
-#ifdef _WIN32
-    const std::string INVISIBLE_CELL = "- ";
-    const std::string MISSED_SHOT_CELL = "* ";
-    const std::string MY_SHIP_CELL = "||";
-    const std::string SHIP_DAMAGED = "X ";
-    const std::string SHIP_SUNK_CELL = "X*";
-    const std::string MAPS_SEPARATOR = "  |  ";
-#else
+#ifdef __unix
     const std::string INVISIBLE_CELL = "- ";
     const std::string MISSED_SHOT_CELL = "\U00002737 ";
     const std::string MY_SHIP_CELL = "\U0001F229";
     const std::string SHIP_DAMAGED = "\U00002716 ";
     const std::string SHIP_SUNK_CELL = "\U0001F147 ";
+    const std::string MAPS_SEPARATOR = "  |  ";
+// UNICODE characters are not supported on Windows Console, that's why we have to use ASCHII for Windows
+#elif _WIN32 
+    const std::string INVISIBLE_CELL = "- ";
+    const std::string MISSED_SHOT_CELL = "* ";
+    const std::string MY_SHIP_CELL = "||";
+    const std::string SHIP_DAMAGED = "X ";
+    const std::string SHIP_SUNK_CELL = "X*";
     const std::string MAPS_SEPARATOR = "  |  ";
 #endif
 

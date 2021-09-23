@@ -145,7 +145,7 @@ int main(int argc, char *argv[])
                 startGame = false;
                 showStatistics(false);
                 break;
-            };
+            }
         }
 
         if (startGame)
@@ -155,9 +155,11 @@ int main(int argc, char *argv[])
     }
     catch (const exception &ex)
     {
-        auto msg = ex.what();
         cerr << "Unexpected error happened: " << ex.what() << endl;
     }
+
+    cout << "Press 'Enter' to exit" << endl;
+    cin.get();
 
     return 0;
 }

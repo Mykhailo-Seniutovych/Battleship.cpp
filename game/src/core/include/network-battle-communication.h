@@ -24,9 +24,9 @@ public:
     void notifyShotResponse(const ShootResponse &shootResponse) override;
 
 private:
-    std::shared_ptr<IAppConfig> m_appConfig;
     std::unique_ptr<ITcpClient> m_tcpClient;
     std::unique_ptr<IMapper> m_mapper;
+    std::shared_ptr<IAppConfig> m_appConfig;
 
     std::string m_opponentName;
 };

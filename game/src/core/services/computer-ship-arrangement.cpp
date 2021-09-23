@@ -40,7 +40,7 @@ Ship ComputerShipArrangement::getRandomlyPlacedShip(
     auto position = randomBool.getRandomBool() ? Position::Horizontal : Position::Vertical;
     auto availableCellsForShipBeginning = getAvailableCells(
         t_newShipLength, position, t_existingShips);
-    auto randomInt = IntRandomGenerator<uint8_t>(0, availableCellsForShipBeginning.size() - 1);
+    auto randomInt = IntRandomGenerator<int32_t>(0, availableCellsForShipBeginning.size() - 1);
     auto index = randomInt.getRandomInt();
 
     auto newShipBeginning = availableCellsForShipBeginning.at(index);

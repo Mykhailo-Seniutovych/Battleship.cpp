@@ -49,9 +49,9 @@ void TcpClient::establishConnection(const std::string &t_incomingConnection)
         }
 
         m_socketDescriptor = socketDescriptor;
+        m_isSocketEstablished = true;
 
         sendMessage(t_incomingConnection);
-        m_isSocketEstablished = true;
     }
 }
 
@@ -70,8 +70,8 @@ void TcpClient::sendMessage(const string &message)
 
 int32_t TcpClient::readMessageLength()
 {
-    char messageLengthBytes[sizeof(int32_t)];
-    auto bytesReadCount = read(m_socketDescriptor, messageLengthBytes, sizeof(messageLengthBytes));
+    char buffer[sizeof(int32_t)];
+    auto bytesReadCount = read(m_socketDescriptor, buffer, sizeof(buffer));
     if (bytesReadCount == 0)
     {
         throwConnectionLostError();
@@ -84,17 +84,17 @@ int32_t TcpClient::readMessageLength()
 
     if (!EndianChecker::isCurrentSystemBigEndian())
     {
-        reverse(messageLengthBytes, messageLengthBytes + sizeof(messageLengthBytes));
+        reverse(buffer, buffer + sizeof(buffer));
     }
     int32_t messageLength;
-    memcpy(&messageLength, messageLengthBytes, sizeof(int32_t));
+    memcpy(&messageLength, buffer, sizeof(int32_t));
     return messageLength;
 }
 
 string TcpClient::readMessageContent(int32_t t_messageLength)
 {
-    char buffer[t_messageLength];
-    auto bytesReadCount = read(m_socketDescriptor, buffer, t_messageLength);
+    auto buffer = make_unique<char[]>(t_messageLength);
+    auto bytesReadCount = read(m_socketDescriptor, buffer.get(), t_messageLength);
     if (bytesReadCount == 0)
     {
         throwConnectionLostError();
@@ -104,20 +104,20 @@ string TcpClient::readMessageContent(int32_t t_messageLength)
         throwError();
     }
 
-    return string(buffer).substr(0, t_messageLength);
+    return string(buffer.get()).substr(0, t_messageLength);
 }
 
 void TcpClient::sendMessageLength(int32_t t_length)
 {
-    char lengthBuffer[sizeof(int32_t)];
-    memcpy(lengthBuffer, &t_length, sizeof(int32_t));
+    char buffer[sizeof(int32_t)];
+    memcpy(buffer, &t_length, sizeof(int32_t));
 
     if (!EndianChecker::isCurrentSystemBigEndian())
     {
-        reverse(lengthBuffer, lengthBuffer + sizeof(lengthBuffer));
+        reverse(buffer, buffer + sizeof(buffer));
     }
-    char messageLengthBytes[sizeof(int32_t)];
-    auto bytesWrittenCount = send(m_socketDescriptor, lengthBuffer, sizeof(int32_t), 0);
+
+    auto bytesWrittenCount = send(m_socketDescriptor, buffer, sizeof(int32_t), 0);
     if (bytesWrittenCount < 0)
     {
         throwError();
@@ -126,7 +126,6 @@ void TcpClient::sendMessageLength(int32_t t_length)
 
 void TcpClient::sendMessageContent(const string &message)
 {
-    char buffer[message.length()];
     auto bytesWrittenCount = send(m_socketDescriptor, message.c_str(), message.length(), 0);
     if (bytesWrittenCount < 0)
     {
@@ -145,7 +144,7 @@ void TcpClient::throwConnectionLostError()
 {
     close(m_socketDescriptor);
     m_isSocketEstablished = false;
-    throw TcpException("Network connection with another player was lost.");
+    throw TcpException(CONNECTION_LOST_MSG);
 }
 
 void TcpClient::shutdownConnection()

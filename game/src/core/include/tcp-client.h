@@ -18,9 +18,10 @@ public:
     void shutdownConnection() override;
 
 private:
-    int32_t m_socketDescriptor;
-    bool m_isSocketEstablished = false;
+    const std::string CONNECTION_LOST_MSG = "Network connection with another player was lost.";
 
+    uint64_t m_socketDescriptor;
+    bool m_isSocketEstablished = false;
     std::shared_ptr<IAppConfig> m_appConfig;
 
     int32_t readMessageLength();

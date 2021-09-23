@@ -15,22 +15,21 @@ Cell ConsoleCellReader::readCell() const
     string newTarget;
     getline(cin, newTarget);
 
-    try
+    auto rowLetter = newTarget[0];
+    auto rowNumberResult = convertRowLetterToRowNumber(rowLetter);
+    if (rowNumberResult < 1)
     {
-        auto rowLetter = newTarget[0];
-        uint8_t rowNum = convertRowLetterToRowNumber(rowLetter) - 1;
-        auto colNumberFromUserInput = stoi(newTarget.substr(newTarget.find(" ") + 1));
-        if (colNumberFromUserInput < 1 || colNumberFromUserInput > Constants::MAP_SIZE)
-        {
-            cerr << INVALID_INPUT_ERROR_MSG << endl;
-            return readCell();
-        }
-        auto colNum = colNumberFromUserInput - 1;
-        return Cell(rowNum, colNum);
-    }
-    catch (const exception &ex)
-    {
-        cout << INVALID_INPUT_ERROR_MSG << endl;
+        cerr << INVALID_INPUT_ERROR_MSG << endl;
         return readCell();
     }
+
+    uint8_t rowNum = rowNumberResult - 1;
+    auto colNumberFromUserInput = stoi(newTarget.substr(newTarget.find(" ") + 1));
+    if (colNumberFromUserInput < 1 || colNumberFromUserInput > Constants::MAP_SIZE)
+    {
+        cerr << INVALID_INPUT_ERROR_MSG << endl;
+        return readCell();
+    }
+    auto colNum = colNumberFromUserInput - 1;
+    return Cell(rowNum, colNum);
 }

@@ -2,95 +2,95 @@
 #include "cstdint"
 #include "exceptions/invalid-input-exception.h"
 
-char map_utils::convertRowNumberToRowLetter(uint8_t t_rowNum)
+char map_utils::convertRowNumberToRowLetter(uint8_t t_result)
 {
-    char rowLetter;
-    switch (t_rowNum)
+    char result;
+    switch (t_result)
     {
     case 1:
-        rowLetter = 'A';
+        result = 'A';
         break;
     case 2:
-        rowLetter = 'B';
+        result = 'B';
         break;
     case 3:
-        rowLetter = 'C';
+        result = 'C';
         break;
     case 4:
-        rowLetter = 'D';
+        result = 'D';
         break;
     case 5:
-        rowLetter = 'E';
+        result = 'E';
         break;
     case 6:
-        rowLetter = 'F';
+        result = 'F';
         break;
     case 7:
-        rowLetter = 'G';
+        result = 'G';
         break;
     case 8:
-        rowLetter = 'H';
+        result = 'H';
         break;
     case 9:
-        rowLetter = 'I';
+        result = 'I';
         break;
     case 10:
-        rowLetter = 'J';
+        result = 'J';
         break;
     default:
-        throw new InvalidInputException("Row number is invalid.");
+        result = -1;
     };
 
-    return rowLetter;
+    return result;
 };
 
-uint8_t map_utils::convertRowLetterToRowNumber(char t_rowLetter)
+int8_t map_utils::convertRowLetterToRowNumber(char t_rowLetter)
 {
-    char rowNum;
+    char result;
     if (t_rowLetter == 'A' || t_rowLetter == 'a')
     {
-        rowNum = 1;
+        result = 1;
     }
     else if (t_rowLetter == 'B' || t_rowLetter == 'b')
     {
-        rowNum = 2;
+        result = 2;
     }
     else if (t_rowLetter == 'C' || t_rowLetter == 'c')
     {
-        rowNum = 3;
+        result = 3;
     }
     else if (t_rowLetter == 'D' || t_rowLetter == 'd')
     {
-        rowNum = 4;
+        result = 4;
     }
     else if (t_rowLetter == 'E' || t_rowLetter == 'e')
     {
-        rowNum = 5;
+        result = 5;
     }
     else if (t_rowLetter == 'F' || t_rowLetter == 'f')
     {
-        rowNum = 6;
+        result = 6;
     }
     else if (t_rowLetter == 'G' || t_rowLetter == 'g')
     {
-        rowNum = 7;
+        result = 7;
     }
     else if (t_rowLetter == 'H' || t_rowLetter == 'h')
     {
-        rowNum = 8;
+        result = 8;
     }
     else if (t_rowLetter == 'I' || t_rowLetter == 'i')
     {
-        rowNum = 9;
+        result = 9;
     }
     else if (t_rowLetter == 'J' || t_rowLetter == 'j')
     {
-        rowNum = 10;
+        result = 10;
     }
     else
     {
-        throw InvalidInputException("Row letter is invalid.");
+        result = -1;
     }
 
-    return rowNum;
+    return result;
 };

@@ -24,7 +24,7 @@ NetworkBattleCommunication::~NetworkBattleCommunication()
 
 void NetworkBattleCommunication::establishNetworkConnection() const
 {
-    auto incomingConnection = IncomingConnection{
+    IncomingConnection incomingConnection{
         .playerNickname = m_appConfig.get()->getNickname(),
         .opponentNickname = m_opponentName,
         .passcode = m_appConfig.get()->getAuthPasscode()};
@@ -58,14 +58,14 @@ Cell NetworkBattleCommunication::getNextShotTarget() const
 
 void NetworkBattleCommunication::notifyShotResponse(const ShootResponse &shootResponse)
 {
-    auto messageWrapper = MessageWrapper(shootResponse);
+    MessageWrapper messageWrapper(shootResponse);
     auto message = m_mapper.get()->mapFromShootResponse(messageWrapper);
     m_tcpClient.get()->sendMessage(message);
 };
 
 ShootResponse NetworkBattleCommunication::sendShotTo(const Cell &cell)
 {
-    auto messageWrapper = MessageWrapper(cell);
+    MessageWrapper messageWrapper(cell);
     auto message = m_mapper.get()->mapFromCell(messageWrapper);
     m_tcpClient.get()->sendMessage(message);
 

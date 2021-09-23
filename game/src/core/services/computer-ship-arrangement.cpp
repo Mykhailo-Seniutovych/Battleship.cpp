@@ -12,7 +12,7 @@ using namespace std;
 
 Ships ComputerShipArrangement::getShipsArrangement() const
 {
-    auto ships = Ships();
+    Ships ships;
     vector<Ship> existingShips = {};
     
     ships.carrier = getRandomlyPlacedShip(existingShips, Constants::CARRIER_LENGTH);
@@ -36,11 +36,11 @@ Ships ComputerShipArrangement::getShipsArrangement() const
 Ship ComputerShipArrangement::getRandomlyPlacedShip(
     const vector<Ship> &t_existingShips, uint8_t t_newShipLength) const
 {
-    auto randomBool = BoolRandomGenerator();
+    BoolRandomGenerator randomBool;
     auto position = randomBool.getRandomBool() ? Position::Horizontal : Position::Vertical;
     auto availableCellsForShipBeginning = getAvailableCells(
         t_newShipLength, position, t_existingShips);
-    auto randomInt = IntRandomGenerator<int32_t>(0, availableCellsForShipBeginning.size() - 1);
+    IntRandomGenerator<int32_t> randomInt(0, availableCellsForShipBeginning.size() - 1);
     auto index = randomInt.getRandomInt();
 
     auto newShipBeginning = availableCellsForShipBeginning.at(index);

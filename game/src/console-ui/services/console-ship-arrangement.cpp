@@ -22,7 +22,7 @@ Ships ConsoleShipArrangement::getShipsArrangement() const
     skipCommentSection(inputFileStream);
     skipUntilSecondMapRow(inputFileStream);
 
-    auto shipCells = ShipCells();
+    ShipCells shipCells;
     uint8_t rowIndex = 0;
     while (!inputFileStream.eof())
     {
@@ -101,7 +101,7 @@ void ConsoleShipArrangement::parseLine(
 
 Ships ConsoleShipArrangement::createShipsFromCells(const ShipCells &t_shipCells) const
 {
-    auto ships = Ships{
+    Ships ships{
         .carrier = createShipFromCells(t_shipCells.carrierCells),
         .battleship = createShipFromCells(t_shipCells.battleshipCells),
         .cruiser = createShipFromCells(t_shipCells.cruiserCells),

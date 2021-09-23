@@ -33,7 +33,7 @@ ShipCoordinates Ship::getCoordinates() const
     cellsCoordinates.insert(m_intactCellsCoordinates.begin(), m_intactCellsCoordinates.end());
     cellsCoordinates.insert(m_damagedCellsCoordinates.begin(), m_damagedCellsCoordinates.end());
 
-    auto result = ShipCoordinates(m_position, m_axisCoordinate, cellsCoordinates);
+    ShipCoordinates result(m_position, m_axisCoordinate, cellsCoordinates);
     return result;
 }
 

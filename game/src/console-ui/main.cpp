@@ -114,7 +114,7 @@ void showStatistics(bool showBest)
 {
     auto databaseService = make_unique<DatabaseService<Player>>();
     databaseService.get()->ensureDbCreated();
-    auto statisticsUi = StatisticsUi(
+    StatisticsUi statisticsUi(
         make_unique<StatisticsService>(move(databaseService)));
     if (showBest)
     {

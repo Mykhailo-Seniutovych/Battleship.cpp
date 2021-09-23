@@ -27,7 +27,7 @@ ComputerBattleCommunication::ComputerBattleCommunication(
 
 GameStartParams ComputerBattleCommunication::receiveGameStartParams() const
 {
-    auto boolGenerator = BoolRandomGenerator();
+    BoolRandomGenerator boolGenerator;
     return boolGenerator.getRandomBool()
                ? GameStartParams{.initiateFirstShot = true}
                : GameStartParams{.initiateFirstShot = false};

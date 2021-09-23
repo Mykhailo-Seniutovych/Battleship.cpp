@@ -15,9 +15,9 @@ public:
     {
         std::function<GameStartParams(nlohmann::json &)> mapper = [](nlohmann::json &json)
         {
-            auto message = GameStartParams();
-            message.initiateFirstShot = json["initiateFirstShot"];
-            return message;
+            GameStartParams params;
+            params.initiateFirstShot = json["initiateFirstShot"];
+            return params;
         };
 
         return mapToMessage(t_message, mapper);
@@ -27,10 +27,10 @@ public:
     {
         std::function<Cell(nlohmann::json &)> mapper = [](nlohmann::json &json)
         {
-            auto message = Cell();
-            message.horCoord = json["horCoord"];
-            message.verCoord = json["verCoord"];
-            return message;
+            Cell cell;
+            cell.horCoord = json["horCoord"];
+            cell.verCoord = json["verCoord"];
+            return cell;
         };
 
         return mapToMessage(t_message, mapper);
@@ -40,19 +40,19 @@ public:
     {
         std::function<ShootResponse(nlohmann::json &)> mapper = [](nlohmann::json &json)
         {
-            auto message = ShootResponse();
-            message.cellState = json["cellState"];
+            ShootResponse response;
+            response.cellState = json["cellState"];
             if (json.count("sunkShipCoordinates"))
             {
-                message.sunkShipCoordinates.axisCoordinate = json["sunkShipCoordinates"]["axisCoordinate"];
+                response.sunkShipCoordinates.axisCoordinate = json["sunkShipCoordinates"]["axisCoordinate"];
 
                 std::vector<uint8_t> coordinates = json["sunkShipCoordinates"]["cellsCoordinates"];
-                message.sunkShipCoordinates.cellsCoordinates =
+                response.sunkShipCoordinates.cellsCoordinates =
                     std::unordered_set<uint8_t>(coordinates.begin(), coordinates.end());
 
-                message.sunkShipCoordinates.position = json["sunkShipCoordinates"]["position"];
+                response.sunkShipCoordinates.position = json["sunkShipCoordinates"]["position"];
             }
-            return message;
+            return response;
         };
 
         return mapToMessage(t_message, mapper);
@@ -103,7 +103,7 @@ private:
     {
         nlohmann::json json = nlohmann::json::parse(t_message);
 
-        auto result = MessageWrapper<T>();
+        MessageWrapper<T> result;
         result.isError = json["isError"];
         
         if (!json["error"].is_null())

@@ -1,5 +1,8 @@
 .vscode
+.vs
 bin
 build
 obj
+packages
 *.db
+*.user

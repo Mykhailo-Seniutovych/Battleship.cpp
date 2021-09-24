@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Include>
+    <?define ProductVersion = 1.0.0?>
+    <?define ProductDescription="Classic battleship game written in C++"?>
+    <?define UpgradeCode="DD199DDF-4A56-49BE-981D-C9182A2F2E4C"?>
+    <?define Manufacturer="Mykhailo Seniutovych"?>
+    <?define EnglishUSLanguageCode=1033?>
+    <?define ExeFileName="battleship++.exe"?>
+    <?define ProductName="Battleship++"?>
+</Include>

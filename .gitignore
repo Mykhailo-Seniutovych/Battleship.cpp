@@ -6,3 +6,4 @@ obj
 packages
 *.db
 *.user
+/game.installer.deb/*.deb

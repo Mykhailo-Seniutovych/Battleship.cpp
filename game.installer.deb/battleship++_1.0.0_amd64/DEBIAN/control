@@ -1,0 +1,5 @@
+Package: battleship++
+Version: 1.0.0
+Architecture: amd64
+Maintainer: Mykhailo Seniutovych
+Description: Classic battleship game written in C++

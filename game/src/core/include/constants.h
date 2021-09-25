@@ -2,10 +2,12 @@
 #define BATTLESHIP_SRC_CORE_INCLUDE_CONSTANTS_H
 
 #include <stdint.h>
+#include <string>
 
 class Constants
 {
 public:
+    inline static const std::string MAP_FILE_NAME = "map.txt";
     static const uint8_t SHIPS_COUNT = 5;
     static const uint8_t MAP_SIZE = 10;
 

@@ -128,9 +128,9 @@ void showStatistics(bool showBest)
 
 int main(int argc, char *argv[])
 {
+    auto startGame = true;
     try
     {
-        auto startGame = true;
         for (uint8_t index = 1; index < argc; index++)
         {
             if (string(argv[index]) == "--stats-best")
@@ -146,6 +146,35 @@ int main(int argc, char *argv[])
                 showStatistics(false);
                 break;
             }
+
+            if (string(argv[index]) == "--set-nickname")
+            {
+                startGame = false;
+                auto nicknameIndex = index + 1;
+                if (nicknameIndex < argc)
+                {
+                    auto appConfig = make_shared<AppConfig>();
+                    appConfig.get()->initialize();
+                    appConfig.get()->setNickname(argv[nicknameIndex]);
+                }
+                else
+                {
+                    cout << "Provide value for nickname." << endl;
+                }
+            }
+
+            if (string(argv[index]) == "--help")
+            {
+                startGame = false;
+                cout << "Command line options:" << endl
+                     << left << setw(35) << "--stats-best"
+                     << "Display statistics of best players" << endl
+                     << left << setw(35) << "--stats-worst"
+                     << "Display statistics of worst players" << endl
+                     << left << setw(35) << "--set-nickname {new nickname}"
+                     << "Set a new nickname" << endl
+                     << endl;
+            }
         }
 
         if (startGame)
@@ -158,8 +187,11 @@ int main(int argc, char *argv[])
         cerr << "Unexpected error happened: " << ex.what() << endl;
     }
 
-    cout << "Press 'Enter' to exit" << endl;
-    cin.get();
+    if (startGame)
+    {
+        cout << "Press 'Enter' to exit" << endl;
+        cin.get();
+    }
 
     return 0;
 }

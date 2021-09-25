@@ -13,8 +13,12 @@ public:
     std::string getNickname() const override;
     std::string getAuthPasscode() const override;
 
+    void setNickname(const std::string &t_nickname) override;
 private:
     const std::string CONFIG_FILENAME = "app-config.json";
+    const std::string NICKNAME_KEY = "nickname";
+    const std::string SERVER_ADDRESS_KEY = "serverAddress";
+    const std::string SERVER_PORT_KEY = "serverPort";
 
     std::string m_serverAddres;
     uint32_t m_serverPort;

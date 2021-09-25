@@ -1,5 +1,6 @@
 #include <fstream>
 #include <exception>
+#include <iomanip>
 #include "invalid-config-exception.h"
 #include "app-config.h"
 #include "json.hpp"
@@ -14,9 +15,9 @@ void AppConfig::initialize()
         nlohmann::json json;
         fileStream >> json;
 
-        m_nickname = json["nickname"];
-        m_serverAddres = json["serverAddress"];
-        m_serverPort = json["serverPort"];
+        m_nickname = json[NICKNAME_KEY];
+        m_serverAddres = json[SERVER_ADDRESS_KEY];
+        m_serverPort = json[SERVER_PORT_KEY];
     }
     catch (const exception &ex)
     {
@@ -46,4 +47,15 @@ std::string AppConfig::getAuthPasscode() const
 {
     // TODO: Provide better storage of a passcode than directly in source code, that is publicly available on GitHub.
     return "cG!GA{{Y2G;A'C`[,&nPoYTf6yg&FFPkj!`EqoLB0r{lvxKdOE";
+}
+
+void AppConfig::setNickname(const string &t_nickname)
+{
+    nlohmann::json json;
+    json[NICKNAME_KEY] = t_nickname;
+    json[SERVER_ADDRESS_KEY] = m_serverAddres;
+    json[SERVER_PORT_KEY] = m_serverPort;
+
+    std::ofstream fileStream(CONFIG_FILENAME);
+    fileStream << setw(4) << json << std::endl;
 }

@@ -8,15 +8,28 @@
 #include "constants.h"
 #include "validation-exception.h"
 
+#include <exception>
+#include <iostream>
+
 using namespace std;
+
+static void editMapsOnUnix()
+{
+#ifdef __unix
+    std::string cmd = "/bin/nano " + Constants::MAP_FILE_NAME;
+    system(cmd.c_str());
+#endif
+}
 
 Ships ConsoleShipArrangement::getShipsArrangement() const
 {
+    editMapsOnUnix();
+    
     ifstream inputFileStream;
-    inputFileStream.open(MAP_FILE_NAME);
+    inputFileStream.open(Constants::MAP_FILE_NAME);
     if (!inputFileStream.is_open())
     {
-        throw ios_base::failure("Could not open file " + MAP_FILE_NAME);
+        throw ios_base::failure("Could not open file " + Constants::MAP_FILE_NAME);
     }
 
     skipCommentSection(inputFileStream);
@@ -24,7 +37,7 @@ Ships ConsoleShipArrangement::getShipsArrangement() const
 
     ShipCells shipCells;
     uint8_t rowIndex = 0;
-    while (!inputFileStream.eof())
+    while (!inputFileStream.eof() && rowIndex < Constants::MAP_SIZE)
     {
         string line;
         getline(inputFileStream, line);

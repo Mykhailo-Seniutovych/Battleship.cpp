@@ -11,6 +11,8 @@ public:
     virtual uint32_t getServerPort() const = 0;
     virtual std::string getNickname() const = 0;
     virtual std::string getAuthPasscode() const = 0;
+
+    virtual void setNickname(const std::string &t_nickname) = 0;
 };
 
 #endif

@@ -24,7 +24,6 @@ private:
         std::vector<Cell> destroyerCells;
     };
 
-    const std::string MAP_FILE_NAME = "map.txt";
     const std::string CARRIER_SYMBOL = "5 ";
     const std::string BATTLESHIP_SYMBOL = "4 ";
     const std::string CRUISER_SYMBOL = "3 ";

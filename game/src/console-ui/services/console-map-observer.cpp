@@ -1,7 +1,20 @@
 #include <iostream>
 #include "console-map-observer.h"
+
+#ifdef ___WIN32
+#include <conio.h>
+#endif
+
 using namespace std;
 
+static void clearConsole()
+{
+#ifdef __unix
+    printf("\033c");
+#elif defined _WIN32
+    clrscr();
+#endif
+}
 ConsoleMapObserver::ConsoleMapObserver(std::unique_ptr<IMaps> t_maps)
     : m_maps(std::move(t_maps)){};
 
@@ -20,6 +33,8 @@ void ConsoleMapObserver::notifyShipsInitialized(const Ships &ships) const
 
 void ConsoleMapObserver::notifyMyMapUpdated(const MapUpdateData &updateData) const
 {
+    clearConsole();
+
     m_maps.get()->printMyShotCell(updateData.cell);
     m_maps.get()->updateMyMap(updateData);
     m_maps.get()->printMaps();
@@ -27,6 +42,8 @@ void ConsoleMapObserver::notifyMyMapUpdated(const MapUpdateData &updateData) con
 
 void ConsoleMapObserver::notifyEnemyMapUpdated(const MapUpdateData &updateData) const
 {
+    clearConsole();
+
     m_maps.get()->updateEnemyMap(updateData);
     m_maps.get()->printMaps();
 }

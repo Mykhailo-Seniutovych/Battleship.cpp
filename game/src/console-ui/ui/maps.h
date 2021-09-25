@@ -41,7 +41,7 @@ private:
     const std::string SHIP_SUNK_CELL = "\U0001F147 ";
     const std::string MAPS_SEPARATOR = "  |  ";
 // UNICODE characters are not supported on Windows Console, that's why we have to use ASCHII for Windows
-#elif _WIN32 
+#elif defined _WIN32
     const std::string INVISIBLE_CELL = "- ";
     const std::string MISSED_SHOT_CELL = "* ";
     const std::string MY_SHIP_CELL = "||";

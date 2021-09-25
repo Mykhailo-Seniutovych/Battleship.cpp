@@ -1,5 +1,6 @@
-## To build the installer with MSBUILD, run the following command
-* msbuild Game.Installer.Msi.sln /p:Configuration=Release
+## To build the installer with MSBUILD, do the following steps
+* Build the game using instructions from game/README.md file
+* Build the installer using __msbuild Game.Installer.Msi.sln /p:Configuration=Release__ command
 
 # To run the program go to installation folder and do the following
 * Set your nickname inside __app-config.json__ 

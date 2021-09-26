@@ -1,10 +1,6 @@
 #include <iostream>
 #include "console-map-observer.h"
 
-#ifdef ___WIN32
-#include <conio.h>
-#endif
-
 using namespace std;
 
 static void clearConsole()
@@ -12,7 +8,7 @@ static void clearConsole()
 #ifdef __unix
     printf("\033c");
 #elif defined _WIN32
-    clrscr();
+    system("cls");
 #endif
 }
 ConsoleMapObserver::ConsoleMapObserver(std::unique_ptr<IMaps> t_maps)

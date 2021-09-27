@@ -7,7 +7,7 @@ You can use the following symbols:
 "4 " - signifies that the cell is part of a battleship ship (four cells long ship)
 "3 " - signifies that the cell is part of a cruiser or submarine ship (three cells long ship)
 "3`" - signifies that the cell is part of a submarine ship (three cells long ship)
-"1 " - signifies that the cell is part of a destroyer ship (two cells long ship)
+"2 " - signifies that the cell is part of a destroyer ship (two cells long ship)
 
 YOU MUST NOT ADD ADDITIONAL SPACES ON THE MAP, OTHERWISE THE MAP WILL BE INVALID.
 TO BE SURE THAT YOU DON'T HAVE EXTRA SPACES, LOOK IF "|" SYMBOLS ON THE RIGHT ARE VERTICALLY ALLIGNED.

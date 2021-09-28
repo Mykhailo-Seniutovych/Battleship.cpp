@@ -44,7 +44,7 @@ private:
 #elif defined _WIN32
     const std::string INVISIBLE_CELL = "- ";
     const std::string MISSED_SHOT_CELL = "* ";
-    const std::string MY_SHIP_CELL = "||";
+    const std::string MY_SHIP_CELL = "()";
     const std::string SHIP_DAMAGED = "X ";
     const std::string SHIP_SUNK_CELL = "X*";
     const std::string MAPS_SEPARATOR = "  |  ";

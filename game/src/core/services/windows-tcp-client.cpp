@@ -198,7 +198,7 @@ void TcpClient::shutdownConnection()
 
 static string getSocketErrorMessage(int t_errorCode)
 {
-    wchar_t* charErrMsg = "";
+    wchar_t* charErrMsg = nullptr;
     FormatMessageW(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
         NULL, t_errorCode,
         MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),

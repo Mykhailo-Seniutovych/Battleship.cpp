@@ -19,24 +19,24 @@ NetworkBattleCommunication::NetworkBattleCommunication(
 
 NetworkBattleCommunication::~NetworkBattleCommunication()
 {
-    m_tcpClient.get()->shutdownConnection();
+    m_tcpClient->shutdownConnection();
 }
 
 void NetworkBattleCommunication::establishNetworkConnection() const
 {
     IncomingConnection incomingConnection{
-        .playerNickname = m_appConfig.get()->getNickname(),
+        .playerNickname = m_appConfig->getNickname(),
         .opponentNickname = m_opponentName,
-        .passcode = m_appConfig.get()->getAuthPasscode()};
+        .passcode = m_appConfig->getAuthPasscode()};
 
-    auto message = m_mapper.get()->mapFromIncomingConnection(incomingConnection);
-    m_tcpClient.get()->establishConnection(message);
+    auto message = m_mapper->mapFromIncomingConnection(incomingConnection);
+    m_tcpClient->establishConnection(message);
 }
 
 GameStartParams NetworkBattleCommunication::receiveGameStartParams() const
 {
-    auto message = m_tcpClient.get()->readNextMessage();
-    auto msgWrapper = m_mapper.get()->mapToGameStartParams(message);
+    auto message = m_tcpClient->readNextMessage();
+    auto msgWrapper = m_mapper->mapToGameStartParams(message);
     if (msgWrapper.isError)
     {
         throw CommunicationException(msgWrapper.error);
@@ -47,8 +47,8 @@ GameStartParams NetworkBattleCommunication::receiveGameStartParams() const
 
 Cell NetworkBattleCommunication::getNextShotTarget() const
 {
-    auto message = m_tcpClient.get()->readNextMessage();
-    auto msgWrapper = m_mapper.get()->mapToCell(message);
+    auto message = m_tcpClient->readNextMessage();
+    auto msgWrapper = m_mapper->mapToCell(message);
     if (msgWrapper.isError)
     {
         throw CommunicationException(msgWrapper.error);
@@ -59,18 +59,18 @@ Cell NetworkBattleCommunication::getNextShotTarget() const
 void NetworkBattleCommunication::notifyShotResponse(const ShootResponse &shootResponse)
 {
     MessageWrapper messageWrapper(shootResponse);
-    auto message = m_mapper.get()->mapFromShootResponse(messageWrapper);
-    m_tcpClient.get()->sendMessage(message);
+    auto message = m_mapper->mapFromShootResponse(messageWrapper);
+    m_tcpClient->sendMessage(message);
 };
 
 ShootResponse NetworkBattleCommunication::sendShotTo(const Cell &cell)
 {
     MessageWrapper messageWrapper(cell);
-    auto message = m_mapper.get()->mapFromCell(messageWrapper);
-    m_tcpClient.get()->sendMessage(message);
+    auto message = m_mapper->mapFromCell(messageWrapper);
+    m_tcpClient->sendMessage(message);
 
-    auto shootResponseMessage = m_tcpClient.get()->readNextMessage();
-    auto shootResponse = m_mapper.get()->mapToShootResponse(shootResponseMessage);
+    auto shootResponseMessage = m_tcpClient->readNextMessage();
+    auto shootResponse = m_mapper->mapToShootResponse(shootResponseMessage);
     if (shootResponse.isError)
     {
         throw CommunicationException(shootResponse.error);

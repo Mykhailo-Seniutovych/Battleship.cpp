@@ -1,14 +1,28 @@
 #include <fstream>
 #include <exception>
 #include <iomanip>
+#include <filesystem>
 #include "invalid-config-exception.h"
 #include "app-config.h"
 #include "json.hpp"
 
 using namespace std;
 
+static const std::string CONFIG_FILENAME = "app-config.json";
+static const std::string NICKNAME_KEY = "nickname";
+static const std::string SERVER_ADDRESS_KEY = "serverAddress";
+static const std::string SERVER_PORT_KEY = "serverPort";
+
 void AppConfig::initialize()
 {
+    if (!filesystem::exists(CONFIG_FILENAME))
+    {
+        auto message =
+            CONFIG_FILENAME + " was not found. Make sure this file exists. " +
+            "If you lost or deleted it accidentally, you can reintsall the game to restore it.";
+        throw InvalidConfigException(message);
+    }
+
     try
     {
         ifstream fileStream(CONFIG_FILENAME);
@@ -22,8 +36,9 @@ void AppConfig::initialize()
     catch (const exception &ex)
     {
         auto message =
-            "Could not read and process '" + CONFIG_FILENAME +
-            "', message: '" + ex.what() + "'. Make sure config file exists and has valid values.";
+            "Could not process '" + CONFIG_FILENAME +
+            "', message: '" + ex.what() + "'. Make sure the file is in correct json format. " +
+            "If you don't know how to change to the correct format, you can reintsall the game to restore it in the correct foramt.";
         throw InvalidConfigException(message);
     }
 }

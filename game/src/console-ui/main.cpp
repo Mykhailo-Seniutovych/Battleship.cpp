@@ -64,7 +64,7 @@ BattleManager createBattleManager(PlayMode t_playMode, shared_ptr<IAppConfig> t_
             make_unique<ShipManager>(),
             make_unique<ComputerBattleCommunicationFactory>(
                 make_unique<ShipManager>(),
-                make_unique<ConsoleShipArrangement>()),
+                make_unique<ComputerShipArrangement>()),
             make_unique<ConsoleCellReader>());
     }
     else
@@ -88,7 +88,7 @@ void playGame()
     auto playMode = readPlayMode();
 
     auto appConfig = make_shared<AppConfig>();
-    appConfig.get()->initialize();
+    appConfig->initialize();
 
     auto battleManager = createBattleManager(playMode, appConfig);
 
@@ -96,11 +96,11 @@ void playGame()
     battleManager.subscribe(move(mapObserver));
 
     auto databaseService = make_unique<DatabaseService<Player>>();
-    databaseService.get()->ensureDbCreated();
+    databaseService->ensureDbCreated();
 
     auto statisticsObserver = make_unique<StatisticsObserver>(
         make_unique<StatisticsService>(move(databaseService)),
-        appConfig.get()->getNickname());
+        appConfig->getNickname());
     battleManager.subscribe(move(statisticsObserver));
 
     if (playMode == PlayMode::AnotherPlayer)
@@ -113,7 +113,7 @@ void playGame()
 void showStatistics(bool showBest)
 {
     auto databaseService = make_unique<DatabaseService<Player>>();
-    databaseService.get()->ensureDbCreated();
+    databaseService->ensureDbCreated();
     StatisticsUi statisticsUi(
         make_unique<StatisticsService>(move(databaseService)));
     if (showBest)
@@ -154,8 +154,8 @@ int main(int argc, char *argv[])
                 if (nicknameIndex < argc)
                 {
                     auto appConfig = make_shared<AppConfig>();
-                    appConfig.get()->initialize();
-                    appConfig.get()->setNickname(argv[nicknameIndex]);
+                    appConfig->initialize();
+                    appConfig->setNickname(argv[nicknameIndex]);
                 }
                 else
                 {

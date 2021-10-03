@@ -26,8 +26,8 @@ void TcpClient::establishConnection(const std::string &t_incomingConnection)
         {
             throwError();
         }
-        auto address = m_appConfig.get()->getServerAddres();
-        auto port = m_appConfig.get()->getServerPort();
+        auto address = m_appConfig->getServerAddres();
+        auto port = m_appConfig->getServerPort();
 
         sockaddr_in servAddr;
         servAddr.sin_family = AF_INET;

@@ -9,6 +9,23 @@
 using namespace std;
 using namespace map_utils;
 
+#ifdef __unix
+    static const std::string INVISIBLE_CELL = "- ";
+    static const std::string MISSED_SHOT_CELL = "\U00002737 ";
+    static const std::string MY_SHIP_CELL = "\U0001F229";
+    static const std::string SHIP_DAMAGED = "\U00002716 ";
+    static const std::string SHIP_SUNK_CELL = "\U000025A0 ";
+    static const std::string MAPS_SEPARATOR = "  |  ";
+// UNICODE characters are not supported on Windows Console, that's why we have to use ASCHII for Windows
+#elif defined _WIN32
+    static const std::string INVISIBLE_CELL = "- ";
+    static const std::string MISSED_SHOT_CELL = "* ";
+    static const std::string MY_SHIP_CELL = "()";
+    static const std::string SHIP_DAMAGED = "X ";
+    static const std::string SHIP_SUNK_CELL = "X*";
+    static const std::string MAPS_SEPARATOR = "  |  ";
+#endif
+
 void Maps::initMaps(
     const ShipCoordinates &t_myCarrier,
     const ShipCoordinates &t_myBattleship,

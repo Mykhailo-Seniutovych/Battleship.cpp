@@ -35,8 +35,8 @@ GameStartParams ComputerBattleCommunication::receiveGameStartParams() const
 
 void ComputerBattleCommunication::initShips()
 {
-    auto ships = m_computerShipArrangement.get()->getShipsArrangement();
-    m_computerShipManager.get()->initializeShips(ships);
+    auto ships = m_computerShipArrangement->getShipsArrangement();
+    m_computerShipManager->initializeShips(ships);
 }
 
 void ComputerBattleCommunication::initShootTargets()
@@ -71,6 +71,6 @@ void ComputerBattleCommunication::notifyShotResponse(const ShootResponse &shootR
 
 ShootResponse ComputerBattleCommunication::sendShotTo(const Cell &cell)
 {
-    auto response = m_computerShipManager.get()->receiveShot(cell);
+    auto response = m_computerShipManager->receiveShot(cell);
     return response;
 }

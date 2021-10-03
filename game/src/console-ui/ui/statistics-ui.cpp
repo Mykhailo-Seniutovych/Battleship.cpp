@@ -6,6 +6,8 @@
 
 using namespace std;
 
+static const uint32_t PLAYERS_COUNT = 10;
+
 StatisticsUi::StatisticsUi(unique_ptr<IStatisticsService> t_statisticsService)
     : m_statisticsService(move(t_statisticsService))
 {
@@ -13,13 +15,13 @@ StatisticsUi::StatisticsUi(unique_ptr<IStatisticsService> t_statisticsService)
 
 void StatisticsUi::showBestPlayers() const
 {
-    auto players = m_statisticsService.get()->getTopBestPlayers(PLAYERS_COUNT);
+    auto players = m_statisticsService->getTopBestPlayers(PLAYERS_COUNT);
     displayPlayers(players);
 }
 
 void StatisticsUi::showWorstPlayers() const
 {
-    auto players = m_statisticsService.get()->getTopWorstPlayers(PLAYERS_COUNT);
+    auto players = m_statisticsService->getTopWorstPlayers(PLAYERS_COUNT);
     displayPlayers(players);
 }
 

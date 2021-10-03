@@ -16,5 +16,5 @@ void StatisticsObserver::notifyEnemyMapUpdated(const MapUpdateData &t_updateData
 
 void StatisticsObserver::notifyGameOver(bool t_currentPlayerWon) const
 {
-    m_statisticsService.get()->updatePlayerStats(m_currentPlayerNickname, t_currentPlayerWon);
+    m_statisticsService->updatePlayerStats(m_currentPlayerNickname, t_currentPlayerWon);
 }

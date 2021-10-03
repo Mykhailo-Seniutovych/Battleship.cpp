@@ -20,6 +20,6 @@ shared_ptr<IBattleComunication> NetworkBattleCommunicationFactory::createBattleC
 {
     auto communication = make_shared<NetworkBattleCommunication>(
         move(m_tcpClient), move(m_mapper), m_appConfig, m_opponentName);
-    communication.get()->establishNetworkConnection();
+    communication->establishNetworkConnection();
     return communication;
 }

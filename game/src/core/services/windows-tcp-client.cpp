@@ -34,8 +34,8 @@ void TcpClient::establishConnection(const std::string &t_incomingConnection)
             throw TcpException(errorMsg);
         }
 
-        auto address = m_appConfig.get()->getServerAddres();
-        auto port = m_appConfig.get()->getServerPort();
+        auto address = m_appConfig->getServerAddres();
+        auto port = m_appConfig->getServerPort();
 
         sockaddr_in addrInfo;
         addrInfo.sin_family = AF_INET;
@@ -198,7 +198,7 @@ void TcpClient::shutdownConnection()
 
 static string getSocketErrorMessage(int t_errorCode)
 {
-    wchar_t* charErrMsg;
+    wchar_t* charErrMsg = "";
     FormatMessageW(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
         NULL, t_errorCode,
         MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),

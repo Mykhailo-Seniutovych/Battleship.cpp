@@ -24,12 +24,6 @@ private:
         std::vector<Cell> destroyerCells;
     };
 
-    const std::string CARRIER_SYMBOL = "5 ";
-    const std::string BATTLESHIP_SYMBOL = "4 ";
-    const std::string CRUISER_SYMBOL = "3 ";
-    const std::string SUBMARINE_SYMBOL = "3`";
-    const std::string DESTROYER_SYMBOL = "2 ";
-
     void skipCommentSection(std::ifstream &t_inputFileStream) const;
     void skipUntilSecondMapRow(std::ifstream &t_inputFileStream) const;
     void parseLine(ShipCells &t_shipCells, const std::string &t_line, uint8_t t_rowIndex) const;

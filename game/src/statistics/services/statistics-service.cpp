@@ -13,7 +13,7 @@ StatisticsService::StatisticsService(std::unique_ptr<IDatabaseService<Player>> t
 
 void StatisticsService::updatePlayerStats(const std::string &nickname, bool isGameWon) const
 {
-    auto playerRecord = m_databaseService.get()->readSingle(
+    auto playerRecord = m_databaseService->readSingle(
         Queries::SELECT_PLAYER,
         RecordReaders::playerReader(),
         Queries::selectPlayerBinder(nickname.c_str()));
@@ -23,7 +23,7 @@ void StatisticsService::updatePlayerStats(const std::string &nickname, bool isGa
         playerRecord.entity.gamesWon += isGameWon ? 1 : 0;
         playerRecord.entity.gamesLost += isGameWon ? 0 : 1;
 
-        m_databaseService.get()->executeCommand(
+        m_databaseService->executeCommand(
             Queries::UPDATE_PLAYER_STATS,
             Queries::updatePlayerStatsBinder(
                 playerRecord.entity.nickname.c_str(),
@@ -34,7 +34,7 @@ void StatisticsService::updatePlayerStats(const std::string &nickname, bool isGa
     {
         auto gamesWon = isGameWon ? 1 : 0;
         auto gamesLost = isGameWon ? 0 : 1;
-        m_databaseService.get()->executeCommand(
+        m_databaseService->executeCommand(
             Queries::INSERT_PLAYER,
             Queries::insertPlayerBinder(nickname.c_str(), gamesWon, gamesLost));
     }
@@ -42,7 +42,7 @@ void StatisticsService::updatePlayerStats(const std::string &nickname, bool isGa
 
 vector<Player> StatisticsService::getTopBestPlayers(uint32_t t_count) const
 {
-    auto players = m_databaseService.get()->readCollection(
+    auto players = m_databaseService->readCollection(
         Queries::SELECT_PLAYERS, RecordReaders::playerReader());
 
     sort(players.begin(), players.end(), std::greater<Player>());
@@ -56,7 +56,7 @@ vector<Player> StatisticsService::getTopBestPlayers(uint32_t t_count) const
 
 vector<Player> StatisticsService::getTopWorstPlayers(uint32_t t_count) const
 {
-    auto players = m_databaseService.get()->readCollection(
+    auto players = m_databaseService->readCollection(
         Queries::SELECT_PLAYERS, RecordReaders::playerReader());
 
     sort(players.begin(), players.end());

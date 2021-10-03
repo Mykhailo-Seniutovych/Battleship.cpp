@@ -13,6 +13,12 @@
 
 using namespace std;
 
+static const std::string CARRIER_SYMBOL = "5 ";
+static const std::string BATTLESHIP_SYMBOL = "4 ";
+static const std::string CRUISER_SYMBOL = "3 ";
+static const std::string SUBMARINE_SYMBOL = "3`";
+static const std::string DESTROYER_SYMBOL = "2 ";
+
 static void editMapsOnUnix()
 {
 #ifdef __unix
@@ -24,7 +30,7 @@ static void editMapsOnUnix()
 Ships ConsoleShipArrangement::getShipsArrangement() const
 {
     editMapsOnUnix();
-    
+
     ifstream inputFileStream;
     inputFileStream.open(Constants::MAP_FILE_NAME);
     if (!inputFileStream.is_open())
@@ -85,6 +91,13 @@ void ConsoleShipArrangement::parseLine(
     ShipCells &t_shipCells, const std::string &t_line, uint8_t t_rowIndex) const
 {
     auto charCountInOneMapRow = Constants::MAP_SIZE * 2 + 2;
+    if (t_line.size() < charCountInOneMapRow)
+    {
+        throw ValidationException(
+            "Map file has incorrect format. "
+            "If you corrupted the file and don't know how to restore it to the correct format, reinstall the game.");
+    }
+
     for (uint8_t verIndex = 2; verIndex < charCountInOneMapRow; verIndex += 2)
     {
         auto symbol = t_line.substr(verIndex, 2);

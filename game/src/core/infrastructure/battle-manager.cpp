@@ -20,11 +20,11 @@ BattleManager::BattleManager(
 
 void BattleManager::playBattle() const
 {
-    auto shipsOnMap = m_shipArrangement.get()->getShipsArrangement();
-    m_shipManager.get()->initializeShips(shipsOnMap);
+    auto shipsOnMap = m_shipArrangement->getShipsArrangement();
+    m_shipManager->initializeShips(shipsOnMap);
 
-    auto battleCommunication = m_battleCommunicationFactory.get()->createBattleCommunication();
-    auto startParams = battleCommunication.get()->receiveGameStartParams();
+    auto battleCommunication = m_battleCommunicationFactory->createBattleCommunication();
+    auto startParams = battleCommunication->receiveGameStartParams();
     notifyShipsInitialized(shipsOnMap);
 
     if (startParams.initiateFirstShot)
@@ -54,18 +54,18 @@ void BattleManager::playBattle() const
 
 ShootResponse BattleManager::sendShot(shared_ptr<IBattleComunication> t_battleCommunication) const
 {
-    auto cellToShoot = m_cellReader.get()->readCell();
-    auto enemyResponse = t_battleCommunication.get()->sendShotTo(cellToShoot);
+    auto cellToShoot = m_cellReader->readCell();
+    auto enemyResponse = t_battleCommunication->sendShotTo(cellToShoot);
     notifyEnemyMapUpdated(cellToShoot, enemyResponse);
     return enemyResponse;
 }
 
 ShootResponse BattleManager::receiveShot(shared_ptr<IBattleComunication> t_battleCommunication) const
 {
-    auto targetCell = t_battleCommunication.get()->getNextShotTarget();
-    auto currentPlayerResponse = m_shipManager.get()->receiveShot(targetCell);
+    auto targetCell = t_battleCommunication->getNextShotTarget();
+    auto currentPlayerResponse = m_shipManager->receiveShot(targetCell);
     notifyMyMapUpdated(targetCell, currentPlayerResponse);
-    t_battleCommunication.get()->notifyShotResponse(currentPlayerResponse);
+    t_battleCommunication->notifyShotResponse(currentPlayerResponse);
     return currentPlayerResponse;
 }
 

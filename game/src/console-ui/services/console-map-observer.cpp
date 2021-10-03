@@ -18,30 +18,30 @@ void ConsoleMapObserver::notifyShipsInitialized(const Ships &ships) const
 {
     cout << "Connection established successfully." << endl
          << endl;
-    m_maps.get()->initMaps(
+    m_maps->initMaps(
         ships.carrier.getCoordinates(),
         ships.battleship.getCoordinates(),
         ships.cruiser.getCoordinates(),
         ships.submarine.getCoordinates(),
         ships.destroyer.getCoordinates());
-    m_maps.get()->printMaps();
+    m_maps->printMaps();
 }
 
 void ConsoleMapObserver::notifyMyMapUpdated(const MapUpdateData &updateData) const
 {
     clearConsole();
 
-    m_maps.get()->printMyShotCell(updateData.cell);
-    m_maps.get()->updateMyMap(updateData);
-    m_maps.get()->printMaps();
+    m_maps->printMyShotCell(updateData.cell);
+    m_maps->updateMyMap(updateData);
+    m_maps->printMaps();
 }
 
 void ConsoleMapObserver::notifyEnemyMapUpdated(const MapUpdateData &updateData) const
 {
     clearConsole();
 
-    m_maps.get()->updateEnemyMap(updateData);
-    m_maps.get()->printMaps();
+    m_maps->updateEnemyMap(updateData);
+    m_maps->printMaps();
 }
 
 void ConsoleMapObserver::notifyGameOver(bool t_currentPlayerWon) const

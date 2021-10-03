@@ -16,7 +16,6 @@ public:
     void showWorstPlayers() const override;
 
 private:
-    const uint32_t PLAYERS_COUNT = 10;
     std::unique_ptr<IStatisticsService> m_statisticsService;
 
     void displayPlayers(const std::vector<Player> &players) const;

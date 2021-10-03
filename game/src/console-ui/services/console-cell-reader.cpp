@@ -11,34 +11,41 @@ using namespace map_utils;
 
 Cell ConsoleCellReader::readCell() const
 {
-	cout << "Enter coordinates to shoot at (e.g. \"A 10\")" << endl;
-	string newTarget;
-	getline(cin, newTarget);
+    cout << "Enter coordinates to shoot at (e.g. \"A 10\")" << endl;
+    string newTarget;
+    getline(cin, newTarget);
 
-	auto rowLetter = newTarget[0];
-	auto rowNumberResult = convertRowLetterToRowNumber(rowLetter);
-	if (rowNumberResult < 1)
-	{
-		cerr << INVALID_INPUT_ERROR_MSG << endl;
-		return readCell();
-	}
+    auto spacePosition = newTarget.find(" ");
+    auto spaceFound = spacePosition != string::npos;
+    if (newTarget == "" || !spaceFound)
+    {
+        cerr << INVALID_INPUT_ERROR_MSG << endl;
+        return readCell();
+    }
 
-	try
-	{
-		uint8_t rowNum = rowNumberResult - 1;
-		auto colNumberFromUserInput = stoi(newTarget.substr(newTarget.find(" ") + 1));
-		if (colNumberFromUserInput < 1 || colNumberFromUserInput > Constants::MAP_SIZE)
-		{
-			cerr << INVALID_INPUT_ERROR_MSG << endl;
-			return readCell();
-		}
-		auto colNum = colNumberFromUserInput - 1;
-		return Cell(rowNum, colNum);
-	}
-	catch (exception ex)
-	{
-		cerr << INVALID_INPUT_ERROR_MSG << endl;
-		return readCell();
-	}
+    auto rowLetter = newTarget[0];
+    auto rowNumberResult = convertRowLetterToRowNumber(rowLetter);
+    if (rowNumberResult < 1)
+    {
+        cerr << INVALID_INPUT_ERROR_MSG << endl;
+        return readCell();
+    }
 
+    try
+    {
+        uint8_t rowNum = rowNumberResult - 1;
+        auto colNumberFromUserInput = stoi(newTarget.substr(spacePosition + 1));
+        if (colNumberFromUserInput < 1 || colNumberFromUserInput > Constants::MAP_SIZE)
+        {
+            cerr << INVALID_INPUT_ERROR_MSG << endl;
+            return readCell();
+        }
+        auto colNum = colNumberFromUserInput - 1;
+        return Cell(rowNum, colNum);
+    }
+    catch (exception ex)
+    {
+        cerr << INVALID_INPUT_ERROR_MSG << endl;
+        return readCell();
+    }
 }

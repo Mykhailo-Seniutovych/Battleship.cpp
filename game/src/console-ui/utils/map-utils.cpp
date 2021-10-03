@@ -21,7 +21,7 @@ int8_t map_utils::convertRowLetterToRowNumber(char t_rowLetter)
 {
     int8_t result = -1;
     auto rowNumber = toupper(t_rowLetter) - ASCHII_LETTER_OFFSET;
-    if (rowNumber > 0 && rowNumber < Constants::MAP_SIZE)
+    if (rowNumber > 0 && rowNumber <= Constants::MAP_SIZE)
     {
         result = rowNumber;
     }

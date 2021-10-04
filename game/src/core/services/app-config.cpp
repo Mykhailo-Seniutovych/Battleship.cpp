@@ -5,6 +5,8 @@
 #include "invalid-config-exception.h"
 #include "app-config.h"
 #include "json.hpp"
+#include "utils/text-utils.h"
+#include "validation-exception.h"
 
 using namespace std;
 
@@ -66,6 +68,11 @@ std::string AppConfig::getAuthPasscode() const
 
 void AppConfig::setNickname(const string &t_nickname)
 {
+    if (!TextUtils::containsOnlyAscii(t_nickname))
+    {
+        throw ValidationException("Nickname can contain only ASCII characters.");
+    }
+    
     nlohmann::json json;
     json[NICKNAME_KEY] = t_nickname;
     json[SERVER_ADDRESS_KEY] = m_serverAddres;

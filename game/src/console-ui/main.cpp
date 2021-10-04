@@ -184,7 +184,7 @@ int main(int argc, char *argv[])
     }
     catch (const exception &ex)
     {
-        cerr << "Unexpected error happened: " << ex.what() << endl;
+        cerr << "Error happened: " << ex.what() << endl;
     }
 
     if (startGame)

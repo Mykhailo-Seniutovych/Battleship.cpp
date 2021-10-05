@@ -3,9 +3,9 @@
 * run the script **./create_installer.h** from current folder
 
 ## To install the package on your Linux machine run:
-* __sudo dpkg -i battleship++_{version}_amd64.deb__
+* _sudo dpkg -i battleship++_{version}_amd64.deb__
 
 ## To start the game:
-* go to __usr/bin__ folder
+* go to __usr/bin/battleship++__ folder
 * run the game using __sudo ./battleship++__ (sudo needed for sqlite to work properly)
 

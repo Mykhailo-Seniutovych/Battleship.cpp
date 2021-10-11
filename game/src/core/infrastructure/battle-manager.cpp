@@ -10,7 +10,7 @@ BattleManager::BattleManager(
     unique_ptr<IShipManager> t_shipManager,
     unique_ptr<IBattleComunicationFactory> t_battleCommunicationFactory,
     unique_ptr<ICellReader> t_cellReader)
-    
+
     : m_shipArrangement(move(t_shipArrangement)),
       m_shipManager(move(t_shipManager)),
       m_battleCommunicationFactory(move(t_battleCommunicationFactory)),
@@ -27,27 +27,57 @@ void BattleManager::playBattle() const
     auto startParams = battleCommunication->receiveGameStartParams();
     notifyShipsInitialized(shipsOnMap);
 
+    bool gameContines = true;
+
     if (startParams.initiateFirstShot)
     {
-        sendShot(battleCommunication);
+        bool hasAnotherShot = true;
+        while (hasAnotherShot && gameContines)
+        {
+            auto enemyResponse = sendShot(battleCommunication);
+            auto enemyLost = enemyResponse.cellState == CellState::GameOver;
+            if (enemyLost)
+            {
+                notifyGameOver(true);
+                gameContines = false;
+                break;
+            }
+            hasAnotherShot = enemyResponse.cellState == CellState::ShipDamaged ||
+                             enemyResponse.cellState == CellState::ShipSunk;
+        }
     }
 
-    while (true)
+    while (gameContines)
     {
-        auto currentPlayerResponse = receiveShot(battleCommunication);
-        auto currentPlayerLost = currentPlayerResponse.cellState == CellState::GameOver;
-        if (currentPlayerLost)
+        bool hasAnotherShot = true;
+        while (hasAnotherShot && gameContines)
         {
-            notifyGameOver(false);
-            break;
+            auto currentPlayerResponse = receiveShot(battleCommunication);
+            auto currentPlayerLost = currentPlayerResponse.cellState == CellState::GameOver;
+
+            if (currentPlayerLost)
+            {
+                notifyGameOver(false);
+                gameContines = false;
+                break;
+            }
+            hasAnotherShot = currentPlayerResponse.cellState == CellState::ShipDamaged ||
+                             currentPlayerResponse.cellState == CellState::ShipSunk;
         }
 
-        auto enemyResponse = sendShot(battleCommunication);
-        auto enemyLost = enemyResponse.cellState == CellState::GameOver;
-        if (enemyLost)
+        hasAnotherShot = true;
+        while (hasAnotherShot && gameContines)
         {
-            notifyGameOver(true);
-            break;
+            auto enemyResponse = sendShot(battleCommunication);
+            auto enemyLost = enemyResponse.cellState == CellState::GameOver;
+            if (enemyLost)
+            {
+                notifyGameOver(true);
+                gameContines = false;
+                break;
+            }
+            hasAnotherShot = enemyResponse.cellState == CellState::ShipDamaged ||
+                             enemyResponse.cellState == CellState::ShipSunk;
         }
     };
 }

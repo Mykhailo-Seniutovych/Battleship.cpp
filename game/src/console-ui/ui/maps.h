@@ -46,7 +46,7 @@ private:
     void initShipOnMyMap(const ShipCoordinates &ship);
     void printMapsSeparator() const;
     void printMapRow(uint8_t row, const MapCellState (&t_map)[Constants::MAP_SIZE][Constants::MAP_SIZE]) const;
-    void printRowNumber(uint8_t rowNum) const;
+    void printColNumber(uint8_t rowNum) const;
     void printCell(const MapCellState &cellState) const;
 };
 

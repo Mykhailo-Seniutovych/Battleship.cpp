@@ -12,14 +12,14 @@ You can use the following symbols:
 YOU MUST NOT ADD ADDITIONAL SPACES ON THE MAP, OTHERWISE THE MAP WILL BE INVALID.
 TO BE SURE THAT YOU DON'T HAVE EXTRA SPACES, LOOK IF "|" SYMBOLS ON THE RIGHT ARE VERTICALLY ALLIGNED.
 */
-  1 2 3 4 5 6 7 8 9 10|
-A - - - - - - - - - - |
-B 5 5 5 5 5 - 3 3 3 - |
-C - - - - - - - - - - |
-D - - - - - - - - 2 - |
-E - - - - - - - - 2 - |
-F - - - - 3`3`3`- - - |
-G - - - - - - - - - 4 |
-H - - - - - - - - - 4 |
-I - - - - - - - - - 4 |
-J - - - - - - - - - 4 |
+   A B C D E F G H I J |
+ 1 - - - - - - - - - - |
+ 2 5 5 5 5 5 - 3 3 3 - |
+ 3 - - - - - - - - - - |
+ 4 - - - - - - - - 2 - |
+ 5 - - - - - - - - 2 - |
+ 6 - - - - 3`3`3`- - - |
+ 7 - - - - - - - - - 4 |
+ 8 - - - - - - - - - 4 |
+ 9 - - - - - - - - - 4 |
+10 - - - - - - - - - 4 |

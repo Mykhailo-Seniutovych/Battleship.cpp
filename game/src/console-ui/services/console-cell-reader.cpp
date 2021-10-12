@@ -1,4 +1,3 @@
-
 #include <iostream>
 #include <string>
 #include "console-cell-reader.h"
@@ -17,35 +16,54 @@ Cell ConsoleCellReader::readCell() const
 
     auto spacePosition = newTarget.find(" ");
     auto spaceFound = spacePosition != string::npos;
-    if (newTarget == "" || !spaceFound)
-    {
-        cerr << INVALID_INPUT_ERROR_MSG << endl;
-        return readCell();
-    }
+    Cell cell;
+    auto isError = false;
 
-    auto rowLetter = newTarget[0];
-    auto rowNumberResult = convertRowLetterToRowNumber(rowLetter);
-    if (rowNumberResult < 1)
+    do
     {
-        cerr << INVALID_INPUT_ERROR_MSG << endl;
-        return readCell();
-    }
-
-    try
-    {
-        uint8_t rowNum = rowNumberResult - 1;
-        auto colNumberFromUserInput = stoi(newTarget.substr(spacePosition + 1));
-        if (colNumberFromUserInput < 1 || colNumberFromUserInput > Constants::MAP_SIZE)
+        if (newTarget == "" || !spaceFound)
         {
-            cerr << INVALID_INPUT_ERROR_MSG << endl;
-            return readCell();
+            isError = true;
+            break;
         }
-        auto colNum = colNumberFromUserInput - 1;
-        return Cell(rowNum, colNum);
-    }
-    catch (exception ex)
+
+        uint8_t rowNum = 0;
+        try
+        {
+            auto rowNumberFromUserInput = stoi(newTarget.substr(0, spacePosition));
+
+            if (rowNumberFromUserInput < 1 || rowNumberFromUserInput > Constants::MAP_SIZE)
+            {
+                isError = true;
+                break;
+            }
+            rowNum = rowNumberFromUserInput - 1;
+        }
+        catch (exception ex)
+        {
+            isError = true;
+            break;
+        }
+
+        auto colLetter = newTarget.substr(spacePosition + 1)[0];
+        auto colNumberResult = convertRowLetterToRowNumber(colLetter);
+        if (colNumberResult < 1)
+        {
+            isError = true;
+            break;
+        }
+
+        uint8_t colNum = colNumberResult - 1;
+        cell = Cell(rowNum, colNum);
+    } while (false);
+
+    if (isError)
     {
         cerr << INVALID_INPUT_ERROR_MSG << endl;
         return readCell();
+    }
+    else
+    {
+        return cell;
     }
 }

@@ -98,7 +98,7 @@ void ConsoleShipArrangement::skipUntilSecondMapRow(ifstream &t_inputFileStream) 
 void ConsoleShipArrangement::parseLine(
     ShipCells &t_shipCells, const std::string &t_line, uint8_t t_rowIndex) const
 {
-    auto charCountInOneMapRow = Constants::MAP_SIZE * 2 + 3;
+    auto charCountInOneMapRow = Constants::MAP_SIZE * 2 + 4;
     if (t_line.size() != charCountInOneMapRow)
     {
         throw ValidationException(
@@ -106,7 +106,7 @@ void ConsoleShipArrangement::parseLine(
             "If you corrupted the file and don't know how to restore it to the correct format, reinstall the game.");
     }
 
-    for (uint8_t verIndex = 2; verIndex < charCountInOneMapRow - 1; verIndex += 2)
+    for (uint8_t verIndex = 3; verIndex < charCountInOneMapRow - 1; verIndex += 2)
     {
         auto symbol = t_line.substr(verIndex, 2);
         uint8_t colIndex = (verIndex - 2) / 2;

@@ -6,7 +6,7 @@
 
 static const uint8_t ASCHII_LETTER_OFFSET = 64;
 
-char map_utils::convertRowNumberToRowLetter(uint8_t t_rowNum)
+char map_utils::convertColNumberToColLetter(uint8_t t_rowNum)
 {
     auto letterCode = t_rowNum + ASCHII_LETTER_OFFSET;
     char result = -1;

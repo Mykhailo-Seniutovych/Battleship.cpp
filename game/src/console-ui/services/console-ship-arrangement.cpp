@@ -4,12 +4,13 @@
 #include <cstdint>
 #include <unordered_set>
 #include <string>
+#include <exception>
+#include <iostream>
+#include <algorithm>
+
 #include "console-ship-arrangement.h"
 #include "constants.h"
 #include "validation-exception.h"
-
-#include <exception>
-#include <iostream>
 
 using namespace std;
 
@@ -25,6 +26,12 @@ static void editMapsOnUnix()
     std::string cmd = "/bin/nano " + Constants::MAP_FILE_NAME;
     system(cmd.c_str());
 #endif
+}
+
+static void rightTrimString(std::string &s) {
+    s.erase(std::find_if(s.rbegin(), s.rend(), [](unsigned char ch) {
+        return !std::isspace(ch);
+    }).base(), s.end());
 }
 
 Ships ConsoleShipArrangement::getShipsArrangement() const
@@ -47,6 +54,7 @@ Ships ConsoleShipArrangement::getShipsArrangement() const
     {
         string line;
         getline(inputFileStream, line);
+        rightTrimString(line);
         parseLine(shipCells, line, rowIndex);
         rowIndex++;
     }
@@ -90,15 +98,15 @@ void ConsoleShipArrangement::skipUntilSecondMapRow(ifstream &t_inputFileStream) 
 void ConsoleShipArrangement::parseLine(
     ShipCells &t_shipCells, const std::string &t_line, uint8_t t_rowIndex) const
 {
-    auto charCountInOneMapRow = Constants::MAP_SIZE * 2 + 2;
-    if (t_line.size() < charCountInOneMapRow)
+    auto charCountInOneMapRow = Constants::MAP_SIZE * 2 + 3;
+    if (t_line.size() != charCountInOneMapRow)
     {
         throw ValidationException(
             "Map file has incorrect format. "
             "If you corrupted the file and don't know how to restore it to the correct format, reinstall the game.");
     }
 
-    for (uint8_t verIndex = 2; verIndex < charCountInOneMapRow; verIndex += 2)
+    for (uint8_t verIndex = 2; verIndex < charCountInOneMapRow - 1; verIndex += 2)
     {
         auto symbol = t_line.substr(verIndex, 2);
         uint8_t colIndex = (verIndex - 2) / 2;
@@ -138,26 +146,39 @@ Ships ConsoleShipArrangement::createShipsFromCells(const ShipCells &t_shipCells)
 
 Ship ConsoleShipArrangement::createShipFromCells(const std::vector<Cell> &t_cells) const
 {
-    auto position =
-        t_cells[0].horCoord == t_cells[1].horCoord
-            ? Position::Horizontal
-            : Position::Vertical;
-
-    auto axisCoord = position == Position::Horizontal
-                         ? t_cells[0].horCoord
-                         : t_cells[0].verCoord;
-
-    unordered_set<uint8_t> coordinates = {};
-    for (const auto &cell : t_cells)
+    Ship ship;
+    if (t_cells.size() > 1)
     {
-        auto cellAxisCoord = position == Position::Horizontal ? cell.horCoord : cell.verCoord;
-        if (cellAxisCoord != axisCoord)
+        auto position =
+            t_cells[0].horCoord == t_cells[1].horCoord
+                ? Position::Horizontal
+                : Position::Vertical;
+
+        auto axisCoord = position == Position::Horizontal
+                             ? t_cells[0].horCoord
+                             : t_cells[0].verCoord;
+
+        unordered_set<uint8_t> coordinates = {};
+        for (const auto &cell : t_cells)
         {
-            throw ValidationException(
-                "Ship cells must be in sequential order, "
-                "and ship must be either in horizontal or vertical position, not both.");
+            auto cellAxisCoord = position == Position::Horizontal ? cell.horCoord : cell.verCoord;
+            if (cellAxisCoord != axisCoord)
+            {
+                throw ValidationException(
+                    "Ship cells must be in sequential order, "
+                    "and ship must be either in horizontal or vertical position, not both.");
+            }
+            coordinates.insert(position == Position::Horizontal ? cell.verCoord : cell.horCoord);
         }
-        coordinates.insert(position == Position::Horizontal ? cell.verCoord : cell.horCoord);
+        ship = Ship(position, axisCoord, coordinates);
     }
-    return Ship(position, axisCoord, coordinates);
+    else if (t_cells.size() == 1)
+    {
+        ship = Ship(Position::Horizontal, t_cells[0].horCoord, {t_cells[0].verCoord});
+    }
+    else
+    {
+        throw ValidationException("Ship length cannot be 0");
+    }
+    return ship;
 }

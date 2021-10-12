@@ -19,11 +19,19 @@ public:
     void initializeShips(const Ships &t_ships) override;
 
 private:
-    Ship m_carrier;
     Ship m_battleship;
-    Ship m_cruiser;
-    Ship m_submarine;
-    Ship m_destroyer;
+
+    Ship m_cruiser1;
+    Ship m_cruiser2;
+
+    Ship m_destroyer1;
+    Ship m_destroyer2;
+    Ship m_destroyer3;
+
+    Ship m_submarine1;
+    Ship m_submarine2;
+    Ship m_submarine3;
+    Ship m_submarine4;
 
     bool isGameOver() const;
 

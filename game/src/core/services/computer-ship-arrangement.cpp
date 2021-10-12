@@ -15,20 +15,38 @@ Ships ComputerShipArrangement::getShipsArrangement() const
     Ships ships;
     vector<Ship> existingShips = {};
 
-    ships.carrier = getRandomlyPlacedShip(existingShips, Constants::CARRIER_LENGTH);
-    existingShips.push_back(ships.carrier);
-
     ships.battleship = getRandomlyPlacedShip(existingShips, Constants::BATTLESHIP_LENGTH);
     existingShips.push_back(ships.battleship);
 
-    ships.cruiser = getRandomlyPlacedShip(existingShips, Constants::CRUISER_LENGTH);
-    existingShips.push_back(ships.cruiser);
 
-    ships.submarine = getRandomlyPlacedShip(existingShips, Constants::SUBMARINE_LENGTH);
-    existingShips.push_back(ships.submarine);
+    ships.cruiser1 = getRandomlyPlacedShip(existingShips, Constants::CRUISER_LENGTH);
+    existingShips.push_back(ships.cruiser1);
 
-    ships.destroyer = getRandomlyPlacedShip(existingShips, Constants::DESTROYER_LENGTH);
-    existingShips.push_back(ships.destroyer);
+    ships.cruiser2 = getRandomlyPlacedShip(existingShips, Constants::CRUISER_LENGTH);
+    existingShips.push_back(ships.cruiser2);
+
+
+    ships.destroyer1 = getRandomlyPlacedShip(existingShips, Constants::DESTROYER_LENGTH);
+    existingShips.push_back(ships.destroyer1);
+
+    ships.destroyer2 = getRandomlyPlacedShip(existingShips, Constants::DESTROYER_LENGTH);
+    existingShips.push_back(ships.destroyer2);
+
+    ships.destroyer3 = getRandomlyPlacedShip(existingShips, Constants::DESTROYER_LENGTH);
+    existingShips.push_back(ships.destroyer3);
+
+
+    ships.submarine1 = getRandomlyPlacedShip(existingShips, Constants::SUBMARINE_LENGTH);
+    existingShips.push_back(ships.submarine1);
+
+    ships.submarine2 = getRandomlyPlacedShip(existingShips, Constants::SUBMARINE_LENGTH);
+    existingShips.push_back(ships.submarine2);
+
+    ships.submarine3 = getRandomlyPlacedShip(existingShips, Constants::SUBMARINE_LENGTH);
+    existingShips.push_back(ships.submarine3);
+
+    ships.submarine4 = getRandomlyPlacedShip(existingShips, Constants::SUBMARINE_LENGTH);
+    existingShips.push_back(ships.submarine4);
 
     return ships;
 }

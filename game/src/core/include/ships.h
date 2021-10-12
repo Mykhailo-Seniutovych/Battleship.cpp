@@ -5,11 +5,19 @@
 
 struct Ships
 {
-    Ship carrier;
     Ship battleship;
-    Ship cruiser;
-    Ship submarine;
-    Ship destroyer;
+
+    Ship cruiser1;
+    Ship cruiser2;
+
+    Ship destroyer1;
+    Ship destroyer2;
+    Ship destroyer3;
+    
+    Ship submarine1;
+    Ship submarine2;
+    Ship submarine3;
+    Ship submarine4;
 };
 
 #endif

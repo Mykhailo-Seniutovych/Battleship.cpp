@@ -3,23 +3,33 @@ This file contains the arrangement of your ships for the game.
 Before starting the game modify this file to place the ships in the desired positions.
 You can use the following symbols: 
 "- " - signifies an empty cell, 
-"5 " - signifies that the cell is part of a carrier ship (five cells long ship)
+
 "4 " - signifies that the cell is part of a battleship ship (four cells long ship)
-"3 " - signifies that the cell is part of a cruiser or submarine ship (three cells long ship)
-"3`" - signifies that the cell is part of a submarine ship (three cells long ship)
-"2 " - signifies that the cell is part of a destroyer ship (two cells long ship)
+
+"3 " - signifies that the cell is part of a first cruiser ship (three cells long ship)
+"3`" - signifies that the cell is part of a second cruiser ship (three cells long ship)
+
+"2 " - signifies that the cell is part of a first destroyer ship (two cells long ship)
+"2`" - signifies that the cell is part of a second destroyer ship (two cells long ship)
+"2'" - signifies that the cell is part of a third destroyer ship (two cells long ship)
+
+"1 " - signifies that the cell is part of a first submarine ship (one cells long ship)
+"1`" - signifies that the cell is part of a second submarine ship (one cells long ship)
+"1'" - signifies that the cell is part of a third submarine ship (one cells long ship)
+"1~" - signifies that the cell is part of a fourth submarine ship (one cells long ship)
+
 
 YOU MUST NOT ADD ADDITIONAL SPACES ON THE MAP, OTHERWISE THE MAP WILL BE INVALID.
 TO BE SURE THAT YOU DON'T HAVE EXTRA SPACES, LOOK IF "|" SYMBOLS ON THE RIGHT ARE VERTICALLY ALLIGNED.
 */
    A B C D E F G H I J |
- 1 - - - - - - - - - - |
- 2 5 5 5 5 5 - 3 3 3 - |
- 3 - - - - - - - - - - |
- 4 - - - - - - - - 2 - |
- 5 - - - - - - - - 2 - |
- 6 - - - - 3`3`3`- - - |
- 7 - - - - - - - - - 4 |
- 8 - - - - - - - - - 4 |
- 9 - - - - - - - - - 4 |
-10 - - - - - - - - - 4 |
+ 1 - - 2`2` - - - - - -|
+ 2 4 - - - - - 3 3 3 - |
+ 3 4 - - - - - - - - - |
+ 4 4 - 3`3`3`- - - 2 - |
+ 5 4 - - - - - - - 2 - |
+ 6 - - 1'- - - - - - - |
+ 7 - - - - - - - - - - |
+ 8 - - - - - - - - - 1~|
+ 9 - 1 - - 1`- - 2'- - |
+10 - - - - - - - 2'- - |

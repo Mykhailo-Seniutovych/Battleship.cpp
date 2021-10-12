@@ -10,7 +10,7 @@ using namespace map_utils;
 
 Cell ConsoleCellReader::readCell() const
 {
-    cout << "Enter coordinates to shoot at (e.g. \"A 10\")" << endl;
+    cout << "Enter coordinates to shoot at (e.g. \"10 A\")" << endl;
     string newTarget;
     getline(cin, newTarget);
 

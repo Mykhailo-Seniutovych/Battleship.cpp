@@ -11,17 +11,33 @@ void ShipManager::initializeShips(const Ships &t_ships)
 {
     unordered_set<Cell, Cell::HashFunction> takenCells = {};
 
-    validateShip(t_ships.carrier, takenCells, Constants::CARRIER_LENGTH);
     validateShip(t_ships.battleship, takenCells, Constants::BATTLESHIP_LENGTH);
-    validateShip(t_ships.cruiser, takenCells, Constants::CRUISER_LENGTH);
-    validateShip(t_ships.submarine, takenCells, Constants::SUBMARINE_LENGTH);
-    validateShip(t_ships.destroyer, takenCells, Constants::DESTROYER_LENGTH);
 
-    m_carrier = t_ships.carrier;
+    validateShip(t_ships.cruiser1, takenCells, Constants::CRUISER_LENGTH);
+    validateShip(t_ships.cruiser2, takenCells, Constants::CRUISER_LENGTH);
+
+    validateShip(t_ships.destroyer1, takenCells, Constants::DESTROYER_LENGTH);
+    validateShip(t_ships.destroyer2, takenCells, Constants::DESTROYER_LENGTH);
+    validateShip(t_ships.destroyer3, takenCells, Constants::DESTROYER_LENGTH);
+
+    validateShip(t_ships.submarine1, takenCells, Constants::SUBMARINE_LENGTH);
+    validateShip(t_ships.submarine2, takenCells, Constants::SUBMARINE_LENGTH);
+    validateShip(t_ships.submarine3, takenCells, Constants::SUBMARINE_LENGTH);
+    validateShip(t_ships.submarine4, takenCells, Constants::SUBMARINE_LENGTH);
+
     m_battleship = t_ships.battleship;
-    m_cruiser = t_ships.cruiser;
-    m_submarine = t_ships.submarine;
-    m_destroyer = t_ships.destroyer;
+
+    m_cruiser1 = t_ships.cruiser1;
+    m_cruiser2 = t_ships.cruiser2;
+
+    m_destroyer1 = t_ships.destroyer1;
+    m_destroyer2 = t_ships.destroyer2;
+    m_destroyer3 = t_ships.destroyer3;
+
+    m_submarine1 = t_ships.submarine1;
+    m_submarine2 = t_ships.submarine2;
+    m_submarine3 = t_ships.submarine3;
+    m_submarine4 = t_ships.submarine4;
 }
 
 void ShipManager::validateShip(
@@ -115,25 +131,45 @@ ShootResponse ShipManager::receiveShot(const Cell &t_cell)
 {
     ShootResponse response(CellState::Miss);
 
-    if (m_carrier.tryReceiveShot(t_cell))
-    {
-        response = getSuccessfulShotResponse(m_carrier);
-    }
-    else if (m_battleship.tryReceiveShot(t_cell))
+    if (m_battleship.tryReceiveShot(t_cell))
     {
         response = getSuccessfulShotResponse(m_battleship);
     }
-    else if (m_cruiser.tryReceiveShot(t_cell))
+    else if (m_cruiser1.tryReceiveShot(t_cell))
     {
-        response = getSuccessfulShotResponse(m_cruiser);
+        response = getSuccessfulShotResponse(m_cruiser1);
     }
-    else if (m_submarine.tryReceiveShot(t_cell))
+    else if (m_cruiser2.tryReceiveShot(t_cell))
     {
-        response = getSuccessfulShotResponse(m_submarine);
+        response = getSuccessfulShotResponse(m_cruiser2);
     }
-    else if (m_destroyer.tryReceiveShot(t_cell))
+    else if (m_destroyer1.tryReceiveShot(t_cell))
     {
-        response = getSuccessfulShotResponse(m_destroyer);
+        response = getSuccessfulShotResponse(m_destroyer1);
+    }
+    else if (m_destroyer2.tryReceiveShot(t_cell))
+    {
+        response = getSuccessfulShotResponse(m_destroyer2);
+    }
+    else if (m_destroyer3.tryReceiveShot(t_cell))
+    {
+        response = getSuccessfulShotResponse(m_destroyer3);
+    }
+    else if (m_submarine1.tryReceiveShot(t_cell))
+    {
+        response = getSuccessfulShotResponse(m_submarine1);
+    }
+    else if (m_submarine2.tryReceiveShot(t_cell))
+    {
+        response = getSuccessfulShotResponse(m_submarine2);
+    }
+    else if (m_submarine3.tryReceiveShot(t_cell))
+    {
+        response = getSuccessfulShotResponse(m_submarine3);
+    }
+    else if (m_submarine4.tryReceiveShot(t_cell))
+    {
+        response = getSuccessfulShotResponse(m_submarine4);
     }
 
     return response;
@@ -155,9 +191,17 @@ ShootResponse ShipManager::getSuccessfulShotResponse(const Ship &t_ship) const
 
 bool ShipManager::isGameOver() const
 {
-    return m_carrier.isShipSunk() &&
-           m_battleship.isShipSunk() &&
-           m_cruiser.isShipSunk() &&
-           m_submarine.isShipSunk() &&
-           m_destroyer.isShipSunk();
+    return m_battleship.isShipSunk() &&
+
+           m_cruiser1.isShipSunk() &&
+           m_cruiser2.isShipSunk() &&
+
+           m_destroyer1.isShipSunk() &&
+           m_destroyer2.isShipSunk() &&
+           m_destroyer3.isShipSunk() &&
+
+           m_submarine1.isShipSunk() &&
+           m_submarine2.isShipSunk() &&
+           m_submarine3.isShipSunk() &&
+           m_submarine4.isShipSunk();
 }

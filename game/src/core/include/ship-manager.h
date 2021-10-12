@@ -19,18 +19,37 @@ public:
     void initializeShips(const Ships &t_ships) override;
 
 private:
-    Ship m_carrier;
     Ship m_battleship;
-    Ship m_cruiser;
-    Ship m_submarine;
-    Ship m_destroyer;
+
+    Ship m_cruiser1;
+    Ship m_cruiser2;
+
+    Ship m_destroyer1;
+    Ship m_destroyer2;
+    Ship m_destroyer3;
+
+    Ship m_submarine1;
+    Ship m_submarine2;
+    Ship m_submarine3;
+    Ship m_submarine4;
 
     bool isGameOver() const;
+
     ShootResponse getSuccessfulShotResponse(const Ship &t_ship) const;
+
     void validateShip(
         const Ship &t_ship,
         std::unordered_set<Cell, Cell::HashFunction> &t_takenCells,
-        uint8_t t_shipSize);
+        uint8_t t_shipSize) const;
+
+    void insertOuterCellsTakenByShip(
+        std::unordered_set<Cell, Cell::HashFunction> &t_takenCells,
+        const Ship &t_ship) const;
+
+    void insertValidCell(
+        std::unordered_set<Cell, Cell::HashFunction> &t_takenCells,
+        int8_t t_horCoord,
+        int8_t t_verCoord) const;
 };
 
 #endif

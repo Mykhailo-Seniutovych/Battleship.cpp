@@ -8,11 +8,16 @@ class IMaps
 {
 public:
     virtual void initMaps(
-        const ShipCoordinates &t_myCarrier,
         const ShipCoordinates &t_myBattleship,
-        const ShipCoordinates &t_myCruiser,
-        const ShipCoordinates &t_mySubmarine,
-        const ShipCoordinates &t_myDestroyer) = 0;
+        const ShipCoordinates &t_myCruiser1,
+        const ShipCoordinates &t_myCruiser2,
+        const ShipCoordinates &t_myDestroyer1,
+        const ShipCoordinates &t_myDestroyer2,
+        const ShipCoordinates &t_myDestroyer3,
+        const ShipCoordinates &t_mySubmarine1,
+        const ShipCoordinates &t_mySubmarine2,
+        const ShipCoordinates &t_mySubmarine3,
+        const ShipCoordinates &t_mySubmarine4) = 0;
 
     virtual void updateMyMap(const MapUpdateData &t_updateData) = 0;
     virtual void updateEnemyMap(const MapUpdateData &t_updateData) = 0;

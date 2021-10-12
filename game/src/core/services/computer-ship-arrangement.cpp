@@ -14,21 +14,39 @@ Ships ComputerShipArrangement::getShipsArrangement() const
 {
     Ships ships;
     vector<Ship> existingShips = {};
-    
-    ships.carrier = getRandomlyPlacedShip(existingShips, Constants::CARRIER_LENGTH);
-    existingShips.push_back(ships.carrier);
 
     ships.battleship = getRandomlyPlacedShip(existingShips, Constants::BATTLESHIP_LENGTH);
     existingShips.push_back(ships.battleship);
 
-    ships.cruiser = getRandomlyPlacedShip(existingShips, Constants::CRUISER_LENGTH);
-    existingShips.push_back(ships.cruiser);
 
-    ships.submarine = getRandomlyPlacedShip(existingShips, Constants::SUBMARINE_LENGTH);
-    existingShips.push_back(ships.submarine);
+    ships.cruiser1 = getRandomlyPlacedShip(existingShips, Constants::CRUISER_LENGTH);
+    existingShips.push_back(ships.cruiser1);
 
-    ships.destroyer = getRandomlyPlacedShip(existingShips, Constants::DESTROYER_LENGTH);
-    existingShips.push_back(ships.destroyer);
+    ships.cruiser2 = getRandomlyPlacedShip(existingShips, Constants::CRUISER_LENGTH);
+    existingShips.push_back(ships.cruiser2);
+
+
+    ships.destroyer1 = getRandomlyPlacedShip(existingShips, Constants::DESTROYER_LENGTH);
+    existingShips.push_back(ships.destroyer1);
+
+    ships.destroyer2 = getRandomlyPlacedShip(existingShips, Constants::DESTROYER_LENGTH);
+    existingShips.push_back(ships.destroyer2);
+
+    ships.destroyer3 = getRandomlyPlacedShip(existingShips, Constants::DESTROYER_LENGTH);
+    existingShips.push_back(ships.destroyer3);
+
+
+    ships.submarine1 = getRandomlyPlacedShip(existingShips, Constants::SUBMARINE_LENGTH);
+    existingShips.push_back(ships.submarine1);
+
+    ships.submarine2 = getRandomlyPlacedShip(existingShips, Constants::SUBMARINE_LENGTH);
+    existingShips.push_back(ships.submarine2);
+
+    ships.submarine3 = getRandomlyPlacedShip(existingShips, Constants::SUBMARINE_LENGTH);
+    existingShips.push_back(ships.submarine3);
+
+    ships.submarine4 = getRandomlyPlacedShip(existingShips, Constants::SUBMARINE_LENGTH);
+    existingShips.push_back(ships.submarine4);
 
     return ships;
 }
@@ -75,11 +93,11 @@ vector<Cell> ComputerShipArrangement::getAvailableCells(
     auto availableCells = getAllBeginningCells(t_newShipLength, t_newShipPosition);
     if (t_newShipPosition == Position::Horizontal)
     {
-        removeUnavailableCellsFromLeft(availableCells, t_existingShips, t_newShipLength);
+        removeUnavailableCellsForHorizontal(availableCells, t_existingShips, t_newShipLength);
     }
     else
     {
-        removeUnavailableCellsFromTop(availableCells, t_existingShips, t_newShipLength);
+        removeUnavailableCellsForVertical(availableCells, t_existingShips, t_newShipLength);
     }
 
     vector<Cell> result = {};
@@ -107,7 +125,7 @@ unordered_set<Cell, Cell::HashFunction> ComputerShipArrangement::getAllBeginning
     return availableCells;
 }
 
-void ComputerShipArrangement::removeUnavailableCellsFromLeft(
+void ComputerShipArrangement::removeUnavailableCellsForHorizontal(
     unordered_set<Cell, Cell::HashFunction> &t_availableCells,
     const vector<Ship> &t_existingShips,
     uint8_t t_newShipLength) const
@@ -117,15 +135,17 @@ void ComputerShipArrangement::removeUnavailableCellsFromLeft(
         auto shipCells = existingShip.getShipCells();
         for (auto cell : shipCells)
         {
-            for (uint8_t index = 0; index < t_newShipLength; index++)
+            for (int8_t index = -1; index <= t_newShipLength; index++)
             {
-                t_availableCells.erase(Cell(cell.horCoord, cell.verCoord - index));
+                eraseValidCell(t_availableCells, cell.horCoord - 1, cell.verCoord - index);
+                eraseValidCell(t_availableCells, cell.horCoord, cell.verCoord - index);
+                eraseValidCell(t_availableCells, cell.horCoord + 1, cell.verCoord - index);
             }
         }
     }
 }
 
-void ComputerShipArrangement::removeUnavailableCellsFromTop(
+void ComputerShipArrangement::removeUnavailableCellsForVertical(
     unordered_set<Cell, Cell::HashFunction> &t_availableCells,
     const vector<Ship> &t_existingShips,
     uint8_t t_newShipLength) const
@@ -135,10 +155,26 @@ void ComputerShipArrangement::removeUnavailableCellsFromTop(
         auto shipCells = existingShip.getShipCells();
         for (auto cell : shipCells)
         {
-            for (uint8_t index = 0; index < t_newShipLength; index++)
+
+            for (int8_t index = -1; index <= t_newShipLength; index++)
             {
-                t_availableCells.erase(Cell(cell.horCoord - index, cell.verCoord));
+                eraseValidCell(t_availableCells, cell.horCoord - index, cell.verCoord - 1);
+                eraseValidCell(t_availableCells, cell.horCoord - index, cell.verCoord);
+                eraseValidCell(t_availableCells, cell.horCoord - index, cell.verCoord + 1);
             }
         }
+    }
+}
+
+void ComputerShipArrangement::eraseValidCell(
+    unordered_set<Cell, Cell::HashFunction> &t_availableCells,
+    int8_t t_horCoord,
+    int8_t t_verCoord) const
+{
+    auto isPointOnMap = (t_horCoord >= 0 && t_horCoord < Constants::MAP_SIZE) &&
+                        (t_verCoord >= 0 && t_verCoord < Constants::MAP_SIZE);
+    if (isPointOnMap)
+    {
+        t_availableCells.erase(Cell(t_horCoord, t_verCoord));
     }
 }

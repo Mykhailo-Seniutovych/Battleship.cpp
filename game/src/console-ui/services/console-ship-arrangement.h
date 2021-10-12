@@ -17,11 +17,20 @@ public:
 private:
     struct ShipCells
     {
-        std::vector<Cell> carrierCells;
         std::vector<Cell> battleshipCells;
-        std::vector<Cell> cruiserCells;
-        std::vector<Cell> submarineCells;
-        std::vector<Cell> destroyerCells;
+        
+        std::vector<Cell> cruiser1Cells;
+        std::vector<Cell> cruiser2Cells;
+
+        std::vector<Cell> destroyer1Cells;
+        std::vector<Cell> destroyer2Cells;
+        std::vector<Cell> destroyer3Cells;
+
+        std::vector<Cell> submarine1Cells;
+        std::vector<Cell> submarine2Cells;
+        std::vector<Cell> submarine3Cells;
+        std::vector<Cell> submarine4Cells;
+
     };
 
     void skipCommentSection(std::ifstream &t_inputFileStream) const;

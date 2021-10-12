@@ -20,11 +20,16 @@ class Maps : public IMaps
 {
 public:
     void initMaps(
-        const ShipCoordinates &t_myCarrier,
         const ShipCoordinates &t_myBattleship,
-        const ShipCoordinates &t_myCruiser,
-        const ShipCoordinates &t_mySubmarine,
-        const ShipCoordinates &t_myDestroyer) override;
+        const ShipCoordinates &t_myCruiser1,
+        const ShipCoordinates &t_myCruiser2,
+        const ShipCoordinates &t_myDestroyer1,
+        const ShipCoordinates &t_myDestroyer2,
+        const ShipCoordinates &t_myDestroyer3,
+        const ShipCoordinates &t_mySubmarine1,
+        const ShipCoordinates &t_mySubmarine2,
+        const ShipCoordinates &t_mySubmarine3,
+        const ShipCoordinates &t_mySubmarine4) override;
 
     void updateMyMap(const MapUpdateData &t_updateData) override;
     void updateEnemyMap(const MapUpdateData &t_updateData) override;
@@ -46,7 +51,7 @@ private:
     void initShipOnMyMap(const ShipCoordinates &ship);
     void printMapsSeparator() const;
     void printMapRow(uint8_t row, const MapCellState (&t_map)[Constants::MAP_SIZE][Constants::MAP_SIZE]) const;
-    void printRowNumber(uint8_t rowNum) const;
+    void printColNumber(uint8_t rowNum) const;
     void printCell(const MapCellState &cellState) const;
 };
 

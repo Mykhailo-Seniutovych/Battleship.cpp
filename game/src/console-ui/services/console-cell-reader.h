@@ -12,9 +12,9 @@ public:
 private:
     const std::string INVALID_INPUT_ERROR_MSG =
         "Coordinates entered are invalid. "
-        "Make sure your input is in this format '{RowLetterNumber} {ColumnNumber}', "
-        "where {RowLetterNumber} is one of 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'I' "
-        "and {ColumnNumber} is one of '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'.";
+        "Make sure your input is in this format '{RowNumber} {ColumnLetter}', "
+        "where {RowNumber} is one of '1', '2', '3', '4', '5', '6', '7', '8', '9', '10' "
+        "and {ColumnLetter} is one of 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'I'.";
 };
 
 #endif

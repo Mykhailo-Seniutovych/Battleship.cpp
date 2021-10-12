@@ -10,28 +10,33 @@ using namespace std;
 using namespace map_utils;
 
 #ifdef __unix
-    static const std::string INVISIBLE_CELL = "- ";
-    static const std::string MISSED_SHOT_CELL = "\U00002737 ";
-    static const std::string MY_SHIP_CELL = "\U0001F229";
-    static const std::string SHIP_DAMAGED = "\U00002716 ";
-    static const std::string SHIP_SUNK_CELL = "\U000025A0 ";
-    static const std::string MAPS_SEPARATOR = "  |  ";
+static const std::string INVISIBLE_CELL = "- ";
+static const std::string MISSED_SHOT_CELL = "\U00002737 ";
+static const std::string MY_SHIP_CELL = "\U0001F229";
+static const std::string SHIP_DAMAGED = "\U00002716 ";
+static const std::string SHIP_SUNK_CELL = "\U000025A0 ";
+static const std::string MAPS_SEPARATOR = "  |  ";
 // UNICODE characters are not supported on Windows Console, that's why we have to use ASCHII for Windows
 #elif defined _WIN32
-    static const std::string INVISIBLE_CELL = "- ";
-    static const std::string MISSED_SHOT_CELL = "* ";
-    static const std::string MY_SHIP_CELL = "()";
-    static const std::string SHIP_DAMAGED = "X ";
-    static const std::string SHIP_SUNK_CELL = "X*";
-    static const std::string MAPS_SEPARATOR = "  |  ";
+static const std::string INVISIBLE_CELL = "- ";
+static const std::string MISSED_SHOT_CELL = "* ";
+static const std::string MY_SHIP_CELL = "()";
+static const std::string SHIP_DAMAGED = "X ";
+static const std::string SHIP_SUNK_CELL = "X*";
+static const std::string MAPS_SEPARATOR = "  |  ";
 #endif
 
 void Maps::initMaps(
-    const ShipCoordinates &t_myCarrier,
     const ShipCoordinates &t_myBattleship,
-    const ShipCoordinates &t_myCruiser,
-    const ShipCoordinates &t_mySubmarine,
-    const ShipCoordinates &t_myDestroyer)
+    const ShipCoordinates &t_myCruiser1,
+    const ShipCoordinates &t_myCruiser2,
+    const ShipCoordinates &t_myDestroyer1,
+    const ShipCoordinates &t_myDestroyer2,
+    const ShipCoordinates &t_myDestroyer3,
+    const ShipCoordinates &t_mySubmarine1,
+    const ShipCoordinates &t_mySubmarine2,
+    const ShipCoordinates &t_mySubmarine3,
+    const ShipCoordinates &t_mySubmarine4)
 {
     for (uint8_t row = 0; row < Constants::MAP_SIZE; row++)
     {
@@ -42,11 +47,16 @@ void Maps::initMaps(
         }
     }
 
-    initShipOnMyMap(t_myCarrier);
     initShipOnMyMap(t_myBattleship);
-    initShipOnMyMap(t_myCruiser);
-    initShipOnMyMap(t_mySubmarine);
-    initShipOnMyMap(t_myDestroyer);
+    initShipOnMyMap(t_myCruiser1);
+    initShipOnMyMap(t_myCruiser2);
+    initShipOnMyMap(t_myDestroyer1);
+    initShipOnMyMap(t_myDestroyer2);
+    initShipOnMyMap(t_myDestroyer3);
+    initShipOnMyMap(t_mySubmarine1);
+    initShipOnMyMap(t_mySubmarine2);
+    initShipOnMyMap(t_mySubmarine3);
+    initShipOnMyMap(t_mySubmarine4);
 }
 
 void Maps::updateMyMap(const MapUpdateData &updateData)
@@ -100,9 +110,9 @@ void Maps::addSunkShip(
 void Maps::printMyShotCell(const Cell &t_cell) const
 {
     cout << "Enemy shot at ("
-         << convertRowNumberToRowLetter(unsigned(t_cell.horCoord) + 1)
+         << unsigned(t_cell.horCoord) + 1
          << " "
-         << unsigned(t_cell.verCoord) + 1
+         << convertColNumberToColLetter(unsigned(t_cell.verCoord) + 1)
          << ")"
          << endl;
 }
@@ -175,21 +185,20 @@ void Maps::printMapRow(uint8_t row, const MapCellState (&t_map)[Constants::MAP_S
     {
         if (row == 0 && col == 0)
         {
-            cout << "  ";
+            cout << "   ";
         }
         else if (row == 0)
         {
-
-            cout << unsigned(col);
-            auto isColumnNumberOneCharLong = col < 10;
-            if (isColumnNumberOneCharLong)
-            {
-                cout << " ";
-            }
+            printColNumber(col);
         }
         else if (col == 0)
         {
-            printRowNumber(row);
+            auto isRowNumberOneCharLong = row < 10;
+            if (isRowNumberOneCharLong)
+            {
+                cout << " ";
+            }
+            cout << unsigned(row) << " ";
         }
         else
         {
@@ -198,9 +207,9 @@ void Maps::printMapRow(uint8_t row, const MapCellState (&t_map)[Constants::MAP_S
     }
 }
 
-void Maps::printRowNumber(uint8_t rowNum) const
+void Maps::printColNumber(uint8_t rowNum) const
 {
-    char rowLetter = convertRowNumberToRowLetter(rowNum);
+    char rowLetter = convertColNumberToColLetter(rowNum);
     cout << rowLetter << " ";
 }
 

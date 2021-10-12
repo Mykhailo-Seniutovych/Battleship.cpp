@@ -4,20 +4,29 @@
 #include <cstdint>
 #include <unordered_set>
 #include <string>
+#include <exception>
+#include <iostream>
+#include <algorithm>
+
 #include "console-ship-arrangement.h"
 #include "constants.h"
 #include "validation-exception.h"
 
-#include <exception>
-#include <iostream>
-
 using namespace std;
 
-static const std::string CARRIER_SYMBOL = "5 ";
 static const std::string BATTLESHIP_SYMBOL = "4 ";
-static const std::string CRUISER_SYMBOL = "3 ";
-static const std::string SUBMARINE_SYMBOL = "3`";
-static const std::string DESTROYER_SYMBOL = "2 ";
+
+static const std::string CRUISER1_SYMBOL = "3 ";
+static const std::string CRUISER2_SYMBOL = "3`";
+
+static const std::string DESTROYER1_SYMBOL = "2 ";
+static const std::string DESTROYER2_SYMBOL = "2`";
+static const std::string DESTROYER3_SYMBOL = "2'";
+
+static const std::string SUBMARINE1_SYMBOL = "1 ";
+static const std::string SUBMARINE2_SYMBOL = "1`";
+static const std::string SUBMARINE4_SYMBOL = "1'";
+static const std::string SUBMARINE3_SYMBOL = "1~";
 
 static void editMapsOnUnix()
 {
@@ -25,6 +34,14 @@ static void editMapsOnUnix()
     std::string cmd = "/bin/nano " + Constants::MAP_FILE_NAME;
     system(cmd.c_str());
 #endif
+}
+
+static void rightTrimString(std::string &s)
+{
+    s.erase(std::find_if(s.rbegin(), s.rend(), [](unsigned char ch)
+                         { return !std::isspace(ch); })
+                .base(),
+            s.end());
 }
 
 Ships ConsoleShipArrangement::getShipsArrangement() const
@@ -47,6 +64,7 @@ Ships ConsoleShipArrangement::getShipsArrangement() const
     {
         string line;
         getline(inputFileStream, line);
+        rightTrimString(line);
         parseLine(shipCells, line, rowIndex);
         rowIndex++;
     }
@@ -90,37 +108,60 @@ void ConsoleShipArrangement::skipUntilSecondMapRow(ifstream &t_inputFileStream) 
 void ConsoleShipArrangement::parseLine(
     ShipCells &t_shipCells, const std::string &t_line, uint8_t t_rowIndex) const
 {
-    auto charCountInOneMapRow = Constants::MAP_SIZE * 2 + 2;
-    if (t_line.size() < charCountInOneMapRow)
+    auto charCountInOneMapRow = Constants::MAP_SIZE * 2 + 4;
+    if (t_line.size() != charCountInOneMapRow)
     {
         throw ValidationException(
             "Map file has incorrect format. "
             "If you corrupted the file and don't know how to restore it to the correct format, reinstall the game.");
     }
 
-    for (uint8_t verIndex = 2; verIndex < charCountInOneMapRow; verIndex += 2)
+    for (uint8_t verIndex = 3; verIndex < charCountInOneMapRow - 1; verIndex += 2)
     {
         auto symbol = t_line.substr(verIndex, 2);
         uint8_t colIndex = (verIndex - 2) / 2;
-        if (symbol == CARRIER_SYMBOL)
-        {
-            t_shipCells.carrierCells.push_back(Cell(t_rowIndex, colIndex));
-        }
         if (symbol == BATTLESHIP_SYMBOL)
         {
             t_shipCells.battleshipCells.push_back(Cell(t_rowIndex, colIndex));
         }
-        if (symbol == CRUISER_SYMBOL)
+
+        if (symbol == CRUISER1_SYMBOL)
         {
-            t_shipCells.cruiserCells.push_back(Cell(t_rowIndex, colIndex));
+            t_shipCells.cruiser1Cells.push_back(Cell(t_rowIndex, colIndex));
         }
-        if (symbol == SUBMARINE_SYMBOL)
+        if (symbol == CRUISER2_SYMBOL)
         {
-            t_shipCells.submarineCells.push_back(Cell(t_rowIndex, colIndex));
+            t_shipCells.cruiser2Cells.push_back(Cell(t_rowIndex, colIndex));
         }
-        if (symbol == DESTROYER_SYMBOL)
+
+        if (symbol == DESTROYER1_SYMBOL)
         {
-            t_shipCells.destroyerCells.push_back(Cell(t_rowIndex, colIndex));
+            t_shipCells.destroyer1Cells.push_back(Cell(t_rowIndex, colIndex));
+        }
+        if (symbol == DESTROYER2_SYMBOL)
+        {
+            t_shipCells.destroyer2Cells.push_back(Cell(t_rowIndex, colIndex));
+        }
+        if (symbol == DESTROYER3_SYMBOL)
+        {
+            t_shipCells.destroyer3Cells.push_back(Cell(t_rowIndex, colIndex));
+        }
+
+        if (symbol == SUBMARINE1_SYMBOL)
+        {
+            t_shipCells.submarine1Cells.push_back(Cell(t_rowIndex, colIndex));
+        }
+        if (symbol == SUBMARINE2_SYMBOL)
+        {
+            t_shipCells.submarine2Cells.push_back(Cell(t_rowIndex, colIndex));
+        }
+        if (symbol == SUBMARINE3_SYMBOL)
+        {
+            t_shipCells.submarine3Cells.push_back(Cell(t_rowIndex, colIndex));
+        }
+        if (symbol == SUBMARINE4_SYMBOL)
+        {
+            t_shipCells.submarine4Cells.push_back(Cell(t_rowIndex, colIndex));
         }
     }
 }
@@ -128,36 +169,55 @@ void ConsoleShipArrangement::parseLine(
 Ships ConsoleShipArrangement::createShipsFromCells(const ShipCells &t_shipCells) const
 {
     Ships ships{
-        .carrier = createShipFromCells(t_shipCells.carrierCells),
         .battleship = createShipFromCells(t_shipCells.battleshipCells),
-        .cruiser = createShipFromCells(t_shipCells.cruiserCells),
-        .submarine = createShipFromCells(t_shipCells.submarineCells),
-        .destroyer = createShipFromCells(t_shipCells.destroyerCells)};
+        .cruiser1 = createShipFromCells(t_shipCells.cruiser1Cells),
+        .cruiser2 = createShipFromCells(t_shipCells.cruiser2Cells),
+        .destroyer1 = createShipFromCells(t_shipCells.destroyer1Cells),
+        .destroyer2 = createShipFromCells(t_shipCells.destroyer2Cells),
+        .destroyer3 = createShipFromCells(t_shipCells.destroyer3Cells),
+        .submarine1 = createShipFromCells(t_shipCells.submarine1Cells),
+        .submarine2 = createShipFromCells(t_shipCells.submarine2Cells),
+        .submarine3 = createShipFromCells(t_shipCells.submarine3Cells),
+        .submarine4 = createShipFromCells(t_shipCells.submarine4Cells),
+    };
     return ships;
 }
 
 Ship ConsoleShipArrangement::createShipFromCells(const std::vector<Cell> &t_cells) const
 {
-    auto position =
-        t_cells[0].horCoord == t_cells[1].horCoord
-            ? Position::Horizontal
-            : Position::Vertical;
-
-    auto axisCoord = position == Position::Horizontal
-                         ? t_cells[0].horCoord
-                         : t_cells[0].verCoord;
-
-    unordered_set<uint8_t> coordinates = {};
-    for (const auto &cell : t_cells)
+    Ship ship;
+    if (t_cells.size() > 1)
     {
-        auto cellAxisCoord = position == Position::Horizontal ? cell.horCoord : cell.verCoord;
-        if (cellAxisCoord != axisCoord)
+        auto position =
+            t_cells[0].horCoord == t_cells[1].horCoord
+                ? Position::Horizontal
+                : Position::Vertical;
+
+        auto axisCoord = position == Position::Horizontal
+                             ? t_cells[0].horCoord
+                             : t_cells[0].verCoord;
+
+        unordered_set<uint8_t> coordinates = {};
+        for (const auto &cell : t_cells)
         {
-            throw ValidationException(
-                "Ship cells must be in sequential order, "
-                "and ship must be either in horizontal or vertical position, not both.");
+            auto cellAxisCoord = position == Position::Horizontal ? cell.horCoord : cell.verCoord;
+            if (cellAxisCoord != axisCoord)
+            {
+                throw ValidationException(
+                    "Ship cells must be in sequential order, "
+                    "and ship must be either in horizontal or vertical position, not both.");
+            }
+            coordinates.insert(position == Position::Horizontal ? cell.verCoord : cell.horCoord);
         }
-        coordinates.insert(position == Position::Horizontal ? cell.verCoord : cell.horCoord);
+        ship = Ship(position, axisCoord, coordinates);
     }
-    return Ship(position, axisCoord, coordinates);
+    else if (t_cells.size() == 1)
+    {
+        ship = Ship(Position::Horizontal, t_cells[0].horCoord, {t_cells[0].verCoord});
+    }
+    else
+    {
+        throw ValidationException("Ship length cannot be 0");
+    }
+    return ship;
 }

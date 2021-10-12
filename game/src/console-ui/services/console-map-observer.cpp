@@ -19,11 +19,16 @@ void ConsoleMapObserver::notifyShipsInitialized(const Ships &ships) const
     cout << "Connection established successfully." << endl
          << endl;
     m_maps->initMaps(
-        ships.carrier.getCoordinates(),
         ships.battleship.getCoordinates(),
-        ships.cruiser.getCoordinates(),
-        ships.submarine.getCoordinates(),
-        ships.destroyer.getCoordinates());
+        ships.cruiser1.getCoordinates(),
+        ships.cruiser2.getCoordinates(),
+        ships.destroyer1.getCoordinates(),
+        ships.destroyer2.getCoordinates(),
+        ships.destroyer3.getCoordinates(),
+        ships.submarine1.getCoordinates(),
+        ships.submarine2.getCoordinates(),
+        ships.submarine3.getCoordinates(),
+        ships.submarine4.getCoordinates());
     m_maps->printMaps();
 }
 

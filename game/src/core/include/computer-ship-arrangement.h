@@ -24,15 +24,20 @@ private:
     std::unordered_set<Cell, Cell::HashFunction> getAllBeginningCells(
         uint8_t t_newShipLength, Position t_newShipPosition) const;
 
-    void removeUnavailableCellsFromLeft(
+    void removeUnavailableCellsForHorizontal(
         std::unordered_set<Cell, Cell::HashFunction> &t_availableCells,
         const std::vector<Ship> &t_existingShips,
         uint8_t t_newShipLength) const;
 
-    void removeUnavailableCellsFromTop(
+    void removeUnavailableCellsForVertical(
         std::unordered_set<Cell, Cell::HashFunction> &t_availableCells,
         const std::vector<Ship> &t_existingShips,
         uint8_t t_newShipLength) const;
+
+    void eraseValidCell(
+        std::unordered_set<Cell, Cell::HashFunction> &t_availableCells,
+        int8_t t_horCoord,
+        int8_t t_verCoord) const;
 };
 
 #endif

@@ -26,11 +26,22 @@ private:
     Ship m_destroyer;
 
     bool isGameOver() const;
+
     ShootResponse getSuccessfulShotResponse(const Ship &t_ship) const;
+
     void validateShip(
         const Ship &t_ship,
         std::unordered_set<Cell, Cell::HashFunction> &t_takenCells,
-        uint8_t t_shipSize);
+        uint8_t t_shipSize) const;
+
+    void insertOuterCellsTakenByShip(
+        std::unordered_set<Cell, Cell::HashFunction> &t_takenCells,
+        const Ship &t_ship) const;
+
+    void insertValidCell(
+        std::unordered_set<Cell, Cell::HashFunction> &t_takenCells,
+        int8_t t_horCoord,
+        int8_t t_verCoord) const;
 };
 
 #endif

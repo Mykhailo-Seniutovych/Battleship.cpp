@@ -27,7 +27,7 @@ void ShipManager::initializeShips(const Ships &t_ships)
 void ShipManager::validateShip(
     const Ship &t_ship,
     std::unordered_set<Cell, Cell::HashFunction> &t_takenCells,
-    uint8_t t_shipSize)
+    uint8_t t_shipSize) const
 {
     auto coordinates = t_ship.getCoordinates();
     if (coordinates.cellsCoordinates.size() != t_shipSize)
@@ -39,6 +39,11 @@ void ShipManager::validateShip(
         throw ValidationException(msg);
     }
 
+    if (coordinates.axisCoordinate > Constants::MAP_SIZE - 1)
+    {
+        throw ValidationException("Ship cell is outside of map boundaries.");
+    }
+
     uint8_t previousCoord;
     auto isPreviousCoordSet = false;
     for (auto coord : coordinates.cellsCoordinates)
@@ -47,7 +52,7 @@ void ShipManager::validateShip(
         {
             throw ValidationException("Ship cell is outside of map boundaries.");
         }
-        
+
         if (isPreviousCoordSet && coord != previousCoord + 1)
         {
             throw ValidationException("Ship cells of a ship are not in a sequential order.");
@@ -59,12 +64,50 @@ void ShipManager::validateShip(
 
         if (t_takenCells.count(cell))
         {
-            throw ValidationException("Ship cell overlaps with other ship cells.");
+            throw ValidationException("Ship cell touches or overlaps with other ship cells .");
         }
 
         t_takenCells.insert(cell);
         previousCoord = coord;
         isPreviousCoordSet = true;
+    }
+
+    insertOuterCellsTakenByShip(t_takenCells, t_ship);
+}
+
+void ShipManager::insertOuterCellsTakenByShip(
+    std::unordered_set<Cell, Cell::HashFunction> &t_takenCells,
+    const Ship &t_ship) const
+{
+    auto coordinates = t_ship.getCoordinates();
+    for (auto coord : coordinates.cellsCoordinates)
+    {
+        auto horCoord = coordinates.position == Position::Horizontal ? coordinates.axisCoordinate : coord;
+        auto verCoord = coordinates.position == Position::Horizontal ? coord : coordinates.axisCoordinate;
+
+        insertValidCell(t_takenCells, horCoord - 1, verCoord - 1);
+        insertValidCell(t_takenCells, horCoord - 1, verCoord);
+        insertValidCell(t_takenCells, horCoord - 1, verCoord + 1);
+
+        insertValidCell(t_takenCells, horCoord, verCoord - 1);
+        insertValidCell(t_takenCells, horCoord, verCoord + 1);
+
+        insertValidCell(t_takenCells, horCoord + 1, verCoord - 1);
+        insertValidCell(t_takenCells, horCoord + 1, verCoord);
+        insertValidCell(t_takenCells, horCoord + 1, verCoord + 1);
+    }
+}
+
+void ShipManager::insertValidCell(
+    std::unordered_set<Cell, Cell::HashFunction> &t_takenCells,
+    int8_t t_horCoord,
+    int8_t t_verCoord) const
+{
+    auto isPointOnMap = (t_horCoord >= 0 && t_horCoord < Constants::MAP_SIZE) &&
+                        (t_verCoord >= 0 && t_verCoord < Constants::MAP_SIZE);
+    if (isPointOnMap)
+    {
+        t_takenCells.insert(Cell(t_horCoord, t_verCoord));
     }
 }
 
